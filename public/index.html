@@ -134,8 +134,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .h1 .ln{display:block;overflow:hidden;padding:.14em .12em .22em 0;margin:-.14em -.12em -.22em 0;will-change:transform}
 .h1 .ln>span{display:block;transition:transform 1.3s var(--ease-out);transition-delay:calc(var(--d) * 100ms + 150ms)}
 .js-intro:not(.is-in) .h1 .ln>span{transform:translateY(110%)}
-.hero-foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;margin-top:clamp(24px,3vw,40px);transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out)}
-html:not(.scrolled) .hero-foot{opacity:0;transform:translateY(28px);pointer-events:none}
+.intro{position:relative;z-index:2;padding-top:clamp(40px,5vw,84px);padding-bottom:clamp(8px,2vw,24px)}
+.hero-foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out)}
 .hero-foot p{margin:0;max-width:44ch;font-size:clamp(16px,1.25vw,19px)}
 .hero-foot p span{color:rgba(243,238,249,.82)}
 .hero-foot p strong{font-weight:500;display:block;margin-bottom:12px;font-size:clamp(21px,1.85vw,30px);line-height:1.2;letter-spacing:-.01em;color:#fff;max-width:24ch}
@@ -261,6 +261,7 @@ html:not(.scrolled) .hero-foot{opacity:0;transform:translateY(28px);pointer-even
 .h-on .track{display:flex;width:max-content;padding-bottom:0;padding-left:max(var(--pad), env(safe-area-inset-left,0px), calc((100vw - 1560px) / 2));padding-right:max(var(--pad), env(safe-area-inset-right,0px), calc((100vw - 1560px) / 2));will-change:transform}
 .frame{position:relative;border-top:1px solid var(--trait);padding:clamp(28px,3vw,44px) 0 0;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px clamp(20px,3vw,48px);align-content:start}
 .h-on .frame{width:min(44vw,620px);padding-right:clamp(20px,3vw,56px)}
+@media (max-width:899px){.h-on .frame{width:78vw;padding-right:24px}.h-on .steps-hd{margin-bottom:28px}}
 .frame .n{font-family:var(--f-display);font-style:italic;font-size:clamp(90px,11vw,200px);line-height:.8;color:var(--violet);grid-row:1/3}
 .frame h3{align-self:end}
 .frame p{margin:0;color:var(--cendre);max-width:36ch;align-self:start}
@@ -489,6 +490,9 @@ html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
       <span class="ln"><span style="--d:0">Impossible</span></span>
       <span class="ln"><span style="--d:1"><em>à oublier.</em></span></span>
     </h1>
+  </section>
+
+  <section class="intro wrap" aria-label="Présentation">
     <div class="hero-foot">
       <p><strong>Vos clients n’aiment pas les vidéos. Ils aiment les histoires.</strong> <span>Explicatif, notoriété, événement ou personnage de marque : Sayki écrit et réalise des films qui racontent et qui font bouger quelque chose chez vos clients. D’abord l’idée et l’histoire. Ensuite la production, sans tournage : la qualité d’une pub de marque, pas son budget.</span></p>
       <a class="down" href="#films">Voir les films <span aria-hidden="true">↓</span></a>
@@ -802,7 +806,7 @@ const meth=$('#methode'), methIn=$('.pin-in',meth), track=$('#track');
  track.addEventListener('scroll',()=>{const x=track.scrollLeft; let k=0,best=1e9; fr.forEach((f,i)=>{const d=Math.abs(f.offsetLeft-track.offsetLeft-x-parseFloat(getComputedStyle(track).paddingLeft)); if(d<best){best=d;k=i;}}); dots.forEach((d,i)=>d.classList.toggle('on',i===k));},{passive:true});}
 let H_ON=false;
 function setupPins(){
-  H_ON=PIN&&innerWidth>=900;
+  H_ON=PIN;
   root.classList.toggle('h-on',H_ON);
 
   if(H_ON){const extra=Math.max(0,track.scrollWidth-innerWidth); meth.style.height=(innerHeight+extra)+'px';}
@@ -1485,7 +1489,6 @@ setInterval(()=>{const s=Math.floor((Date.now()-t0visit)/1000); visit.textConten
 let mqX=0,mqDir=1,lmx=mx,lmy=my,mSpeed=0;
 const heroEl=$('#top'), lines=$$('.h1 .ln');
 function frame(t){
-  root.classList.toggle('scrolled',(SMOOTH?cur:scrollY)>24||scrollY>24);
   const tgt=scrollY;
   if(SMOOTH&&!root.classList.contains('is-locked')){
     cur+=(tgt-cur)*0.085; if(Math.abs(tgt-cur)<0.05) cur=tgt;
