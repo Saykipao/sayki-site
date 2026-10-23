@@ -257,7 +257,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .h-on .steps-hd{padding-top:0;margin-bottom:clamp(28px,4vh,56px)}
 .h-on #methode .pin-in{display:flex;flex-direction:column;justify-content:center}
 .track{display:grid;gap:clamp(12px,1.4vw,24px);padding-bottom:var(--sec)}
-.h-on .track{display:flex;width:max-content;padding-bottom:0;padding-left:max(var(--pad), env(safe-area-inset-left,0px));padding-right:max(var(--pad), env(safe-area-inset-right,0px));will-change:transform}
+.h-on .track{display:flex;width:max-content;padding-bottom:0;padding-left:max(var(--pad), env(safe-area-inset-left,0px), calc((100vw - 1560px) / 2));padding-right:max(var(--pad), env(safe-area-inset-right,0px), calc((100vw - 1560px) / 2));will-change:transform}
 .frame{position:relative;border-top:1px solid var(--trait);padding:clamp(28px,3vw,44px) 0 0;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px clamp(20px,3vw,48px);align-content:start}
 .h-on .frame{width:min(44vw,620px);padding-right:clamp(20px,3vw,56px)}
 .frame .n{font-family:var(--f-display);font-style:italic;font-size:clamp(90px,11vw,200px);line-height:.8;color:var(--violet);grid-row:1/3}
@@ -265,6 +265,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .frame p{margin:0;color:var(--cendre);max-width:36ch;align-self:start}
 @media (max-width:520px){.frame{grid-template-columns:minmax(0,1fr)}.frame .n{grid-row:auto}}
 .no-pin #methode .pin-in{padding-block:0}
+html:not(.h-on) #methode .pin-in{height:auto;position:relative;overflow:visible;padding-bottom:var(--sec)}
+html:not(.h-on) .track{display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:max(var(--pad), env(safe-area-inset-left,0px));scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:28px}
+html:not(.h-on) .track::-webkit-scrollbar{display:none}
+html:not(.h-on) .track::after{content:"";flex:0 0 1px}
+html:not(.h-on) .frame{flex:0 0 min(84%,520px);scroll-snap-align:start}
+.swipe{display:none;margin:0;color:var(--cendre)}
+html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
+.swipe i{display:block;width:6px;height:6px;border-radius:50%;background:var(--trait);transition:background .3s,width .3s}
+.swipe i.on{background:var(--violet);width:18px;border-radius:6px}
 
 /* ---------- Calque clair ---------- */
 .light{--ecran:#150A26;--cendre:#5D5372;--trait:rgba(21,10,38,.12);--violet-clair:#7A1FE0;position:relative;z-index:3;background:#F6F3FA;color:var(--ecran)}
@@ -354,7 +363,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cta-foot{grid-column:1;grid-row:2;align-self:start;position:relative;z-index:2;margin-top:clamp(26px,2.6vw,44px);max-width:min(470px,calc(89% - 24px))}
 .cta-foot .visit{margin-top:0}
 .cta-foot .cta-row{margin-top:clamp(28px,3vw,44px)}
-@media (max-width:860px){.zap-msg{grid-row:4;margin-top:40px}.cta-stage{grid-template-columns:minmax(0,1fr)}.cta-head{grid-row:1;margin-bottom:24px}.tv-wrap{grid-column:1;grid-row:2;width:100%;margin-left:0}.cta-foot{grid-row:3;max-width:none}.cta-head .display{width:auto;max-width:10ch}}
+@media (max-width:860px){.zap-msg{grid-row:3;margin-top:22px;font-size:clamp(26px,7.4vw,40px)}.cta-stage{grid-template-columns:minmax(0,1fr)}.cta-head{grid-row:1;margin-bottom:24px}.tv-wrap{grid-column:1;grid-row:2;width:100%;margin-left:0}.cta-foot{grid-row:4;max-width:none;margin-top:36px}.cta-head .display{width:auto;max-width:10ch}}
 .cta .lead{margin-top:32px;position:relative;z-index:1}
 .cta-row{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;margin-top:40px;position:relative;z-index:1}
 .cta-row .btn{font-size:17px;padding:22px 32px}
@@ -539,6 +548,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <li class="frame"><span class="n" aria-hidden="true">3</span><h3 class="display t-m">Réaliser</h3><p>Ensuite seulement, la technique. Univers, personnages, voix, montage, musique, sans caméra ni plateau.</p></li>
         <li class="frame"><span class="n" aria-hidden="true">4</span><h3 class="display t-m">Décliner</h3><p>16:9 pour l’écran, 9:16 et 1:1 pour les réseaux, en plusieurs langues si besoin.</p></li>
       </ol>
+      <div class="swipe wrap" id="swipe" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><span class="mono">Glissez</span></div>
     </div>
   </section>
 
@@ -787,6 +797,8 @@ document.addEventListener('click',e=>{
 /* épinglages */
 const maniSec=$('#manifeste'), maniIn=$('.pin-in',maniSec);
 const meth=$('#methode'), methIn=$('.pin-in',meth), track=$('#track');
+{const dots=$$('#swipe i'), fr=$$('.frame',track);
+ track.addEventListener('scroll',()=>{const x=track.scrollLeft; let k=0,best=1e9; fr.forEach((f,i)=>{const d=Math.abs(f.offsetLeft-track.offsetLeft-x-parseFloat(getComputedStyle(track).paddingLeft)); if(d<best){best=d;k=i;}}); dots.forEach((d,i)=>d.classList.toggle('on',i===k));},{passive:true});}
 let H_ON=false;
 function setupPins(){
   H_ON=PIN&&innerWidth>=900;
