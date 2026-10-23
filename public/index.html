@@ -128,7 +128,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top, rgba(21,10,38,.94) 0%, rgba(21,10,38,.4) 45%, rgba(21,10,38,.2) 70%, rgba(21,10,38,.75) 100%)}
 .is-gl .hero-media video{opacity:0}
 .is-gl .hero-media::after{display:none}
-.hero-tc{position:absolute;top:calc(100px + env(safe-area-inset-top,0px));right:max(var(--pad), env(safe-area-inset-right,0px));text-align:right;display:grid;gap:4px}
+.hero-tc{position:absolute;top:calc(100px + env(safe-area-inset-top,0px));right:max(var(--pad), env(safe-area-inset-right,0px), calc((100% - 1560px) / 2));text-align:right;display:grid;gap:4px}
 .hero-tc b{font-weight:500;color:var(--violet-clair)}
 .h1{font-size:clamp(80px,15vw,300px);line-height:.88;display:flex;flex-direction:column}
 .h1 .ln{display:block;overflow:hidden;padding:.14em .12em .22em 0;margin:-.14em -.12em -.22em 0;will-change:transform}
