@@ -134,7 +134,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .h1 .ln{display:block;overflow:hidden;padding:.14em .12em .22em 0;margin:-.14em -.12em -.22em 0;will-change:transform}
 .h1 .ln>span{display:block;transition:transform 1.3s var(--ease-out);transition-delay:calc(var(--d) * 100ms + 150ms)}
 .js-intro:not(.is-in) .h1 .ln>span{transform:translateY(110%)}
-.hero-foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;margin-top:clamp(24px,3vw,40px)}
+.hero-foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;margin-top:clamp(24px,3vw,40px);transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out)}
+html:not(.scrolled) .hero-foot{opacity:0;transform:translateY(28px);pointer-events:none}
 .hero-foot p{margin:0;max-width:44ch;font-size:clamp(16px,1.25vw,19px)}
 .hero-foot p span{color:rgba(243,238,249,.82)}
 .hero-foot p strong{font-weight:500;display:block;margin-bottom:12px;font-size:clamp(21px,1.85vw,30px);line-height:1.2;letter-spacing:-.01em;color:#fff;max-width:24ch}
@@ -1484,6 +1485,7 @@ setInterval(()=>{const s=Math.floor((Date.now()-t0visit)/1000); visit.textConten
 let mqX=0,mqDir=1,lmx=mx,lmy=my,mSpeed=0;
 const heroEl=$('#top'), lines=$$('.h1 .ln');
 function frame(t){
+  root.classList.toggle('scrolled',(SMOOTH?cur:scrollY)>24||scrollY>24);
   const tgt=scrollY;
   if(SMOOTH&&!root.classList.contains('is-locked')){
     cur+=(tgt-cur)*0.085; if(Math.abs(tgt-cur)<0.05) cur=tgt;
