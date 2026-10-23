@@ -202,7 +202,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .manifesto{position:relative;height:260vh}
 @media (max-width:899px){.manifesto{height:190vh}}
 .hero-sub{display:none}
-@media (max-width:640px){.hero-sub{display:block;position:relative;margin:16px 0 0;max-width:20ch;font-size:clamp(19px,5.4vw,23px);line-height:1.22;font-weight:500;letter-spacing:-.01em;color:#fff;text-shadow:0 1px 18px rgba(21,10,38,.6);transition:opacity 1s var(--ease-out) .5s}.js-intro:not(.is-in) .hero-sub{opacity:0}.intro .hero-foot p strong{display:none}.hero-tc{display:none}.h1{font-size:calc((100vw - 2 * var(--pad)) / 3.75)}.h1 .ln>span{white-space:nowrap}}
+@media (max-width:640px){.hero-sub{display:block;position:relative;margin:16px 0 0;font-size:clamp(15px,4.7vw,21px);line-height:1.22;font-weight:500;letter-spacing:-.01em;color:#fff;text-shadow:0 1px 18px rgba(21,10,38,.6);transition:opacity 1s var(--ease-out) .5s}.hero-sub span{display:block;white-space:nowrap}.js-intro:not(.is-in) .hero-sub{opacity:0}.intro .hero-foot p strong{display:none}.hero-tc{display:none}.h1{font-size:calc((100vw - 2 * var(--pad)) / 3.75)}.h1 .ln>span{white-space:nowrap}}
 .pin-in{height:100svh;position:sticky;top:0;overflow:hidden}
 .is-smooth .pin-in{position:relative}
 .manifesto .pin-in{display:grid;align-content:center}
@@ -490,7 +490,7 @@ html:not(.h-on) .track{gap:8px}
       <span class="ln"><span style="--d:1">impossible</span></span>
       <span class="ln"><span style="--d:2"><em>à oublier.</em></span></span>
     </h1>
-    <p class="hero-sub" aria-hidden="true">Vos clients n’aiment pas les vidéos. Ils aiment les histoires.</p>
+    <p class="hero-sub" aria-hidden="true"><span>Vos clients n’aiment pas les vidéos.</span><span>Ils aiment les histoires.</span></p>
   </section>
 
   <section class="intro wrap" aria-label="Présentation">
