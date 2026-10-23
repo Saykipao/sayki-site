@@ -194,7 +194,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 }
 @media (max-width:599px){
   .grid{grid-template-columns:minmax(0,1fr)}
-  .media.v{width:min(72%, calc(70vh * 9 / 16))}
+  .media.v{aspect-ratio:16/9;width:100%}
+  .media.v img,.media.v video{object-position:50% 34%}
 }
 
 /* ---------- Manifeste (épinglé) ---------- */
@@ -333,13 +334,10 @@ html:not(.h-on) .track{gap:8px}
 .tv-wrap{position:relative;z-index:1;grid-column:2;grid-row:1/3;align-self:center;justify-self:start;width:96%;margin-left:-11%;--heat:0}
 .tv-halo{position:absolute;inset:-22%;border-radius:40px;background:radial-gradient(closest-side,rgba(158,55,255,.6),rgba(222,80,210,.22) 55%,transparent);filter:blur(40px);opacity:calc(.3 + var(--heat)*.55);transform:scale(calc(1 + var(--heat)*.22));pointer-events:none;transition:opacity .9s var(--ease-out)}
 .tv-wrap.flash .tv-halo{opacity:1;transform:scale(calc(1.15 + var(--heat)*.25));transition-duration:.05s}
-.tv-wave{position:absolute;z-index:3;left:0;top:0;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;pointer-events:none;opacity:0;border:3px solid rgba(255,255,255,.95);box-shadow:0 0 18px 6px rgba(222,80,210,.85),0 0 46px 14px rgba(158,55,255,.7),inset 0 0 22px 6px rgba(60,220,255,.65)}
-.tv-wave.go{animation:tvWave .75s var(--ease-out) forwards}
-@keyframes tvWave{0%{opacity:1;transform:scale(.2)}70%{opacity:.85}100%{opacity:0;transform:scale(calc(9 + var(--heat,0)*4))}}
-.tv-flare{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:radial-gradient(circle at var(--fx,50%) var(--fy,50%),rgba(255,255,255,.85),rgba(222,80,210,.45) 30%,rgba(158,55,255,0) 70%);mix-blend-mode:screen}
-.tv-flare.go{animation:tvFlare .6s var(--ease-out) forwards}
-@keyframes tvFlare{0%{opacity:1}100%{opacity:0}}
-.is-gl .tv-wave,.is-gl .tv-flare{display:none}
+/* zap WebGL dans le cadre, sur mobile */
+.tv.mz-on{background:transparent;overflow:visible}
+.tv.mz-on video,.tv.mz-on::after{opacity:0}
+.tv .mz{display:block}
 .is-gl .tv-halo{display:none}
 .tv{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0d0619;padding:0;border:0;-webkit-tap-highlight-color:transparent;isolation:isolate;will-change:transform;transform-origin:50% 50%}
 .tv::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,rgba(0,0,0,.24) 0 1px,transparent 1px 3px);opacity:.5}
@@ -602,8 +600,7 @@ html:not(.h-on) .track{gap:8px}
       <div class="tv-wrap" id="tvWrap">
         <span class="tv-halo" aria-hidden="true"></span>
         <button class="tv" id="tv" type="button" data-cursor="Zapper" aria-label="Passer au film suivant">
-          <span class="tv-flare" id="tvFlare" aria-hidden="true"></span><span class="tv-wave" id="tvWave" aria-hidden="true"></span>
-          <video id="tvVid" src="assets/intro.mp4" data-src-m="assets/intro-m.mp4" poster="assets/intro.jpg" autoplay muted loop playsinline preload="metadata"></video>
+                    <video id="tvVid" src="assets/intro.mp4" data-src-m="assets/intro-m.mp4" poster="assets/intro.jpg" autoplay muted loop playsinline preload="metadata"></video>
         </button>
       </div>
       <div class="cta-foot">
@@ -1461,7 +1458,7 @@ function pop(el){el.classList.remove('pop'); void el.offsetWidth; el.classList.a
 function say(m){zapMsg.textContent=m; zapMsg.classList.remove('flash'); void zapMsg.offsetWidth; zapMsg.classList.add('flash');}
 function nextLine(){if(zaps<=LINES.length) return LINES[zaps-1]; if(!lineQ.length) lineQ=LINES.slice(0,-1).sort(()=>Math.random()-0.5); return lineQ.pop();}
 function nudge(){if(!ctaBtn)return; ctaBtn.classList.remove('nudge'); void ctaBtn.offsetWidth; ctaBtn.classList.add('nudge');}
-if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){io.disconnect(); if(GL&&GL.zapPreload) GL.zapPreload(CH.map(c=>c.src));}},{rootMargin:'1200px 0px'}); io.observe(tvWrap);}
+if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){io.disconnect(); if(GL&&GL.zapPreload) GL.zapPreload(CH.map(c=>c.src)); else if(MZ) MZ.preload(CH.map(c=>c.src));}},{rootMargin:'1200px 0px'}); io.observe(tvWrap);}
 tv.addEventListener('click',e=>{
   zaps++; ch=(ch+1)%CH.length; seen.add(ch);
   TVM.heat=Math.min(1.5,TVM.heat+0.17);
@@ -1474,17 +1471,65 @@ tv.addEventListener('click',e=>{
   TVM.vx+=-ky*9*f; TVM.vy+=kx*10*f; TVM.vs=Math.max(-0.05,TVM.vs-0.035*f);
   TVM.jvx+= (Math.random()-0.5)*TVM.heat*10*f; TVM.jvy+=(Math.random()-0.5)*TVM.heat*10*f;
   if(GL&&GL.zapTo) GL.zapTo(CH[ch].src,cx,cy,TVM.heat);
+  else if(MZ) MZ.zapTo(CH[ch].src,cx,cy,TVM.heat);
   else{
     tvWrap.classList.remove('flash'); tv.classList.remove('flash'); void tv.offsetWidth;
     tvWrap.classList.add('flash'); tv.classList.add('flash');
-    if(!RM){const tr=tv.getBoundingClientRect(), px=(e.detail?e.clientX-tr.left:tr.width/2), py=(e.detail?e.clientY-tr.top:tr.height/2);
-      const wv=$('#tvWave'), fl=$('#tvFlare'); wv.style.left=px+'px'; wv.style.top=py+'px'; wv.style.setProperty('--heat',TVM.heat.toFixed(2));
-      fl.style.setProperty('--fx',px+'px'); fl.style.setProperty('--fy',py+'px');
-      [wv,fl].forEach(x=>{x.classList.remove('go'); void x.offsetWidth; x.classList.add('go');});}
     tvVid.src=CH[ch].src; tvVid.play().catch(()=>{});
     clearTimeout(tv._ft); tv._ft=setTimeout(()=>{tv.classList.remove('flash'); tvWrap.classList.remove('flash');},RM?0:450);
   }
 });
+
+/* mobile : le zap en WebGL, mais seulement dans le cadre (le reste du site reste léger) */
+function initMiniZap(){
+  if(GL||!window.THREE||RM) return null;
+  const cv=document.createElement('canvas'); cv.className='mz'; cv.setAttribute('aria-hidden','true');
+  let rd; try{rd=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true,powerPreference:'high-performance'});}catch(err){return null;}
+  tv.appendChild(cv); tv.classList.add('mz-on'); tvVid.pause(); tvVid.removeAttribute('autoplay');
+  rd.setClearColor(0x000000,0);
+  const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,-1000,1000);
+  const mkT=v=>{const x=new THREE.VideoTexture(v); x.minFilter=THREE.LinearFilter; x.magFilter=THREE.LinearFilter; x.generateMipmaps=false; return x;};
+  const pool=new Map();
+  function getV(src){let p=pool.get(src); if(!p){const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.preload='auto'; v.src=src;
+    p={v,tex:mkT(v),res:new THREE.Vector2(16,9)}; v.addEventListener('loadedmetadata',()=>{if(v.videoWidth)p.res.set(v.videoWidth,v.videoHeight);}); pool.set(src,p);} return p;}
+  const first=getV(CH[0].src);
+  const mat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_ZAP,transparent:true,depthTest:false,uniforms:{
+    uA:{value:first.tex},uB:{value:first.tex},uResA:{value:first.res},uResB:{value:first.res},
+    uRes:{value:new THREE.Vector2(1,1)},uFrame:{value:new THREE.Vector2(1,1)},uRad:{value:14},
+    uMix:{value:0},uBurst:{value:0},uGlow:{value:0},uHeat:{value:0},uCenter:{value:new THREE.Vector2(0.5,0.5)},uMouse:{value:new THREE.Vector2(0.5,0.5)},uAct:{value:0},uTime:{value:0},uAlpha:{value:1},
+    uVel:{value:0},uProg:{value:0},uHover:{value:0}}});
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(1,1),mat); scene.add(mesh);
+  const st={cur:first,next:null,mix:0,run:false,t0:0,burst:0,glow:0,act:0,vis:false,w:0,h:0};
+  function size(){const w=tv.clientWidth,h=tv.clientHeight; if(!w||!h) return; st.w=w; st.h=h; const p=Math.round(h*0.34), W=w+2*p, H=h+2*p;
+    cv.style.cssText='position:absolute;left:'+(-p)+'px;top:'+(-p)+'px;width:'+W+'px;height:'+H+'px;pointer-events:none;z-index:1';
+    rd.setPixelRatio(Math.min(devicePixelRatio||1,2)); rd.setSize(W,H,false);
+    cam.left=-W/2; cam.right=W/2; cam.top=H/2; cam.bottom=-H/2; cam.updateProjectionMatrix();
+    mesh.scale.set(W,H,1); mat.uniforms.uRes.value.set(W,H); mat.uniforms.uFrame.value.set(w,h);}
+  size(); addEventListener('resize',size);
+  function settle(){ if(!st.next) return; if(st.cur!==st.next) st.cur.v.pause(); st.cur=st.next; st.next=null;
+    const u=mat.uniforms; u.uA.value=st.cur.tex; u.uResA.value=st.cur.res; u.uB.value=st.cur.tex; u.uResB.value=st.cur.res; st.mix=0; st.run=false;}
+  function zapTo(src,cx,cy,heat){ settle(); const p=getV(src); try{p.v.currentTime=0;}catch(e){} p.v.play().catch(()=>{});
+    const u=mat.uniforms; u.uB.value=p.tex; u.uResB.value=p.res; u.uCenter.value.set(cx,cy); u.uMouse.value.set(cx,cy);
+    st.next=p; st.burst=1; st.act=1; st.glow=Math.min(1.4,st.glow*0.5+0.6+heat*0.35); st.t0=performance.now(); st.run=true; }
+  function loop(n){
+    if(GL){cv.remove(); tv.classList.remove('mz-on'); return;}
+    if(st.vis){
+      if(tv.clientWidth!==st.w||tv.clientHeight!==st.h) size();
+      if(st.cur.v.paused) st.cur.v.play().catch(()=>{});
+      const u=mat.uniforms;
+      if(st.run){const k=Math.min((n-st.t0)/620,1); st.mix=1-Math.pow(1-k,3); if(k>=1) settle();}
+      u.uMix.value=st.mix; u.uBurst.value=Math.min(1.4,st.burst*(0.8+TVM.heat*0.4)); u.uGlow.value=st.glow; u.uHeat.value=TVM.heat;
+      u.uAct.value=st.act*0.8; u.uTime.value=n/1000;
+      st.burst*=0.92; st.glow*=0.955; st.act*=0.94;
+      rd.render(scene,cam);
+    }
+    requestAnimationFrame(loop);
+  }
+  if('IntersectionObserver' in window){new IntersectionObserver(es=>es.forEach(x=>{st.vis=x.isIntersecting; if(!st.vis){st.cur.v.pause(); if(st.next) st.next.v.pause();}}),{rootMargin:'100px 0px'}).observe(tvWrap);} else st.vis=true;
+  requestAnimationFrame(loop);
+  return {zapTo,preload:list=>list.forEach(getV)};
+}
+let MZ=null; try{MZ=initMiniZap();}catch(err){console.warn('zap mobile indisponible',err); MZ=null;}
 const visit=$('#visit'), t0visit=Date.now();
 setInterval(()=>{const s=Math.floor((Date.now()-t0visit)/1000); visit.textContent=pad(Math.floor(s/60))+':'+pad(s%60);},1000);
 
