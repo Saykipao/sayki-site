@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Sayki Studio · Impossible à oublier</title>
+<title>Sayki Studio · Devenez impossible à oublier</title>
 <meta name="description" content="Sayki Studio écrit et réalise des films qui racontent une histoire : films d’animation explicatifs, films de notoriété, films pour événement et personnages de marque, pour les marques et les agences, en Belgique. Spécialistes de la vidéo sans tournage.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -200,7 +200,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* ---------- Manifeste (épinglé) ---------- */
 .manifesto{position:relative;height:260vh}
 @media (max-width:899px){.manifesto{height:190vh}}
-@media (max-width:640px){.hero-tc{display:none}}
+@media (max-width:640px){.hero-tc{display:none}.h1{font-size:calc((100vw - 2 * var(--pad)) / 3.75)}.h1 .ln>span{white-space:nowrap}}
 .pin-in{height:100svh;position:sticky;top:0;overflow:hidden}
 .is-smooth .pin-in{position:relative}
 .manifesto .pin-in{display:grid;align-content:center}
@@ -268,14 +268,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 @media (max-width:520px){.frame{grid-template-columns:minmax(0,1fr)}.frame .n{grid-row:auto}}
 .no-pin #methode .pin-in{padding-block:0}
 html:not(.h-on) #methode .pin-in{height:auto;position:relative;overflow:visible;padding-bottom:var(--sec)}
-html:not(.h-on) .track{display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:max(var(--pad), env(safe-area-inset-left,0px));scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:28px}
-html:not(.h-on) .track::-webkit-scrollbar{display:none}
-html:not(.h-on) .track::after{content:"";flex:0 0 1px}
-html:not(.h-on) .frame{flex:0 0 min(84%,520px);scroll-snap-align:start}
-.swipe{display:none;margin:0;color:var(--cendre)}
-html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
-.swipe i{display:block;width:6px;height:6px;border-radius:50%;background:var(--trait);transition:background .3s,width .3s}
-.swipe i.on{background:var(--violet);width:18px;border-radius:6px}
+html:not(.h-on) .track{gap:8px}
 
 /* ---------- Calque clair ---------- */
 .light{--ecran:#150A26;--cendre:#5D5372;--trait:rgba(21,10,38,.12);--violet-clair:#7A1FE0;position:relative;z-index:3;background:#F6F3FA;color:var(--ecran)}
@@ -338,8 +331,15 @@ html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
 @keyframes zapB{0%,82%,97%,100%{opacity:0;transform:none;clip-path:inset(0 0 0 0)}84%{opacity:.9;transform:translate(7px,0);clip-path:inset(50% 0 20% 0)}87%{opacity:.9;transform:translate(-6px,0);clip-path:inset(14% 0 64% 0)}90%{opacity:.8;transform:translate(4px,0);clip-path:inset(70% 0 10% 0)}93%{opacity:.9;transform:translate(-5px,0);clip-path:inset(2% 0 80% 0)}}
 .zap:hover,.zap:hover::before,.zap:hover::after{animation-duration:.6s}
 .tv-wrap{position:relative;z-index:1;grid-column:2;grid-row:1/3;align-self:center;justify-self:start;width:96%;margin-left:-11%;--heat:0}
-.tv-halo{position:absolute;inset:-14%;border-radius:40px;background:radial-gradient(closest-side,rgba(158,55,255,.6),rgba(222,80,210,.22) 55%,transparent);filter:blur(40px);opacity:calc(.3 + var(--heat)*.55);transform:scale(calc(1 + var(--heat)*.22));pointer-events:none;transition:opacity .9s var(--ease-out)}
-.tv-wrap.flash .tv-halo{opacity:1;transition-duration:.05s}
+.tv-halo{position:absolute;inset:-22%;border-radius:40px;background:radial-gradient(closest-side,rgba(158,55,255,.6),rgba(222,80,210,.22) 55%,transparent);filter:blur(40px);opacity:calc(.3 + var(--heat)*.55);transform:scale(calc(1 + var(--heat)*.22));pointer-events:none;transition:opacity .9s var(--ease-out)}
+.tv-wrap.flash .tv-halo{opacity:1;transform:scale(calc(1.15 + var(--heat)*.25));transition-duration:.05s}
+.tv-wave{position:absolute;z-index:3;left:0;top:0;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;pointer-events:none;opacity:0;border:3px solid rgba(255,255,255,.95);box-shadow:0 0 18px 6px rgba(222,80,210,.85),0 0 46px 14px rgba(158,55,255,.7),inset 0 0 22px 6px rgba(60,220,255,.65)}
+.tv-wave.go{animation:tvWave .75s var(--ease-out) forwards}
+@keyframes tvWave{0%{opacity:1;transform:scale(.2)}70%{opacity:.85}100%{opacity:0;transform:scale(calc(9 + var(--heat,0)*4))}}
+.tv-flare{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:radial-gradient(circle at var(--fx,50%) var(--fy,50%),rgba(255,255,255,.85),rgba(222,80,210,.45) 30%,rgba(158,55,255,0) 70%);mix-blend-mode:screen}
+.tv-flare.go{animation:tvFlare .6s var(--ease-out) forwards}
+@keyframes tvFlare{0%{opacity:1}100%{opacity:0}}
+.is-gl .tv-wave,.is-gl .tv-flare{display:none}
 .is-gl .tv-halo{display:none}
 .tv{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0d0619;padding:0;border:0;-webkit-tap-highlight-color:transparent;isolation:isolate;will-change:transform;transform-origin:50% 50%}
 .tv::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,rgba(0,0,0,.24) 0 1px,transparent 1px 3px);opacity:.5}
@@ -365,7 +365,7 @@ html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
 .cta-foot{grid-column:1;grid-row:2;align-self:start;position:relative;z-index:2;margin-top:clamp(26px,2.6vw,44px);max-width:min(470px,calc(89% - 24px))}
 .cta-foot .visit{margin-top:0}
 .cta-foot .cta-row{margin-top:clamp(28px,3vw,44px)}
-@media (max-width:860px){.zap-msg{grid-row:3;margin-top:22px;font-size:clamp(26px,7.4vw,40px)}.cta-stage{grid-template-columns:minmax(0,1fr)}.cta-head{grid-row:1;margin-bottom:24px}.tv-wrap{grid-column:1;grid-row:2;width:100%;margin-left:0}.cta-foot{grid-row:4;max-width:none;margin-top:36px}.cta-head .display{width:auto;max-width:10ch}}
+@media (max-width:860px){.zap-msg{grid-row:4;margin-top:22px;font-size:clamp(26px,7.4vw,40px)}.cta-stage{grid-template-columns:minmax(0,1fr)}.cta-head{grid-row:1;margin-bottom:24px}.tv-wrap{grid-column:1;grid-row:3;width:100%;margin-left:0}.cta-foot{grid-row:2;max-width:none;margin:8px 0 40px}.cta-head .display{width:auto;max-width:10ch}}
 .cta .lead{margin-top:32px;position:relative;z-index:1}
 .cta-row{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;margin-top:40px;position:relative;z-index:1}
 .cta-row .btn{font-size:17px;padding:22px 32px}
@@ -487,8 +487,9 @@ html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
     </div>
     <div class="hero-tc mono" aria-hidden="true"><span>Showreel 2026 · 16:9 · 24 i/s</span><span>TC <b id="heroTc">00:00:00:00</b></span></div>
     <h1 class="display h1">
-      <span class="ln"><span style="--d:0">Impossible</span></span>
-      <span class="ln"><span style="--d:1"><em>à oublier.</em></span></span>
+      <span class="ln"><span style="--d:0">Devenez</span></span>
+      <span class="ln"><span style="--d:1">impossible</span></span>
+      <span class="ln"><span style="--d:2"><em>à oublier.</em></span></span>
     </h1>
   </section>
 
@@ -553,7 +554,6 @@ html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
         <li class="frame"><span class="n" aria-hidden="true">3</span><h3 class="display t-m">Réaliser</h3><p>Ensuite seulement, la technique. Univers, personnages, voix, montage, musique, sans caméra ni plateau.</p></li>
         <li class="frame"><span class="n" aria-hidden="true">4</span><h3 class="display t-m">Décliner</h3><p>16:9 pour l’écran, 9:16 et 1:1 pour les réseaux, en plusieurs langues si besoin.</p></li>
       </ol>
-      <div class="swipe wrap" id="swipe" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><span class="mono">Glissez</span></div>
     </div>
   </section>
 
@@ -602,6 +602,7 @@ html:not(.h-on) .swipe{display:flex;gap:10px;align-items:center}
       <div class="tv-wrap" id="tvWrap">
         <span class="tv-halo" aria-hidden="true"></span>
         <button class="tv" id="tv" type="button" data-cursor="Zapper" aria-label="Passer au film suivant">
+          <span class="tv-flare" id="tvFlare" aria-hidden="true"></span><span class="tv-wave" id="tvWave" aria-hidden="true"></span>
           <video id="tvVid" src="assets/intro.mp4" data-src-m="assets/intro-m.mp4" poster="assets/intro.jpg" autoplay muted loop playsinline preload="metadata"></video>
         </button>
       </div>
@@ -802,11 +803,9 @@ document.addEventListener('click',e=>{
 /* épinglages */
 const maniSec=$('#manifeste'), maniIn=$('.pin-in',maniSec);
 const meth=$('#methode'), methIn=$('.pin-in',meth), track=$('#track');
-{const dots=$$('#swipe i'), fr=$$('.frame',track);
- track.addEventListener('scroll',()=>{const x=track.scrollLeft; let k=0,best=1e9; fr.forEach((f,i)=>{const d=Math.abs(f.offsetLeft-track.offsetLeft-x-parseFloat(getComputedStyle(track).paddingLeft)); if(d<best){best=d;k=i;}}); dots.forEach((d,i)=>d.classList.toggle('on',i===k));},{passive:true});}
 let H_ON=false;
 function setupPins(){
-  H_ON=PIN;
+  H_ON=PIN&&innerWidth>=900;
   root.classList.toggle('h-on',H_ON);
 
   if(H_ON){const extra=Math.max(0,track.scrollWidth-innerWidth); meth.style.height=(innerHeight+extra)+'px';}
@@ -1478,6 +1477,10 @@ tv.addEventListener('click',e=>{
   else{
     tvWrap.classList.remove('flash'); tv.classList.remove('flash'); void tv.offsetWidth;
     tvWrap.classList.add('flash'); tv.classList.add('flash');
+    if(!RM){const tr=tv.getBoundingClientRect(), px=(e.detail?e.clientX-tr.left:tr.width/2), py=(e.detail?e.clientY-tr.top:tr.height/2);
+      const wv=$('#tvWave'), fl=$('#tvFlare'); wv.style.left=px+'px'; wv.style.top=py+'px'; wv.style.setProperty('--heat',TVM.heat.toFixed(2));
+      fl.style.setProperty('--fx',px+'px'); fl.style.setProperty('--fy',py+'px');
+      [wv,fl].forEach(x=>{x.classList.remove('go'); void x.offsetWidth; x.classList.add('go');});}
     tvVid.src=CH[ch].src; tvVid.play().catch(()=>{});
     clearTimeout(tv._ft); tv._ft=setTimeout(()=>{tv.classList.remove('flash'); tvWrap.classList.remove('flash');},RM?0:450);
   }
