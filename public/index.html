@@ -201,6 +201,12 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .p7{grid-column:3/12}
 .grid.is-filtered .film{grid-column:span 6;margin-top:0}
 .more{display:flex;justify-content:center;margin-top:clamp(90px,10vw,180px)}
+.f-sep{width:1px;align-self:stretch;margin:4px 6px;background:var(--trait)}
+.filters .f-labo{display:inline-flex;align-items:center;gap:8px;border-style:dashed}
+.filters .f-labo i{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#9E37FF,#DE50D2);box-shadow:0 0 10px rgba(222,80,210,.7)}
+.filters .f-labo sup{font-size:9px;color:var(--violet-clair);margin-left:-2px}
+.filters .f-labo[aria-pressed="true"]{border-style:solid}
+.filters .f-labo[aria-pressed="true"] sup{color:var(--violet)}
 .more[hidden]{display:none}
 .more button{position:relative;display:inline-flex;align-items:center;gap:16px;padding:18px 18px 18px 30px;border:1px solid var(--trait);border-radius:999px;font-family:var(--f-display);font-size:clamp(22px,2vw,30px);line-height:1;color:var(--ecran);overflow:hidden;isolation:isolate;transition:border-color .5s var(--ease-out),color .5s var(--ease-out)}
 .more button::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#9E37FF,#DE50D2);transform:translateY(101%);transition:transform .6s var(--ease-out)}
@@ -566,7 +572,7 @@ html:not(.h-on) .track{gap:8px}
 
   <section class="sec wrap" id="films">
     <div class="sec-hd">
-      <h2 class="display t-xl split" data-glow>Films<sup id="filmCount">18</sup></h2>
+      <h2 class="display t-xl split" data-glow>Films<sup id="filmCount">12</sup></h2>
       <div class="filters" role="group" aria-label="Filtrer les films">
         <button aria-pressed="true" data-f="all">Tous</button>
         <button aria-pressed="false" data-f="explicatif">Explicatifs</button>
@@ -574,13 +580,13 @@ html:not(.h-on) .track{gap:8px}
         <button aria-pressed="false" data-f="evenement">Événement</button>
         <button aria-pressed="false" data-f="identite">Identité</button>
         <button aria-pressed="false" data-f="avatar">Avatar</button>
-        <button aria-pressed="false" data-f="ip">IP</button>
         <button aria-pressed="false" data-f="pub">Pub</button>
-        <button aria-pressed="false" data-f="rd">R&amp;D</button>
+        <span class="f-sep" aria-hidden="true"></span>
+        <button aria-pressed="false" data-f="labo" class="f-labo"><i aria-hidden="true"></i>Labo<sup>07</sup></button>
       </div>
     </div>
     <div class="grid" id="grid"></div>
-    <div class="more" id="more"><button type="button" id="moreBtn" data-cursor="Voir|plus"><span>Voir plus</span><b class="mono" id="moreN">+11</b><i aria-hidden="true"></i></button></div>
+    <div class="more" id="more"><button type="button" id="moreBtn" data-cursor="Voir|plus"><span>Voir plus</span><b class="mono" id="moreN">+5</b><i aria-hidden="true"></i></button></div>
   </section>
 
   <section class="manifesto pin" id="manifeste" aria-label="Manifeste">
@@ -758,26 +764,28 @@ const FILMS={
     defi:'Faire sentir un parfum à travers un écran. Carré Blanc, de la forêt au flacon, en quinze secondes et en vertical.'},
   laforge:{t:'La Forge',hook:'Une identité qui transpire',type:'Identité visuelle',sect:'Sport',client:'La Forge',tc:'60 s',fmt:'16:9 · 1920×1080',fps:'30 i/s',tags:['identite'],v:false,
     defi:'Présenter l’identité visuelle d’une salle de sport : logo, couleurs, typographies et images de campagne, réunis dans un seul film.'},
+  sorcery:{t:'Sorcery Systems',hook:'La magie, version charte graphique',type:'Identité visuelle',sect:'Tech · Santé',client:'Sorcery Systems',tc:'60 s',fmt:'16:9 · 1920×1080',fps:'25 i/s',tags:['identite'],v:false,
+    defi:'Présenter l’identité de Sorcery Systems, des solutions digitales sur mesure pour le secteur de la santé : logo, couleurs, typographie et éléments graphiques, mis en mouvement.'},
   rall:{t:'RALL',hook:'La mascotte entre sur le terrain',type:'Avatar de marque',sect:'Football',client:'RALL',tc:'8 s',fmt:'9:16 · 1080×1920',fps:'24 i/s',tags:['avatar'],v:true,
     defi:'Donner vie à la mascotte du club de football RALL, en personnage d’animation.'},
   baudouin:{t:'Invitation privée',hook:'Une invitation qui prend de la hauteur',type:'Film d’invitation',sect:'Événement privé',client:'Confidentiel',tc:'1 min 45',fmt:'16:9 · 1920×1080',fps:'24 i/s',tags:['evenement'],v:false,
     defi:'Inviter les proches d’un dirigeant à la fête de sa fin de carrière. L’invitation est un film : il range le costume et s’envole en montgolfière.'},
-  sayki:{t:'Sayki',hook:'Limal City, 23 mai 1998',type:'Série originale',sect:'IP',client:'Sayki Studio',tc:'1 min 39',fmt:'9:16 · 1440×2560',fps:'24 i/s',tags:['ip'],v:true,
+  sayki:{t:'Sayki',hook:'Limal City, 23 mai 1998',type:'Série originale',sect:'IP',client:'Sayki Studio',tc:'1 min 39',fmt:'9:16 · 1440×2560',fps:'24 i/s',tags:['labo','ip'],v:true,
     defi:'Notre propre série d’animation. Un ado, une cassette et une ville sous la pluie. Premier épisode en préparation.'},
-  loophole:{t:'The Loop Hole Project',hook:'Une créature venue des abysses',type:'IP originale',sect:'IP',client:'Sayki Studio',tc:'20 s',fmt:'16:9 · 2560×1440',fps:'24 i/s',tags:['ip'],v:false,
+  loophole:{t:'The Loop Hole Project',hook:'Une créature venue des abysses',type:'IP originale',sect:'IP',client:'Sayki Studio',tc:'20 s',fmt:'16:9 · 2560×1440',fps:'24 i/s',tags:['labo','ip'],v:false,
     defi:'Un univers et un personnage originaux, développés de l’idée jusqu’au teaser.'},
-  ascension:{t:'L’ascension',hook:'Bruxelles, après la fin du monde',type:'R&D',sect:'Recherche',client:'Sayki Studio',tc:'33 s',fmt:'16:9',fps:'24 i/s',tags:['rd'],v:false,
+  ascension:{t:'L’ascension',hook:'Bruxelles, après la fin du monde',type:'R&D',sect:'Recherche',client:'Sayki Studio',tc:'33 s',fmt:'16:9',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'Un test : l’Atomium dans un monde d’après. Jusqu’où peut-on pousser l’image et l’émotion sans tournage ?'},
-  disney:{t:'Disney à la maison',hook:'Iron Man sonne à la porte',type:'R&D',sect:'Film de famille',client:'Projet personnel',tc:'2 min 23',fmt:'16:9 · 1920×1080',fps:'24 i/s',tags:['rd'],v:false,
+  disney:{t:'Disney à la maison',hook:'Iron Man sonne à la porte',type:'R&D',sect:'Film de famille',client:'Projet personnel',tc:'2 min 23',fmt:'16:9 · 1920×1080',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'Un film de famille : pour annoncer un voyage à Disney aux enfants, les personnages débarquent à la maison.'},
-  iam:{t:'IAM',hook:'L’école du micro d’argent prend vie',type:'R&D',sect:'Musique',client:'Projet personnel',tc:'27 s',fmt:'16:9 · 1920×1080',fps:'60 i/s',tags:['rd'],v:false,
+  iam:{t:'IAM',hook:'L’école du micro d’argent prend vie',type:'R&D',sect:'Musique',client:'Projet personnel',tc:'27 s',fmt:'16:9 · 1920×1080',fps:'60 i/s',tags:['labo','rd'],v:false,
     defi:'Faire bouger la pochette de L’école du micro d’argent, l’album culte d’IAM.'},
-  ikari:{t:'Ikari',hook:'Un test qui se prend pour un film',type:'R&D',sect:'Animation',client:'Sayki Studio',tc:'60 s',fmt:'16:9',fps:'24 i/s',tags:['rd'],v:false,
+  ikari:{t:'Ikari',hook:'Un test qui se prend pour un film',type:'R&D',sect:'Animation',client:'Sayki Studio',tc:'60 s',fmt:'16:9',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'Un test de film d’animation : un guerrier, des ruines et beaucoup d’éclairs.'},
-  reveal:{t:'Sayki reveal',hook:'Notre logo, à l’encre',type:'R&D',sect:'Motion design',client:'Sayki Studio',tc:'13 s',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['rd'],v:false,
+  reveal:{t:'Sayki reveal',hook:'Notre logo, à l’encre',type:'R&D',sect:'Motion design',client:'Sayki Studio',tc:'13 s',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'Un test d’animation pour le reveal du logo Sayki.'}
 };
-const ORDER=['aurobindo','vocli','bwplus','elba','delforge','laforge','fid', 'arkopharma','smits','baudouin','loophole','rall','disney','ikari', 'ascension','sayki','iam','reveal'];
+const ORDER=['aurobindo','vocli','bwplus','elba','delforge','laforge','fid', 'arkopharma','smits','baudouin','sorcery','rall', 'loophole','sayki','disney','ikari','ascension','iam','reveal'];
 const PAGE=7;
 /* vignettes : les films verticaux ont une version horizontale sur mobile */
 const MOB=matchMedia('(max-width:899px)').matches;
@@ -789,7 +797,7 @@ const grid=$('#grid');
 ORDER.forEach((id,idx)=>{
   const f=FILMS[id];
   const el=document.createElement('article');
-  el.className='film p'+(idx%PAGE+1); el.dataset.film=id; if(idx>=PAGE) el.hidden=true;
+  el.className='film p'+(idx%PAGE+1); el.dataset.film=id; if(idx>=PAGE||f.tags.includes('labo')) el.hidden=true;
   el.innerHTML=`<a href="#films" data-open="${id}" aria-label="${f.t}, ${f.hook}">
     <div class="media${f.v?' v':''}" data-cursor="Voir|le film">
       <img class="m-color" src="assets/${th(id)}.jpg" alt="" loading="lazy" decoding="async">
@@ -941,7 +949,8 @@ const filterBtns=$$('.filters button');
 let filtering=false;
 let curF='all', limit=PAGE;
 const more=$('#more'), moreN=$('#moreN');
-function listFor(f){ return ORDER.filter(id=>f==='all'||FILMS[id].tags.includes(f)); }
+/* « Tous » = le travail livré ; le Labo (IP + R&D) a son propre filtre */
+function listFor(f){ return ORDER.filter(id=>f==='all'?!FILMS[id].tags.includes('labo'):FILMS[id].tags.includes(f)); }
 function syncMore(){ const n=listFor(curF).length-limit; more.hidden=n<=0; if(n>0) moreN.textContent='+'+n; }
 function applyFilter(f,lim){
   filtering=true; curF=f; limit=lim||PAGE;
