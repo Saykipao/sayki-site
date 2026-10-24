@@ -1423,11 +1423,13 @@ const WIPE=(function(){
   gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
   function size(){const d=Math.min(devicePixelRatio||1,1.5); c.width=Math.ceil(innerWidth*d); c.height=Math.ceil(innerHeight*d); gl.viewport(0,0,c.width,c.height);}
   return function(mode,dur,done){
-    size(); c.style.display='block'; const s=performance.now();
-    (function step(n){const k=Math.min((n-s)/dur,1), q=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+    size(); c.style.display='block'; const s=performance.now(); let fin=false;
+    const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); if(mode===1) c.style.display='none'; else {gl.clearColor(0.082,0.039,0.149,1); gl.clear(gl.COLOR_BUFFER_BIT);} if(done) done();};
+    const safe=setTimeout(finish,dur+350); /* filet : si l'onglet est en arrière-plan, la transition ne reste jamais bloquée */
+    (function step(n){if(fin) return; const k=Math.min((n-s)/dur,1), q=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
       gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
       gl.uniform1f(uK,q); gl.uniform1f(uM,mode); gl.uniform1f(uT,n/1000); gl.uniform2f(uR,c.width,c.height); gl.drawArrays(gl.TRIANGLES,0,3);
-      if(k<1) requestAnimationFrame(step); else {if(mode===1) c.style.display='none'; if(done) done();}})(s);
+      if(k<1) requestAnimationFrame(step); else finish();})(s);
   };
 })();
 function curtain(mid,end){
