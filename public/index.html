@@ -200,6 +200,18 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .p6{grid-column:6/13;margin-top:20vh}
 .p7{grid-column:3/12}
 .grid.is-filtered .film{grid-column:span 6;margin-top:0}
+.more{display:flex;justify-content:center;margin-top:clamp(90px,10vw,180px)}
+.more[hidden]{display:none}
+.more button{position:relative;display:inline-flex;align-items:center;gap:16px;padding:18px 18px 18px 30px;border:1px solid var(--trait);border-radius:999px;font-family:var(--f-display);font-size:clamp(22px,2vw,30px);line-height:1;color:var(--ecran);overflow:hidden;isolation:isolate;transition:border-color .5s var(--ease-out),color .5s var(--ease-out)}
+.more button::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#9E37FF,#DE50D2);transform:translateY(101%);transition:transform .6s var(--ease-out)}
+.more button:hover{border-color:transparent;color:#fff}
+.more button:hover::before{transform:none}
+.more b{font-weight:400;font-size:12px;letter-spacing:.08em;color:var(--violet-clair);transition:color .5s}
+.more button:hover b{color:#fff}
+.more i{position:relative;width:42px;height:42px;border-radius:50%;background:var(--ecran);transition:transform .6s var(--ease-out),background .5s}
+.more i::before,.more i::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:1.5px;margin:-.75px 0 0 -7px;background:var(--nuit)}
+.more i::after{transform:rotate(90deg)}
+.more button:hover i{transform:rotate(90deg) scale(1.06)}
 @media (max-width:899px){
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .film{grid-column:auto !important;margin-top:0 !important}
@@ -554,17 +566,21 @@ html:not(.h-on) .track{gap:8px}
 
   <section class="sec wrap" id="films">
     <div class="sec-hd">
-      <h2 class="display t-xl split" data-glow>Films<sup id="filmCount">07</sup></h2>
+      <h2 class="display t-xl split" data-glow>Films<sup id="filmCount">18</sup></h2>
       <div class="filters" role="group" aria-label="Filtrer les films">
         <button aria-pressed="true" data-f="all">Tous</button>
-        <button aria-pressed="false" data-f="explicatif">Explicatif</button>
+        <button aria-pressed="false" data-f="explicatif">Explicatifs</button>
         <button aria-pressed="false" data-f="notoriete">Notoriété</button>
         <button aria-pressed="false" data-f="evenement">Événement</button>
         <button aria-pressed="false" data-f="identite">Identité</button>
         <button aria-pressed="false" data-f="avatar">Avatar</button>
+        <button aria-pressed="false" data-f="ip">IP</button>
+        <button aria-pressed="false" data-f="pub">Pub</button>
+        <button aria-pressed="false" data-f="rd">R&amp;D</button>
       </div>
     </div>
     <div class="grid" id="grid"></div>
+    <div class="more" id="more"><button type="button" id="moreBtn" data-cursor="Voir|plus"><span>Voir plus</span><b class="mono" id="moreN">+11</b><i aria-hidden="true"></i></button></div>
   </section>
 
   <section class="manifesto pin" id="manifeste" aria-label="Manifeste">
@@ -734,12 +750,38 @@ const FILMS={
     defi:'Rendre une entreprise qui travaille pour le luxe aussi prestigieuse que ses clients. Nous l’avons mise en scène comme une publicité de luxe.'},
   smits:{t:'Pharmacie Smits',hook:'L’ours qui tient la pharmacie',type:'Avatar de marque',sect:'Pharmacie',client:'Pharmacie Smits, Wavre',agence:'—',tc:'45 s',fmt:'9:16 · 1080×1920',fps:'24 i/s',tags:['avatar'],v:true,
     defi:'Donner un visage à une pharmacie de quartier. Smithy, l’ours en blouse, accompagne les familles de Wavre au fil des saisons.'},
-  arkopharma:{t:'Arkopharma',hook:'Réveiller l’âme des pharmaciens',type:'Film pour séminaire',sect:'Pharma',client:'Arkopharma · Le pharmacien',agence:'Nikita Concept',tc:'4 min 30',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['explicatif','evenement'],v:false,
+  arkopharma:{t:'Arkopharma',hook:'Réveiller l’âme des pharmaciens',type:'Film pour séminaire',sect:'Pharma',client:'Arkopharma · Le pharmacien',agence:'Nikita Concept',tc:'4 min 30',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['evenement'],v:false,
     defi:'Montrer l’action des plantes sur le corps à des pharmaciens qui en ont tout vu. Nous l’avons racontée comme un conte.'},
   fid:{t:'FID-Manager',hook:'La comptabilité, version blockbuster',type:'Film pour événement',sect:'Expertise comptable',client:'FID-Manager · Tech-Day',agence:'BeeSight',tc:'6 min',fmt:'16:9 · 1920×1080',fps:'24 i/s',tags:['evenement'],v:false,
-    defi:'Rendre le métier de comptable héroïque, le temps d’une projection au Kinepolis devant 400 professionnels. Suspense, humour, et des personnages animés qui croisent de vrais acteurs.'}
+    defi:'Rendre le métier de comptable héroïque, le temps d’une projection au Kinepolis devant 400 professionnels. Suspense, humour, et des personnages animés qui croisent de vrais acteurs.'},
+  delforge:{t:'Guy Delforge',hook:'Un parfum en quinze secondes',type:'Publicité',sect:'Parfumerie',client:'Parfums de Namur · Guy Delforge',tc:'15 s',fmt:'9:16 · 1080×1920',fps:'60 i/s',tags:['pub'],v:true,
+    defi:'Faire sentir un parfum à travers un écran. Carré Blanc, de la forêt au flacon, en quinze secondes et en vertical.'},
+  laforge:{t:'La Forge',hook:'Une identité qui transpire',type:'Identité visuelle',sect:'Sport',client:'La Forge',tc:'60 s',fmt:'16:9 · 1920×1080',fps:'30 i/s',tags:['identite'],v:false,
+    defi:'Présenter l’identité visuelle d’une salle de sport : logo, couleurs, typographies et images de campagne, réunis dans un seul film.'},
+  rall:{t:'RALL',hook:'La mascotte entre sur le terrain',type:'Avatar de marque',sect:'Football',client:'RALL',tc:'8 s',fmt:'9:16 · 1080×1920',fps:'24 i/s',tags:['avatar'],v:true,
+    defi:'Donner vie à la mascotte du club de football RALL, en personnage d’animation.'},
+  baudouin:{t:'Invitation privée',hook:'Une invitation qui prend de la hauteur',type:'Film d’invitation',sect:'Événement privé',client:'Confidentiel',tc:'1 min 45',fmt:'16:9 · 1920×1080',fps:'24 i/s',tags:['evenement'],v:false,
+    defi:'Inviter les proches d’un dirigeant à la fête de sa fin de carrière. L’invitation est un film : il range le costume et s’envole en montgolfière.'},
+  sayki:{t:'Sayki',hook:'Limal City, 23 mai 1998',type:'Série originale',sect:'IP',client:'Sayki Studio',tc:'1 min 39',fmt:'9:16 · 1440×2560',fps:'24 i/s',tags:['ip'],v:true,
+    defi:'Notre propre série d’animation. Un ado, une cassette et une ville sous la pluie. Premier épisode en préparation.'},
+  loophole:{t:'The Loop Hole Project',hook:'Une créature venue des abysses',type:'IP originale',sect:'IP',client:'Sayki Studio',tc:'20 s',fmt:'16:9 · 2560×1440',fps:'24 i/s',tags:['ip'],v:false,
+    defi:'Un univers et un personnage originaux, développés de l’idée jusqu’au teaser.'},
+  ascension:{t:'L’ascension',hook:'Bruxelles, après la fin du monde',type:'R&D',sect:'Recherche',client:'Sayki Studio',tc:'33 s',fmt:'16:9',fps:'24 i/s',tags:['rd'],v:false,
+    defi:'Un test : l’Atomium dans un monde d’après. Jusqu’où peut-on pousser l’image et l’émotion sans tournage ?'},
+  disney:{t:'Disney à la maison',hook:'Iron Man sonne à la porte',type:'R&D',sect:'Film de famille',client:'Projet personnel',tc:'2 min 23',fmt:'16:9 · 1920×1080',fps:'24 i/s',tags:['rd'],v:false,
+    defi:'Un film de famille : pour annoncer un voyage à Disney aux enfants, les personnages débarquent à la maison.'},
+  iam:{t:'IAM',hook:'L’école du micro d’argent prend vie',type:'R&D',sect:'Musique',client:'Projet personnel',tc:'27 s',fmt:'16:9 · 1920×1080',fps:'60 i/s',tags:['rd'],v:false,
+    defi:'Faire bouger la pochette de L’école du micro d’argent, l’album culte d’IAM.'},
+  ikari:{t:'Ikari',hook:'Un test qui se prend pour un film',type:'R&D',sect:'Animation',client:'Sayki Studio',tc:'60 s',fmt:'16:9',fps:'24 i/s',tags:['rd'],v:false,
+    defi:'Un test de film d’animation : un guerrier, des ruines et beaucoup d’éclairs.'},
+  reveal:{t:'Sayki reveal',hook:'Notre logo, à l’encre',type:'R&D',sect:'Motion design',client:'Sayki Studio',tc:'13 s',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['rd'],v:false,
+    defi:'Un test d’animation pour le reveal du logo Sayki.'}
 };
-const ORDER=['aurobindo','vocli','bwplus','elba','smits','arkopharma','fid'];
+const ORDER=['aurobindo','vocli','bwplus','elba','delforge','laforge','fid', 'arkopharma','smits','baudouin','loophole','rall','disney','ikari', 'ascension','sayki','iam','reveal'];
+const PAGE=7;
+/* vignettes : les films verticaux ont une version horizontale sur mobile */
+const MOB=matchMedia('(max-width:899px)').matches;
+const th=id=>id+(FILMS[id].v&&MOB?'-h':'');
 const CLIENTS=['Guerlain','Proximus','Bioderma','Arkopharma','Aurobindo','Elba','BW+','Hilarious','Nikita Concept','Mona Studio','Flying Fish','TreeOsk','La Forge','Sorcery Systems','Rayon Belge','Tante Riche','Pat le Sommelier'];
 
 /* ================= Construction ================= */
@@ -747,12 +789,12 @@ const grid=$('#grid');
 ORDER.forEach((id,idx)=>{
   const f=FILMS[id];
   const el=document.createElement('article');
-  el.className='film p'+(idx+1); el.dataset.film=id;
+  el.className='film p'+(idx%PAGE+1); el.dataset.film=id; if(idx>=PAGE) el.hidden=true;
   el.innerHTML=`<a href="#films" data-open="${id}" aria-label="${f.t}, ${f.hook}">
     <div class="media${f.v?' v':''}" data-cursor="Voir|le film">
-      <img class="m-color" src="assets/${id}.jpg" alt="" loading="lazy" decoding="async">
-      <img class="m-duo" src="assets/${id}-duo.jpg" alt="" loading="lazy" decoding="async">
-      <video muted loop playsinline preload="none" data-src="assets/${id}.mp4"></video>
+      <img class="m-color" src="assets/${th(id)}.jpg" alt="" loading="lazy" decoding="async">
+      <img class="m-duo" src="assets/${th(id)}-duo.jpg" alt="" loading="lazy" decoding="async">
+      <video muted loop playsinline preload="none" data-src="assets/${th(id)}.mp4"></video>
     </div>
     <div class="cap"><p class="mono cap-k">${f.t} · ${f.type}</p><span class="tc mono">${f.tc}</span><h3 class="display">${f.hook}</h3></div></a>`;
   grid.appendChild(el);
@@ -897,10 +939,15 @@ function revealCheck(){
 /* ================= Filtres animés ================= */
 const filterBtns=$$('.filters button');
 let filtering=false;
-function applyFilter(f){
-  filtering=true;
+let curF='all', limit=PAGE;
+const more=$('#more'), moreN=$('#moreN');
+function listFor(f){ return ORDER.filter(id=>f==='all'||FILMS[id].tags.includes(f)); }
+function syncMore(){ const n=listFor(curF).length-limit; more.hidden=n<=0; if(n>0) moreN.textContent='+'+n; }
+function applyFilter(f,lim){
+  filtering=true; curF=f; limit=lim||PAGE;
+  const want=new Set(listFor(f).slice(0,limit));
   const films=$$('.film');
-  const match=el=>f==='all'||FILMS[el.dataset.film].tags.includes(f);
+  const match=el=>want.has(el.dataset.film);
   const leaving=films.filter(el=>!el.hidden&&!match(el));
   const entering=films.filter(el=>el.hidden&&match(el));
   const stay=films.filter(el=>!el.hidden&&match(el));
@@ -917,7 +964,8 @@ function applyFilter(f){
       el.style.transform=`translate(${a.left-b.left}px,${a.top-b.top}px) scale(${a.width/b.width},${a.height/b.height})`;
     });
     entering.forEach(el=>{el.style.transformOrigin='50% 50%';el.style.transform='translateY(80px) scale(.94)';});
-    $('#filmCount').textContent=String(stay.length+entering.length).padStart(2,'0');
+    $('#filmCount').textContent=String(listFor(f).length).padStart(2,'0');
+    syncMore();
     void grid.offsetWidth;
     requestAnimationFrame(()=>{
       stay.forEach(el=>{el.style.transition=`transform ${DUR}ms ${EASE}`; el.style.transform='';});
@@ -926,10 +974,29 @@ function applyFilter(f){
     });
   }, leaving.length&&!RM?380:0);
 }
+/* voir plus : les 7 suivants montent en douceur, en cascade, depuis le bas */
+function showMore(){
+  if(filtering) return;
+  filtering=true; limit+=PAGE;
+  const want=listFor(curF).slice(0,limit), films=$$('.film');
+  const entering=films.filter(el=>el.hidden&&want.includes(el.dataset.film));
+  const DUR=RM?0:1100, EASE='cubic-bezier(.16,1,.3,1)';
+  entering.forEach(el=>{el.hidden=false;el.classList.add('is-out');el.style.transition='none';el.style.transformOrigin='50% 0';el.style.transform='translateY(140px) scale(.92)';el.style.clipPath='inset(0 0 100% 0)';});
+  syncMore();
+  void grid.offsetWidth;
+  requestAnimationFrame(()=>{
+    entering.forEach((el,i)=>{const d=120+i*110;
+      el.style.transition=`transform ${DUR}ms ${EASE} ${d}ms, opacity 700ms ${EASE} ${d}ms, clip-path ${DUR}ms ${EASE} ${d}ms`;
+      el.style.transform=''; el.style.clipPath='inset(0 0 0% 0)'; el.classList.remove('is-out');});
+    setTimeout(()=>{entering.forEach(el=>{el.style.transition='';el.style.transform='';el.style.transformOrigin='';el.style.clipPath='';}); filtering=false;}, DUR+200+entering.length*110);
+  });
+}
+$('#moreBtn').addEventListener('click',showMore);
+syncMore();
 filterBtns.forEach(b=>b.addEventListener('click',()=>{
   if(filtering||b.getAttribute('aria-pressed')==='true') return;
   filterBtns.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
-  applyFilter(b.dataset.f);
+  applyFilter(b.dataset.f,PAGE);
 }));
 
 /* ================= Petits effets ================= */
@@ -1244,7 +1311,8 @@ function initGL(){
       uHover:{value:0},uMouse:{value:new THREE.Vector2(0.5,0.5)},uTime:{value:0},uVel:{value:0},uAlpha:{value:0},uProg:{value:0},uPar:{value:0}}});
     const mesh=new THREE.Mesh(geo,mat); mesh.visible=false; scene.add(mesh);
     const it={id,el,media,mat,mesh,ready:false,h:0,ht:0,uv:0,alphaT:1,a:0,trans:null,parked:false,vid:null,vidOn:false,mt:new THREE.Vector2(0.5,0.5)};
-    loader.load('assets/'+id+'.jpg',tex=>{tex.minFilter=THREE.LinearFilter;tex.generateMipmaps=false;mat.uniforms.uTex.value=tex;mat.uniforms.uTexRes.value.set(tex.image.width,tex.image.height);it.ready=true;});
+    it.load=()=>{ if(it.req) return; it.req=true; loader.load('assets/'+th(id)+'.jpg',tex=>{tex.minFilter=THREE.LinearFilter;tex.generateMipmaps=false;mat.uniforms.uTex.value=tex;mat.uniforms.uTexRes.value.set(tex.image.width,tex.image.height);it.ready=true;}); };
+    if(!el.hidden) it.load();
     media.addEventListener('mouseenter',()=>{it.ht=1;ensureVid(it);it.vid.play().catch(()=>{});});
     media.addEventListener('mousemove',e=>{const r=media.getBoundingClientRect(); it.mt.set((e.clientX-r.left)/r.width,1-(e.clientY-r.top)/r.height);});
     media.addEventListener('mouseleave',()=>{if(!it.trans&&!busy&&!filmOn) it.ht=0;});
@@ -1252,7 +1320,7 @@ function initGL(){
   });
   function ensureVid(it){
     if(it.vid) return;
-    const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.preload='auto'; v.src='assets/'+it.id+'.mp4';
+    const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.preload='auto'; v.src='assets/'+th(it.id)+'.mp4';
     v.addEventListener('playing',()=>{ if(!it.vtex){it.vtex=mkVT(v);it.mat.uniforms.uVid.value=it.vtex;it.mat.uniforms.uVidRes.value.set(v.videoWidth||16,v.videoHeight||9);} it.vidOn=true;});
     it.vid=v;
   }
@@ -1345,6 +1413,7 @@ function initGL(){
       const u=it.mat.uniforms;
       const r=it.trans?lerpR(it.trans.from,it.trans.to,it.trans.p):it.media.getBoundingClientRect();
       const vis=!it.parked&&r.width>0&&r.bottom>-200&&r.top<H+200;
+      if(r.width>0&&!it.req) it.load();
       it.mesh.visible=vis&&it.ready;
       if(!it.mesh.visible) continue;
       place(it.mesh,r);
@@ -1390,7 +1459,7 @@ function fillFp(id){
   const f=FILMS[id];
   $('#fpCrumb').textContent=f.t; $('#fpKicker').textContent=f.t+' · '+f.type; $('#fpTitle').textContent=f.hook;
   $('#fpDefi').textContent=f.defi;
-  $('#fpMeta').innerHTML=[['Client',f.client],['Agence',f.agence],['Durée',f.tc],['Format',f.fmt],['Cadence',f.fps]].map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('');
+  $('#fpMeta').innerHTML=[['Client',f.client],['Agence',f.agence],['Durée',f.tc],['Format',f.fmt],['Cadence',f.fps]].filter(([k,v])=>v).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('');
   fp.classList.toggle('is-v',f.v);
   fpVid.poster='assets/'+id+'.jpg'; fpVid.src='assets/'+id+'.mp4';
 
@@ -1645,7 +1714,7 @@ $$('.acc-h').forEach(b=>b.addEventListener('click',()=>{
 })();
 /* la vidéo qu'on zappe */
 const tv=$('#tv'), tvWrap=$('#tvWrap'), tvVid=$('#tvVid'), zapMsg=$('#zapMsg'), ctaBtn=$('#contact .btn');
-const CH=[{src:(innerWidth<=640&&!GL)?'assets/intro-m.mp4':'assets/intro.mp4',n:'Showreel'}].concat(ORDER.map(id=>({src:'assets/'+id+'.mp4',n:FILMS[id].t})));
+const CH=[{src:(innerWidth<=640&&!GL)?'assets/intro-m.mp4':'assets/intro.mp4',n:'Showreel'}].concat(ORDER.map(id=>({src:'assets/'+id+(FILMS[id].v?'-h':'')+'.mp4',n:FILMS[id].t})));
 const LINES=["Ah. Vous zappez.", "Comme vos clients devant une pub ennuyeuse.", "Vous voyez le problème.", "Respirez. Les films ne vont pas s’enfuir.", "Vous cherchez la chaîne météo ?", "Ce film-là a demandé trois semaines. Vous lui avez donné une seconde.", "Ça va, le poignet ?", "Vous savez qu’on peut aussi regarder un film en entier ?", "C’est exactement ce que vos clients font à vos vidéos.", "Ce n’est pas un jeu. Bon, d’accord, c’est un jeu.", "Plus vous cliquez, plus ça brille. Vous avez remarqué.", "Bon, quand vous aurez fini de cliquer comme un malade, on parle de votre film ?", "Votre index fait plus de sport que vous cette semaine.", "Ce n’est pas un bouton d’ascenseur. Appuyer plus fort n’accélère rien.", "Chaque clic, c’est un client qui zappe. Sauf ici, où c’est vous.", "Vous êtes du genre à lire la fin du livre en premier, non ?", "Votre souris demande une pause syndicale.", "Encore un clic et on vous facture le chauffage.", "Vous zappez plus vite que votre ado. Chapeau.", "Il n’y a pas de pub entre les films. La pub, c’est nous.", "Votre patron pense que vous travaillez. Continuez.", "À ce rythme, vous aurez tout vu avant le café.", "Clic. Clic. Clic. On vous entend d’ici.", "Vous testez la solidité du site ? Il tient.", "Si votre public clique aussi vite, il vous faut un film. Vite.", "Promis, le prochain est encore mieux. Ou pas. Cliquez pour voir.", "Si vous cherchez le bouton « Passer la pub », ce n’est pas celui-là.", "Votre souris vient de nous envoyer un SOS.", "Le zapping, c’est comme les chips. Impossible de s’arrêter.", "Imaginez ce clic sur « Réserver mes 30 minutes ». Joli, non ?", "Le bouton violet, à gauche, commence à être jaloux.", "Vos clients zappent. Nous, on les fait rester.", "C’est votre pause-café, ça ?", "Vous faites ça aussi devant Netflix ?", "Pendant ce temps, votre concurrent prépare son film.", "On sent une forme d’engagement.", "On ne juge pas. Enfin, un peu.", "Ce rythme-là, en salle de montage, on appelle ça « nerveux ».", "Vous êtes à deux doigts de devenir monteur.", "Doucement, vous allez chauffer l’écran.", "Votre doigt mériterait un contrat d’exclusivité.", "Ça, c’est de l’engagement.", "Vous zappez comme on mange des cacahuètes à l’apéro.", "Votre souris a des courbatures. Elle nous l’a dit.", "Vous cliquez plus vite qu’un stagiaire un vendredi à 17 h.", "Ça vous détend ? Tant mieux.", "Attention, le zapping crée une forte dépendance.", "Ce film vous a plu ? Vous ne le saurez jamais.", "Le site n’a pas de fin. La patience de vos clients, si.", "Cliquer, c’est bien. Réserver, c’est mieux.", "Félicitations, vous avez trouvé le vrai contenu du site.", "À ce stade, c’est du cardio.", "Quelqu’un dans votre bureau vous regarde bizarrement.", "Votre score n’est enregistré nulle part. Cliquez quand même.", "Ce n’est plus du zapping, c’est de la percussion.", "On vous sent prêt pour une réunion de trente minutes.", "Ces films sont encore plus beaux en grand. Au studio. Avec un café.", "Le café est prêt. Vous, vous cliquez encore.", "Ce que vous ressentez là, une pub ennuyeuse le ressent tous les jours.", "Un film qui raconte une histoire, on ne le zappe pas. Vous voyez où on veut en venir.", "Vous zappez avec style. Ça compte.", "Rassurez-vous, nos films ne sont pas vexés.", "C’est beau, un visiteur qui ne lâche rien.", "Vous n’êtes pas obligé de tout voir aujourd’hui. Mais ça nous ferait plaisir.", "Votre clavier se sent délaissé.", "Ce clic-là était particulièrement réussi.", "Celui-là aussi.", "On commence à s’attacher.", "Vous voulez qu’on vous laisse seul avec l’écran ?", "On vous a vu hésiter. Et puis, clic.", "L’IA n’y est pour rien. C’est vous qui cliquez.", "Promis, on ne dira rien à votre service marketing.", "Si chaque clic était un euro de budget, on serait déjà amis.", "Vous avez l’œil d’un directeur artistique. Et le doigt d’un batteur.", "Votre écran demande un congé maladie.", "On a vérifié : cet écran ne se casse pas. Inutile d’insister.", "Vous connaissez maintenant nos films mieux que notre comptable.", "Ici, zapper est autorisé. Chez vos clients, beaucoup moins.", "Un jour, quelqu’un zappera votre film ici. Il s’arrêtera net.", "Si vous cliquez pour trouver la fin, il n’y en a pas. Il y a le vôtre.", "Toujours là ? Nous aussi.", "Votre attention vaut de l’or. Vous la dépensez joyeusement.", "Mettez-vous deux secondes à la place du film.", "Ici, l’impatience est récompensée. Ailleurs, elle coûte des clients.", "Il paraît qu’un bon film se regarde jusqu’au bout. On dit ça, on ne dit rien.", "Vous pourriez faire ça toute la journée. Nous aussi, mais on a des films à livrer.", "On a fait ces films pour être regardés. Pas pour être cliqués. Mais bon.", "Ce rythme-là, c’est un clip, pas une visite.", "Prenez une seconde. Juste une. Voilà. Reprenez.", "On adore votre énergie. Imaginez-la dans un brief.", "Votre doigt vient de battre son record personnel.", "Vos réunions sont aussi rythmées ?", "Un film par clic. On vous fait un prix de gros ?", "Ceci n’est pas une machine à sous. Vous gagnez quand même un film.", "Encore dix clics et vous êtes officiellement accro.", "Ça devient sérieux. On prépare le café.", "C’est le moment où, d’habitude, les gens réservent.", "Vous êtes encore là. On adore. On s’inquiète un peu aussi.", "Dernière ligne droite. Vous y êtes presque.", "Cent clics. Respect. Maintenant, appelez-nous."];
 let ch=0,zaps=0,allSeen=false,lineQ=[];
 if(innerWidth<=640&&!GL){tvVid.src=tvVid.dataset.srcM;}
