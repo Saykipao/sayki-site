@@ -1399,10 +1399,15 @@ function fillFp(id){
 /* ---------- transition des films : une seule vague irisée qui traverse l'écran.
    Au-dessus de la vague, la nouvelle page ; en dessous, l'ancienne. Pas d'écran intermédiaire. ---------- */
 let filmOn=false;
-const WAVE_A=0.13;
-function waveY(x,k,tm){ /* hauteur du bord (0 = haut de l'écran, 1 = bas) */
+const WAVE_A=0.11, WAVE_B=0.16;
+/* « woosh » : part très vite, freine fort au milieu (les deux pages cohabitent), repart très vite */
+function woosh(k){const u=2*k-1, a=Math.abs(u); return 0.5+0.5*Math.sign(u)*(0.18*a+0.82*a*a*a);}
+function wooshV(k){const a=Math.abs(2*k-1); return 0.18+2.46*a*a;} /* vitesse relative, max 2.64 */
+/* bord de la vague (0 = haut de l'écran, 1 = bas) ; la vague prend de l'avance là où l'on a cliqué */
+function waveY(x,q,tm,cx,amp){
   const f=0.55*Math.sin(6.0*x+tm*1.3)+0.3*Math.sin(13.0*x-tm*2.1+1.7)+0.15*Math.sin(23.0*x+tm*3.0);
-  return -WAVE_A+k*(1+2*WAVE_A)+WAVE_A*f;
+  const b=Math.exp(-(x-cx)*(x-cx)/0.045)*Math.sin(Math.PI*q);
+  return -WAVE_A-WAVE_B+q*(1+2*WAVE_A+2*WAVE_B)+WAVE_A*amp*f+WAVE_B*b;
 }
 const GLOW=(function(){
   const c=document.createElement('canvas'); c.id='wipe'; c.setAttribute('aria-hidden','true'); document.body.appendChild(c);
@@ -1410,43 +1415,55 @@ const GLOW=(function(){
   const sh=(type,src)=>{const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s;};
   const pr=gl.createProgram();
   gl.attachShader(pr,sh(gl.VERTEX_SHADER,'attribute vec2 p; varying vec2 vUv; void main(){vUv=p*0.5+0.5; gl_Position=vec4(p,0.0,1.0);}'));
-  gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,`precision mediump float; varying vec2 vUv; uniform float uK; uniform float uT; uniform float uA; uniform float uDir; uniform vec2 uRes;
+  gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,`precision mediump float; varying vec2 vUv;
+    uniform float uQ; uniform float uT; uniform float uCx; uniform float uAmp; uniform float uSpd; uniform vec2 uRes;
+    float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
     vec3 irid(float t){return 0.5+0.5*cos(6.28318*(vec3(0.0,0.33,0.67)+t));}
     void main(){float x=vUv.x, y=1.0-vUv.y;
       float f=0.55*sin(6.0*x+uT*1.3)+0.3*sin(13.0*x-uT*2.1+1.7)+0.15*sin(23.0*x+uT*3.0);
-      float d=(y-(-uA+uK*(1.0+2.0*uA)+uA*f))*uRes.y/900.0;
-      float e=exp(-abs(d)*26.0), core=exp(-abs(d)*240.0);
-      float trail=uDir*d<0.0?exp(-abs(d)*7.0)*0.35:0.0;
-      vec3 col=irid(x*2.0+uT*0.3)*(e*0.75+trail*0.5)+vec3(1.0)*core*0.55;
-      float a=clamp(e*0.7+core*0.5+trail*0.4,0.0,1.0);
-      gl_FragColor=vec4(col,a);}`));
+      float b=exp(-(x-uCx)*(x-uCx)/0.045)*sin(3.14159*uQ);
+      float e=-${WAVE_A.toFixed(3)}-${WAVE_B.toFixed(3)}+uQ*(1.0+${(2*WAVE_A).toFixed(3)}+${(2*WAVE_B).toFixed(3)})+${WAVE_A.toFixed(3)}*uAmp*f+${WAVE_B.toFixed(3)}*b;
+      float d=y-e;                                  /* <0 : nouvelle page, >0 : page qu'on quitte */
+      float w=0.06+0.07*uSpd;                      /* la frange s'étire quand ça va vite */
+      float band=exp(-abs(d)/w);
+      float m=clamp(0.5-d/(2.0*w),0.0,1.0);
+      float edge=smoothstep(0.0,0.5,m)*smoothstep(1.0,0.5,m);
+      vec3 col=irid(d/w*0.22-uT*0.35+x*0.12)*edge*0.45;   /* les reflets des vignettes, parallèles au bord */
+      float haze=d>0.0?exp(-d/(0.08+0.1*uSpd))*0.42:0.0;        /* la page qu'on quitte vire au violet, comme le duotone */
+      vec3 vio=vec3(0.294,0.118,0.58);
+      col+=vio*haze;
+      col+=(hash(vUv*uRes+fract(uT))-0.5)*0.07*band;
+      gl_FragColor=vec4(col,haze);}`));
   gl.linkProgram(pr); if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) return null;
   gl.useProgram(pr);
   const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   const loc=gl.getAttribLocation(pr,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-  const U=n=>gl.getUniformLocation(pr,n), uK=U('uK'), uT=U('uT'), uA=U('uA'), uD=U('uDir'), uR=U('uRes');
+  const U=n=>gl.getUniformLocation(pr,n), uQ=U('uQ'), uT=U('uT'), uCx=U('uCx'), uAmp=U('uAmp'), uSpd=U('uSpd'), uR=U('uRes');
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
   return {
     show(){const d=Math.min(devicePixelRatio||1,1.5); c.width=Math.ceil(innerWidth*d); c.height=Math.ceil(innerHeight*d); gl.viewport(0,0,c.width,c.height); c.style.display='block';},
-    draw(k,tm,dir){gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(uK,k); gl.uniform1f(uT,tm); gl.uniform1f(uA,WAVE_A); gl.uniform1f(uD,dir); gl.uniform2f(uR,c.width,c.height); gl.drawArrays(gl.TRIANGLES,0,3);},
+    draw(q,tm,cx,amp,spd){gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(uQ,q); gl.uniform1f(uT,tm); gl.uniform1f(uCx,cx); gl.uniform1f(uAmp,amp); gl.uniform1f(uSpd,spd); gl.uniform2f(uR,c.width,c.height); gl.drawArrays(gl.TRIANGLES,0,3);},
     hide(){c.style.display='none';}
   };
 })();
-/* reveal=true : la page film apparaît au-dessus de la vague (ouverture) ; false : elle disparaît au-dessus (fermeture) */
-function wave(reveal,dur,done){
+/* reveal=true : la page film apparaît au-dessus de la vague ; false : elle s'en va au-dessus.
+   cx : position horizontale du clic (0..1), la vague part de là. */
+function wave(reveal,dur,cx,done){
   if(RM){fp.style.clipPath=''; done(); return;}
-  const N=40, s=performance.now(), t0=s/1000; let fin=false;
+  const N=64, s=performance.now(), t0=s/1000; let fin=false;
   const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); fp.style.clipPath=''; if(GLOW) GLOW.hide(); done();};
-  const safe=setTimeout(finish,dur+400); /* filet si l'onglet passe en arrière-plan */
+  const safe=setTimeout(finish,dur+400);
   if(GLOW) GLOW.show();
   (function step(n){ if(fin) return;
-    const k=Math.min((n-s)/dur,1), q=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, tm=n/1000-t0;
-    const pts=[]; for(let i=0;i<=N;i++){const x=reveal?1-i/N:i/N; pts.push((x*100).toFixed(2)+'% '+(waveY(x,q,tm)*100).toFixed(2)+'%');}
-    fp.style.clipPath='polygon('+(reveal?'0% -5%,100% -5%,'+pts.join(','):pts.join(',')+',100% 105%,0% 105%')+')';
-    if(GLOW) GLOW.draw(q,tm,reveal?1:-1);
+    const k=Math.min((n-s)/dur,1), q=woosh(k), sp=wooshV(k)/2.64, amp=0.55+0.9*sp, tm=n/1000-t0;
+    const pts=[]; for(let i=0;i<=N;i++){const x=reveal?1-i/N:i/N; pts.push((x*100).toFixed(2)+'% '+(waveY(x,q,tm,cx,amp)*100).toFixed(2)+'%');}
+    fp.style.clipPath='polygon('+(reveal?'0% -40%,100% -40%,'+pts.join(','):pts.join(',')+',100% 140%,0% 140%')+')';
+    if(GLOW) GLOW.draw(q,tm,cx,amp,sp);
     if(k<1) requestAnimationFrame(step); else finish();
   })(s);
 }
+let clickX=0.5;
+addEventListener('pointerdown',e=>{clickX=e.clientX/innerWidth;},true);
 
 /* ---------- lecteur maison (Bunny Stream en HLS, interface Sayki) ---------- */
 const BUNNY_CDN='https://vz-4410841f-776.b-cdn.net/';
@@ -1489,11 +1506,11 @@ function openFilm(id){
   fillFp(id); fp.style.clipPath='polygon(0 0,100% 0,100% 0,0 0)'; fp.hidden=false; fp.scrollTop=0; fp.classList.add('is-open');
   root.classList.add('is-locked');
   startFilm();
-  wave(true,1250,()=>{busy=false; filmOn=true; $('#fpClose').focus({preventScroll:true});});
+  wave(true,1500,clickX,()=>{busy=false; filmOn=true; $('#fpClose').focus({preventScroll:true});});
 }
 function closeFilm(){
   if(busy||fp.hidden) return; busy=true; filmOn=false;
-  wave(false,1150,()=>{
+  wave(false,1350,clickX,()=>{
     stopFilm(); fp.hidden=true; fp.classList.remove('is-open'); root.classList.remove('is-locked');
     busy=false; if(lastFocus) lastFocus.focus({preventScroll:true});
   });
