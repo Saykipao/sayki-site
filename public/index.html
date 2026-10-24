@@ -967,11 +967,11 @@ function applyFilter(f,lim){
     $('#filmCount').textContent=String(listFor(f).length).padStart(2,'0');
     syncMore();
     void grid.offsetWidth;
-    requestAnimationFrame(()=>{
+    setTimeout(()=>{
       stay.forEach(el=>{el.style.transition=`transform ${DUR}ms ${EASE}`; el.style.transform='';});
       entering.forEach((el,i)=>{el.style.transition=`transform ${DUR}ms ${EASE} ${200+i*90}ms, opacity 500ms ${EASE} ${200+i*90}ms`; el.style.transform=''; el.classList.remove('is-out');});
       setTimeout(()=>{films.forEach(el=>{el.style.transition='';el.style.transform='';el.style.transformOrigin='';}); filtering=false;}, DUR+300+entering.length*90);
-    });
+    },20);
   }, leaving.length&&!RM?380:0);
 }
 /* voir plus : les 7 suivants montent en douceur, en cascade, depuis le bas */
@@ -984,12 +984,12 @@ function showMore(){
   entering.forEach(el=>{el.hidden=false;el.classList.add('is-out');el.style.transition='none';el.style.transformOrigin='50% 0';el.style.transform='translateY(140px) scale(.92)';el.style.clipPath='inset(0 0 100% 0)';});
   syncMore();
   void grid.offsetWidth;
-  requestAnimationFrame(()=>{
+  setTimeout(()=>{
     entering.forEach((el,i)=>{const d=120+i*110;
       el.style.transition=`transform ${DUR}ms ${EASE} ${d}ms, opacity 700ms ${EASE} ${d}ms, clip-path ${DUR}ms ${EASE} ${d}ms`;
       el.style.transform=''; el.style.clipPath='inset(0 0 0% 0)'; el.classList.remove('is-out');});
     setTimeout(()=>{entering.forEach(el=>{el.style.transition='';el.style.transform='';el.style.transformOrigin='';el.style.clipPath='';}); filtering=false;}, DUR+200+entering.length*110);
-  });
+  },20);
 }
 $('#moreBtn').addEventListener('click',showMore);
 syncMore();
