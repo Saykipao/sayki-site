@@ -911,7 +911,8 @@ function live(el,on){el.classList.toggle('is-live',on); const v=vidOf(el); if(on
 
 const cursor=$('#cursor'), cursorL=$('#cursorL');
 const preview=$('#preview'), pv=$('video',preview); let ppx=0,ppy=0,pvx=0;
-let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my,nmx=0,nmy=0;
+let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my,nmx=0,nmy=0,lastInput=0,lastFrame=0;
+['mousemove','pointerdown','wheel','touchstart','keydown','scroll'].forEach(ev=>addEventListener(ev,()=>{lastInput=performance.now();},{passive:true}));
 addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;nmx=mx/innerWidth*2-1;nmy=my/innerHeight*2-1;},{passive:true});
 if(FINE){
   root.classList.add('has-cursor');
@@ -931,6 +932,9 @@ if(FINE){
 
 /* ================= WebGL ================= */
 let GL=null;
+function mkVT(v){const x=new THREE.VideoTexture(v); x.minFilter=THREE.LinearFilter; x.magFilter=THREE.LinearFilter; x.generateMipmaps=false;
+  if(v.requestVideoFrameCallback){x.update=function(){}; const cb=()=>{x.needsUpdate=true; v.requestVideoFrameCallback(cb);}; v.requestVideoFrameCallback(cb);}
+  return x;}
 const PXU={value:1};
 var TVM={rx:-1.5,ry:-13,s:1,vx:0,vy:0,vs:0,heat:0,jx:0,jy:0,jvx:0,jvy:0}; window.TVM=TVM;
 const VS=`
@@ -1116,7 +1120,7 @@ function initGL(){
   const geo=new THREE.PlaneGeometry(1,1,48,48);
   const loader=new THREE.TextureLoader();
   let W=0,H=0;
-  function resize(){W=innerWidth;H=innerHeight;PXU.value=((devicePixelRatio||1)>=1.9&&W*H*4<=6.2e6)?2:1; renderer.setPixelRatio(PXU.value);renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/3),Math.ceil(H/3));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
+  function resize(){W=innerWidth;H=innerHeight;PXU.value=((devicePixelRatio||1)>=1.9&&W*H*4<=6.2e6)?2:1; renderer.setPixelRatio(PXU.value);renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/4),Math.ceil(H/4));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
   let bgRT=null;
   resize(); addEventListener('resize',resize);
 
@@ -1125,7 +1129,7 @@ function initGL(){
     uniforms:{uRes:{value:new THREE.Vector2(1,1)},uTime:{value:0},uMouse:{value:new THREE.Vector2(0.5,0.5)},uFocus:{value:new THREE.Vector2(0.5,0.5)},uFocusAmt:{value:0},uScroll:{value:0},uAlpha:{value:0.62}}});
   bgMat.blending=THREE.NoBlending;
   const bgMesh=new THREE.Mesh(new THREE.PlaneGeometry(1,1),bgMat); const bgScene=new THREE.Scene(); bgScene.add(bgMesh);
-  bgRT=new THREE.WebGLRenderTarget(Math.ceil(W/3),Math.ceil(H/3),{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,depthBuffer:false,stencilBuffer:false});
+  bgRT=new THREE.WebGLRenderTarget(Math.ceil(W/4),Math.ceil(H/4),{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,depthBuffer:false,stencilBuffer:false});
   const bgOut=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,
     uniforms:{uTex:{value:bgRT.texture}},
     vertexShader:`varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
@@ -1136,7 +1140,7 @@ function initGL(){
   const glow={m:new THREE.Vector2(0.5,0.5),f:new THREE.Vector2(0.5,0.5),amt:0};
 
   /* hero */
-  const hvTex=new THREE.VideoTexture(heroVid); hvTex.minFilter=THREE.LinearFilter; hvTex.magFilter=THREE.LinearFilter; hvTex.generateMipmaps=false;
+  const hvTex=mkVT(heroVid);
   const hMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_HERO,transparent:true,uniforms:{uPx:PXU,
     uVid:{value:hvTex},uVidRes:{value:new THREE.Vector2(1280,720)},uRes:{value:new THREE.Vector2(1,1)},uMouse:{value:new THREE.Vector2(0.62,0.55)},
     uMV:{value:0},uAct:{value:0},uTime:{value:0},uIntro:{value:RM?1:0},uScroll:{value:0},uAlpha:{value:1},uVel:{value:0},uProg:{value:0},uHover:{value:0},uTint:{value:0},uFade:{value:1},uEdge:{value:0},uDim:{value:0},uClip:{value:new THREE.Vector2(0,0)}}});
@@ -1148,7 +1152,7 @@ function initGL(){
 
   /* studio : même effet que le hero, vidéo teintée */
   const stVid=$('#svDuo');
-  const stTex=new THREE.VideoTexture(stVid); stTex.minFilter=THREE.LinearFilter; stTex.magFilter=THREE.LinearFilter; stTex.generateMipmaps=false;
+  const stTex=mkVT(stVid);
   const sMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_HERO,transparent:true,uniforms:{uPx:PXU,
     uVid:{value:stTex},uVidRes:{value:new THREE.Vector2(854,480)},uRes:{value:new THREE.Vector2(1,1)},uMouse:{value:new THREE.Vector2(0.6,0.5)},
     uMV:{value:0},uAct:{value:0},uTime:{value:0},uIntro:{value:1},uScroll:{value:0},uAlpha:{value:1},uVel:{value:0},uProg:{value:0},uHover:{value:0},uTint:{value:0},uFade:{value:0.2},uEdge:{value:0.3},uDim:{value:0.66},uClip:{value:new THREE.Vector2(0,0)}}});
@@ -1159,7 +1163,7 @@ function initGL(){
 
   /* la vidéo qu'on zappe */
   const tvEl=$('#tv'), tvDom=$('#tvVid');
-  const mkT=v=>{const x=new THREE.VideoTexture(v); x.minFilter=THREE.LinearFilter; x.magFilter=THREE.LinearFilter; x.generateMipmaps=false; return x;};
+  const mkT=mkVT;
   const pool=new Map();
   function getV(src,pre){
     let p=pool.get(src);
@@ -1213,7 +1217,7 @@ function initGL(){
   function ensureVid(it){
     if(it.vid) return;
     const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.preload='auto'; v.src='assets/'+it.id+'.mp4';
-    v.addEventListener('playing',()=>{ if(!it.vtex){it.vtex=new THREE.VideoTexture(v);it.vtex.minFilter=THREE.LinearFilter;it.vtex.generateMipmaps=false;it.mat.uniforms.uVid.value=it.vtex;it.mat.uniforms.uVidRes.value.set(v.videoWidth||16,v.videoHeight||9);} it.vidOn=true;});
+    v.addEventListener('playing',()=>{ if(!it.vtex){it.vtex=mkVT(v);it.mat.uniforms.uVid.value=it.vtex;it.mat.uniforms.uVidRes.value.set(v.videoWidth||16,v.videoHeight||9);} it.vidOn=true;});
     it.vid=v;
   }
 
@@ -1519,7 +1523,7 @@ function initMiniZap(){
   tv.appendChild(cv); tv.classList.add('mz-on'); tvVid.pause(); tvVid.removeAttribute('autoplay');
   rd.setClearColor(0x000000,0);
   const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,-1000,1000);
-  const mkT=v=>{const x=new THREE.VideoTexture(v); x.minFilter=THREE.LinearFilter; x.magFilter=THREE.LinearFilter; x.generateMipmaps=false; return x;};
+  const mkT=mkVT;
   const pool=new Map();
   function getV(src){let p=pool.get(src); if(!p){const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.preload='auto'; v.src=src;
     p={v,tex:mkT(v),res:new THREE.Vector2(16,9)}; v.addEventListener('loadedmetadata',()=>{if(v.videoWidth)p.res.set(v.videoWidth,v.videoHeight);}); pool.set(src,p);} return p;}
@@ -1568,6 +1572,9 @@ setInterval(()=>{const s=Math.floor((Date.now()-t0visit)/1000); visit.textConten
 let mqX=0,mqDir=1,lmx=mx,lmy=my,mSpeed=0;
 const heroEl=$('#top'), lines=$$('.h1 .ln');
 function frame(t){
+  const active=(t-lastInput)<1600||Math.abs(scrollY-cur)>0.5||Math.abs(velS)>0.15||TVM.heat>0.02||open||busy;
+  if(t-lastFrame<(active?15.5:32)){requestAnimationFrame(frame);return;}
+  lastFrame=t;
   const tgt=scrollY;
   if(SMOOTH&&!root.classList.contains('is-locked')){
     cur+=(tgt-cur)*0.085; if(Math.abs(tgt-cur)<0.05) cur=tgt;
