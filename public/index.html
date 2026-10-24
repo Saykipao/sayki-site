@@ -1428,7 +1428,7 @@ const GLOW=(function(){
       float edge=smoothstep(0.0,0.5,m)*smoothstep(1.0,0.5,m);
       vec3 col=irid(d/w*0.22-uT*0.35+x*0.12)*edge*0.4;
       float ds=d*uSide;
-      float haze=ds>0.0?exp(-ds/(0.1+0.1*uSpd))*0.4:0.0;
+      float hw=0.05+0.045*uSpd; float haze=smoothstep(-hw,hw*1.6,ds)*exp(-max(ds,0.0)/(0.12+0.1*uSpd))*0.36;
       col+=vec3(0.294,0.118,0.58)*haze;
       col+=(hash(vUv*uRes+fract(uT))-0.5)*0.06*exp(-abs(d)/w);
       gl_FragColor=vec4(col,haze);}`));
