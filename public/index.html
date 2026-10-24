@@ -1247,7 +1247,7 @@ function initGL(){
     loader.load('assets/'+id+'.jpg',tex=>{tex.minFilter=THREE.LinearFilter;tex.generateMipmaps=false;mat.uniforms.uTex.value=tex;mat.uniforms.uTexRes.value.set(tex.image.width,tex.image.height);it.ready=true;});
     media.addEventListener('mouseenter',()=>{it.ht=1;ensureVid(it);it.vid.play().catch(()=>{});});
     media.addEventListener('mousemove',e=>{const r=media.getBoundingClientRect(); it.mt.set((e.clientX-r.left)/r.width,1-(e.clientY-r.top)/r.height);});
-    media.addEventListener('mouseleave',()=>{if(!it.trans) it.ht=0;});
+    media.addEventListener('mouseleave',()=>{if(!it.trans&&!busy&&!filmOn) it.ht=0;});
     return it;
   });
   function ensureVid(it){
@@ -1548,7 +1548,7 @@ function closeFilm(){
   /* fermeture : la vague remonte, du bas vers le haut, et rend le site */
   wave({el:fp,keep:'above',q0:1,q1:0,dur:1050,cx:clickX,bd:-1,side:-1,done:()=>{
     stopFilm(); fp.hidden=true; fp.classList.remove('is-open'); root.classList.remove('is-locked');
-    busy=false; if(lastFocus) lastFocus.focus({preventScroll:true});
+    busy=false; if(GL) GL.items.forEach(it=>{ if(!it.media.matches(':hover')) it.ht=0; }); if(lastFocus) lastFocus.focus({preventScroll:true});
   }});
 }
 document.addEventListener('click',e=>{const a=e.target.closest('[data-open]'); if(a){e.preventDefault();openFilm(a.dataset.open);}});
