@@ -1396,45 +1396,56 @@ function fillFp(id){
 
   fpMedia.classList.toggle('has-player',!!f.bunny); fpMedia.dataset.bunny=f.bunny||'';
 }
-/* ---------- rideau de transition : la même vague irisée que l'ouverture du site ---------- */
-const WIPE=(function(){
+/* ---------- transition des films : une seule vague irisée qui traverse l'écran.
+   Au-dessus de la vague, la nouvelle page ; en dessous, l'ancienne. Pas d'écran intermédiaire. ---------- */
+let filmOn=false;
+const WAVE_A=0.13;
+function waveY(x,k,tm){ /* hauteur du bord (0 = haut de l'écran, 1 = bas) */
+  const f=0.55*Math.sin(6.0*x+tm*1.3)+0.3*Math.sin(13.0*x-tm*2.1+1.7)+0.15*Math.sin(23.0*x+tm*3.0);
+  return -WAVE_A+k*(1+2*WAVE_A)+WAVE_A*f;
+}
+const GLOW=(function(){
   const c=document.createElement('canvas'); c.id='wipe'; c.setAttribute('aria-hidden','true'); document.body.appendChild(c);
-  const gl=c.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:false}); if(!gl) return null;
+  const gl=c.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false}); if(!gl) return null;
   const sh=(type,src)=>{const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s;};
   const pr=gl.createProgram();
   gl.attachShader(pr,sh(gl.VERTEX_SHADER,'attribute vec2 p; varying vec2 vUv; void main(){vUv=p*0.5+0.5; gl_Position=vec4(p,0.0,1.0);}'));
-  gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,`precision mediump float; varying vec2 vUv; uniform float uK; uniform float uMode; uniform float uT; uniform vec2 uRes;
-    float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-    float nz(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+  gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,`precision mediump float; varying vec2 vUv; uniform float uK; uniform float uT; uniform float uA; uniform float uDir; uniform vec2 uRes;
     vec3 irid(float t){return 0.5+0.5*cos(6.28318*(vec3(0.0,0.33,0.67)+t));}
-    void main(){vec2 uv=vUv; float n=nz(vec2(uv.x*6.0,uT*0.5))*0.12+nz(vec2(uv.x*24.0,uT*1.3))*0.02;
-      float d=(1.0-uv.y+n)-(uK*1.3-0.15);
-      float cov=uMode<0.5?1.0-smoothstep(-0.004,0.03,d):smoothstep(-0.03,0.004,d);
-      float e=smoothstep(0.1,0.0,abs(d));
-      vec2 q=(uv-vec2(0.5,0.45))*vec2(uRes.x/uRes.y,1.0);
-      vec3 bg=vec3(0.082,0.039,0.149)+vec3(0.25,0.08,0.45)*exp(-dot(q,q)*2.5)*0.3;
-      vec3 col=bg+irid(uv.x*2.0+uT*0.3)*e*0.7+vec3(1.0)*smoothstep(0.01,0.0,abs(d))*0.35;
-      gl_FragColor=vec4(col,clamp(max(cov,e*0.8),0.0,1.0));}`));
+    void main(){float x=vUv.x, y=1.0-vUv.y;
+      float f=0.55*sin(6.0*x+uT*1.3)+0.3*sin(13.0*x-uT*2.1+1.7)+0.15*sin(23.0*x+uT*3.0);
+      float d=(y-(-uA+uK*(1.0+2.0*uA)+uA*f))*uRes.y/900.0;
+      float e=exp(-abs(d)*26.0), core=exp(-abs(d)*240.0);
+      float trail=uDir*d<0.0?exp(-abs(d)*7.0)*0.35:0.0;
+      vec3 col=irid(x*2.0+uT*0.3)*(e*0.75+trail*0.5)+vec3(1.0)*core*0.55;
+      float a=clamp(e*0.7+core*0.5+trail*0.4,0.0,1.0);
+      gl_FragColor=vec4(col,a);}`));
   gl.linkProgram(pr); if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) return null;
   gl.useProgram(pr);
   const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   const loc=gl.getAttribLocation(pr,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-  const U=n=>gl.getUniformLocation(pr,n), uK=U('uK'), uM=U('uMode'), uT=U('uT'), uR=U('uRes');
-  gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
-  function size(){const d=Math.min(devicePixelRatio||1,1.5); c.width=Math.ceil(innerWidth*d); c.height=Math.ceil(innerHeight*d); gl.viewport(0,0,c.width,c.height);}
-  return function(mode,dur,done){
-    size(); c.style.display='block'; const s=performance.now(); let fin=false;
-    const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); if(mode===1) c.style.display='none'; else {gl.clearColor(0.082,0.039,0.149,1); gl.clear(gl.COLOR_BUFFER_BIT);} if(done) done();};
-    const safe=setTimeout(finish,dur+350); /* filet : si l'onglet est en arrière-plan, la transition ne reste jamais bloquée */
-    (function step(n){if(fin) return; const k=Math.min((n-s)/dur,1), q=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
-      gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform1f(uK,q); gl.uniform1f(uM,mode); gl.uniform1f(uT,n/1000); gl.uniform2f(uR,c.width,c.height); gl.drawArrays(gl.TRIANGLES,0,3);
-      if(k<1) requestAnimationFrame(step); else finish();})(s);
+  const U=n=>gl.getUniformLocation(pr,n), uK=U('uK'), uT=U('uT'), uA=U('uA'), uD=U('uDir'), uR=U('uRes');
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  return {
+    show(){const d=Math.min(devicePixelRatio||1,1.5); c.width=Math.ceil(innerWidth*d); c.height=Math.ceil(innerHeight*d); gl.viewport(0,0,c.width,c.height); c.style.display='block';},
+    draw(k,tm,dir){gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(uK,k); gl.uniform1f(uT,tm); gl.uniform1f(uA,WAVE_A); gl.uniform1f(uD,dir); gl.uniform2f(uR,c.width,c.height); gl.drawArrays(gl.TRIANGLES,0,3);},
+    hide(){c.style.display='none';}
   };
 })();
-function curtain(mid,end){
-  if(!WIPE||RM){mid(); if(end) end(); return;}
-  WIPE(0,680,()=>{mid(); setTimeout(()=>WIPE(1,900,end),60);});
+/* reveal=true : la page film apparaît au-dessus de la vague (ouverture) ; false : elle disparaît au-dessus (fermeture) */
+function wave(reveal,dur,done){
+  if(RM){fp.style.clipPath=''; done(); return;}
+  const N=40, s=performance.now(), t0=s/1000; let fin=false;
+  const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); fp.style.clipPath=''; if(GLOW) GLOW.hide(); done();};
+  const safe=setTimeout(finish,dur+400); /* filet si l'onglet passe en arrière-plan */
+  if(GLOW) GLOW.show();
+  (function step(n){ if(fin) return;
+    const k=Math.min((n-s)/dur,1), q=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, tm=n/1000-t0;
+    const pts=[]; for(let i=0;i<=N;i++){const x=reveal?1-i/N:i/N; pts.push((x*100).toFixed(2)+'% '+(waveY(x,q,tm)*100).toFixed(2)+'%');}
+    fp.style.clipPath='polygon('+(reveal?'0% -5%,100% -5%,'+pts.join(','):pts.join(',')+',100% 105%,0% 105%')+')';
+    if(GLOW) GLOW.draw(q,tm,reveal?1:-1);
+    if(k<1) requestAnimationFrame(step); else finish();
+  })(s);
 }
 
 /* ---------- lecteur maison (Bunny Stream en HLS, interface Sayki) ---------- */
@@ -1443,6 +1454,7 @@ const pl=$('#pl'), plBig=$('#plBig'), plPP=$('#plPP'), plT=$('#plT'), plTrack=$(
 let hls=null, plIdle=0;
 const fmtT=s=>{s=Math.max(0,Math.floor(s||0)); return pad(Math.floor(s/60))+':'+pad(s%60);};
 function loadHls(){return window.Hls?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js'; s.onload=ok; s.onerror=ko; document.head.appendChild(s);});}
+function hlsAttach(src){ if(window.Hls&&Hls.isSupported()){hls=new Hls({capLevelToPlayerSize:true,startLevel:-1}); hls.loadSource(src); hls.attachMedia(fpVid);} else fpVid.src=src; }
 async function startFilm(){
   const b=fpMedia.dataset.bunny; if(!b) {fpVid.play().catch(()=>{}); return;}
   const id=b.split('/')[1], src=BUNNY_CDN+id+'/playlist.m3u8';
@@ -1450,9 +1462,12 @@ async function startFilm(){
   fpVid.loop=false; fpVid.muted=false; fpVid.poster=BUNNY_CDN+id+'/thumbnail.jpg';
   const native=fpVid.canPlayType('application/vnd.apple.mpegurl');
   if(native&&!(window.MediaSource||window.ManagedMediaSource)) fpVid.src=src;
-  else{ try{await loadHls();}catch(e){} if(window.Hls&&Hls.isSupported()){hls=new Hls({capLevelToPlayerSize:true,startLevel:-1}); hls.loadSource(src); hls.attachMedia(fpVid);} else fpVid.src=src; }
+  else if(window.Hls) hlsAttach(src);
+  else{ try{await loadHls();}catch(e){} hlsAttach(src); }
   fpVid.play().catch(()=>{/* le navigateur veut un clic : le gros bouton lecture reste affiché */});
 }
+/* hls.js préchargé discrètement une fois le site chargé, si au moins un film a un lien Bunny */
+addEventListener('load',()=>setTimeout(()=>{ if(Object.values(FILMS).some(f=>f.bunny)) loadHls().catch(()=>{}); },2500),{once:true});
 function stopFilm(){ fpVid.pause(); if(hls){hls.destroy(); hls=null;} pl.hidden=true; fpVid.removeAttribute('src'); fpVid.load(); fpVid.loop=true; fpVid.muted=true; }
 function togglePlay(){ if(fpVid.paused) fpVid.play().catch(()=>{}); else fpVid.pause(); }
 plBig.addEventListener('click',togglePlay); plPP.addEventListener('click',togglePlay);
@@ -1471,20 +1486,17 @@ addEventListener('keydown',e=>{ if(e.code!=='Space'||fp.hidden||pl.hidden) retur
 
 function openFilm(id){
   if(busy) return; busy=true; lastFocus=document.activeElement;
-  curtain(()=>{
-    open=true; fillFp(id); fp.hidden=false; fp.scrollTop=0; fp.classList.add('is-open');
-    root.classList.add('is-locked'); smooth.classList.add('is-leaving');
-    if(GL){GL.items.forEach(o=>{o.alphaT=0;}); GL.hero.alphaT=0;}
-    startFilm();
-  },()=>{busy=false; $('#fpClose').focus({preventScroll:true});});
+  fillFp(id); fp.style.clipPath='polygon(0 0,100% 0,100% 0,0 0)'; fp.hidden=false; fp.scrollTop=0; fp.classList.add('is-open');
+  root.classList.add('is-locked');
+  startFilm();
+  wave(true,1250,()=>{busy=false; filmOn=true; $('#fpClose').focus({preventScroll:true});});
 }
 function closeFilm(){
-  if(busy||fp.hidden) return; busy=true;
-  curtain(()=>{
-    stopFilm(); fp.hidden=true; fp.classList.remove('is-open');
-    root.classList.remove('is-locked'); smooth.classList.remove('is-leaving'); open=false;
-    if(GL){GL.items.forEach(o=>{o.alphaT=1; o.a=1;}); GL.hero.alphaT=1; GL.hero.mat.uniforms.uAlpha.value=1;}
-  },()=>{busy=false; if(lastFocus) lastFocus.focus({preventScroll:true});});
+  if(busy||fp.hidden) return; busy=true; filmOn=false;
+  wave(false,1150,()=>{
+    stopFilm(); fp.hidden=true; fp.classList.remove('is-open'); root.classList.remove('is-locked');
+    busy=false; if(lastFocus) lastFocus.focus({preventScroll:true});
+  });
 }
 document.addEventListener('click',e=>{const a=e.target.closest('[data-open]'); if(a){e.preventDefault();openFilm(a.dataset.open);}});
 $('#fpClose').addEventListener('click',closeFilm);
@@ -1666,6 +1678,7 @@ setInterval(()=>{const s=Math.floor((Date.now()-t0visit)/1000); visit.textConten
 let mqX=0,mqDir=1,lmx=mx,lmy=my,mSpeed=0;
 const heroEl=$('#top'), lines=$$('.h1 .ln');
 function frame(t){
+  if(filmOn){requestAnimationFrame(frame);return;}
   const active=(t-lastInput)<1600||Math.abs(scrollY-cur)>0.5||Math.abs(velS)>0.15||TVM.heat>0.02||open||busy;
   if(t-lastFrame<(active?15.5:32)){requestAnimationFrame(frame);return;}
   lastFrame=t;
