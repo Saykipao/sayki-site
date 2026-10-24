@@ -345,9 +345,9 @@ html:not(.h-on) .track{gap:8px}
 .tv .mz{display:block}
 .is-gl .tv-halo{display:none}
 .tv{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0d0619;padding:0;border:0;-webkit-tap-highlight-color:transparent;isolation:isolate;will-change:transform;transform-origin:50% 50%}
-.tv::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,rgba(0,0,0,.24) 0 1px,transparent 1px 3px);opacity:.5}
+.tv::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background-image:linear-gradient(rgba(0,0,0,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.5) 1px,transparent 1px);background-size:3px 3px;opacity:.13}
 .is-gl .tv::after{display:none}
-.media::after,#preview::after,.fp-media::after,.studio-media::after,.hero-media::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:repeating-linear-gradient(0deg,rgba(0,0,0,.24) 0 1px,transparent 1px 3px);opacity:.5}
+.media::after,#preview::after,.fp-media::after,.studio-media::after,.hero-media::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background-image:linear-gradient(rgba(0,0,0,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.5) 1px,transparent 1px);background-size:3px 3px;opacity:.13}
 .is-gl .media::after,.is-gl .studio-media::after,.is-gl .hero-media::before{display:none}
 .is-gl .tv{background:transparent;overflow:visible}
 .tv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
@@ -918,6 +918,7 @@ if(FINE){
 
 /* ================= WebGL ================= */
 let GL=null;
+const PXU={value:1};
 var TVM={rx:-1.5,ry:-13,s:1,vx:0,vy:0,vs:0,heat:0,jx:0,jy:0,jvx:0,jvy:0}; window.TVM=TVM;
 const VS=`
 uniform float uVel; uniform float uProg; uniform vec2 uRes; uniform float uHover; uniform vec2 uMouse;
@@ -943,6 +944,8 @@ vec2 cover(vec2 uv,vec2 res,vec2 ir){
   return (uv-0.5)/s+0.5;
 }
 vec3 irid(float t){return 0.5+0.5*cos(6.28318*(vec3(0.0,0.33,0.67)+t));}
+uniform float uPx;
+float pgrid(){float p=max(uPx,1.0); vec2 m=mod(floor(gl_FragCoord.xy),3.0*p); return (m.x<p||m.y<p)?1.0:0.0;}
 `;
 const FS_CARD=COMMON+`
 uniform sampler2D uTex; uniform sampler2D uVid; uniform float uUseVid;
@@ -975,7 +978,7 @@ void main(){
   vec3 duo=gmap(lum*1.08);
   vec3 col=mix(duo,real,m);
   col+=irid(d*2.5-uTime*0.35)*edge*0.55;
-  col*=1.0-0.12*step(2.0,mod(vUv.y*uRes.y,3.0))*(1.0-m*0.4);
+  col*=1.0-0.06*pgrid()*(1.0-m*0.4);
   col+=(hash(uv*uRes+fract(uTime))-0.5)*0.07;
   gl_FragColor=vec4(col,uAlpha);
 }`;
@@ -1017,7 +1020,7 @@ void main(){
   col+=irid(uv.x*2.0+uTime*0.3)*e*0.6*(1.0-uIntro*0.2);
   col+=(hash(uv*uRes+fract(uTime))-0.5)*0.06;
   col=mix(col,vec3(0.082,0.039,0.149),clamp(uDim*(0.62+0.25*smoothstep(0.75,0.0,uv.x)+0.3*smoothstep(0.55,0.1,uv.y)),0.0,0.93));
-  col*=1.0-0.12*step(2.0,mod(vUv.y*uRes.y,3.0))*(1.0-lens*0.7);
+  col*=1.0-0.06*pgrid()*(1.0-lens*0.7);
   float ea=uEdge>0.0?smoothstep(0.0,uEdge,uv.y)*smoothstep(1.0,1.0-uEdge,uv.y):1.0;
   gl_FragColor=vec4(col,uAlpha*ea);
 }`;
@@ -1082,8 +1085,7 @@ void main(){
   float rim=smoothstep(-14.0,0.0,sd);
   col+=irid(ang*0.16+uTime*0.12)*rim*(0.10*uAct+0.6*uGlow+0.5*uHeat);
   col=mix(col,col*vec3(1.06,0.94,1.22)+vec3(0.05,0.02,0.1),clamp(uHeat*0.3,0.0,0.4));
-  float sl=step(2.0,mod(fuv.y*uFrame.y+uBurst*6.0,3.0));
-  col*=1.0-sl*(0.12+0.22*uBurst)*(1.0-lens*0.7);
+  col*=1.0-pgrid()*(0.06+0.1*uBurst)*(1.0-lens*0.7);
   col+=(hash(fuv*uFrame+fract(uTime))-0.5)*0.045;
   vec4 inner=vec4(col,1.0);
   float k=smoothstep(0.75,-0.75,sd);
@@ -1101,7 +1103,7 @@ function initGL(){
   const geo=new THREE.PlaneGeometry(1,1,48,48);
   const loader=new THREE.TextureLoader();
   let W=0,H=0;
-  function resize(){W=innerWidth;H=innerHeight;renderer.setPixelRatio(Math.max(1,Math.min(devicePixelRatio||1,1.5,Math.sqrt(4.2e6/(W*H)))));renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/3),Math.ceil(H/3));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
+  function resize(){W=innerWidth;H=innerHeight;PXU.value=((devicePixelRatio||1)>=1.9&&W*H*4<=6.2e6)?2:1; renderer.setPixelRatio(PXU.value);renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/3),Math.ceil(H/3));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
   let bgRT=null;
   resize(); addEventListener('resize',resize);
 
@@ -1122,7 +1124,7 @@ function initGL(){
 
   /* hero */
   const hvTex=new THREE.VideoTexture(heroVid); hvTex.minFilter=THREE.LinearFilter; hvTex.magFilter=THREE.LinearFilter; hvTex.generateMipmaps=false;
-  const hMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_HERO,transparent:true,uniforms:{
+  const hMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_HERO,transparent:true,uniforms:{uPx:PXU,
     uVid:{value:hvTex},uVidRes:{value:new THREE.Vector2(1280,720)},uRes:{value:new THREE.Vector2(1,1)},uMouse:{value:new THREE.Vector2(0.62,0.55)},
     uMV:{value:0},uAct:{value:0},uTime:{value:0},uIntro:{value:RM?1:0},uScroll:{value:0},uAlpha:{value:1},uVel:{value:0},uProg:{value:0},uHover:{value:0},uTint:{value:0},uFade:{value:1},uEdge:{value:0},uDim:{value:0},uClip:{value:new THREE.Vector2(0,0)}}});
   const hMesh=new THREE.Mesh(geo,hMat); scene.add(hMesh);
@@ -1134,7 +1136,7 @@ function initGL(){
   /* studio : même effet que le hero, vidéo teintée */
   const stVid=$('#svDuo');
   const stTex=new THREE.VideoTexture(stVid); stTex.minFilter=THREE.LinearFilter; stTex.magFilter=THREE.LinearFilter; stTex.generateMipmaps=false;
-  const sMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_HERO,transparent:true,uniforms:{
+  const sMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_HERO,transparent:true,uniforms:{uPx:PXU,
     uVid:{value:stTex},uVidRes:{value:new THREE.Vector2(854,480)},uRes:{value:new THREE.Vector2(1,1)},uMouse:{value:new THREE.Vector2(0.6,0.5)},
     uMV:{value:0},uAct:{value:0},uTime:{value:0},uIntro:{value:1},uScroll:{value:0},uAlpha:{value:1},uVel:{value:0},uProg:{value:0},uHover:{value:0},uTint:{value:0},uFade:{value:0.2},uEdge:{value:0.3},uDim:{value:0.66},uClip:{value:new THREE.Vector2(0,0)}}});
   const sMesh=new THREE.Mesh(geo,sMat); scene.add(sMesh);
@@ -1155,7 +1157,7 @@ function initGL(){
   }
   const first=getV(tvDom.getAttribute('src'),true);
   tvDom.pause(); tvDom.removeAttribute('autoplay');
-  const zMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_ZAP,transparent:true,depthTest:false,uniforms:{
+  const zMat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_ZAP,transparent:true,depthTest:false,uniforms:{uPx:PXU,
     uA:{value:first.tex},uB:{value:first.tex},uResA:{value:first.res},uResB:{value:first.res},
     uRes:{value:new THREE.Vector2(1,1)},uFrame:{value:new THREE.Vector2(1,1)},uRad:{value:14},
     uMix:{value:0},uBurst:{value:0},uGlow:{value:0},uHeat:{value:0},uCenter:{value:new THREE.Vector2(0.5,0.5)},uMouse:{value:new THREE.Vector2(0.5,0.5)},uAct:{value:0},uTime:{value:0},uAlpha:{value:1},
@@ -1184,7 +1186,7 @@ function initGL(){
   /* vignettes */
   const items=$$('.film').map(el=>{
     const id=el.dataset.film, media=$('.media',el);
-    const mat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_CARD,transparent:true,uniforms:{
+    const mat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_CARD,transparent:true,uniforms:{uPx:PXU,
       uTex:{value:null},uVid:{value:null},uUseVid:{value:0},uRes:{value:new THREE.Vector2(1,1)},uTexRes:{value:new THREE.Vector2(16,9)},uVidRes:{value:new THREE.Vector2(16,9)},
       uHover:{value:0},uMouse:{value:new THREE.Vector2(0.5,0.5)},uTime:{value:0},uVel:{value:0},uAlpha:{value:0},uProg:{value:0},uPar:{value:0}}});
     const mesh=new THREE.Mesh(geo,mat); mesh.visible=false; scene.add(mesh);
@@ -1502,7 +1504,7 @@ function initMiniZap(){
   function getV(src){let p=pool.get(src); if(!p){const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.preload='auto'; v.src=src;
     p={v,tex:mkT(v),res:new THREE.Vector2(16,9)}; v.addEventListener('loadedmetadata',()=>{if(v.videoWidth)p.res.set(v.videoWidth,v.videoHeight);}); pool.set(src,p);} return p;}
   const first=getV(CH[0].src);
-  const mat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_ZAP,transparent:true,depthTest:false,uniforms:{
+  const mat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_ZAP,transparent:true,depthTest:false,uniforms:{uPx:PXU,
     uA:{value:first.tex},uB:{value:first.tex},uResA:{value:first.res},uResB:{value:first.res},
     uRes:{value:new THREE.Vector2(1,1)},uFrame:{value:new THREE.Vector2(1,1)},uRad:{value:14},
     uMix:{value:0},uBurst:{value:0},uGlow:{value:0},uHeat:{value:0},uCenter:{value:new THREE.Vector2(0.5,0.5)},uMouse:{value:new THREE.Vector2(0.5,0.5)},uAct:{value:0},uTime:{value:0},uAlpha:{value:1},
@@ -1511,7 +1513,7 @@ function initMiniZap(){
   const st={cur:first,next:null,mix:0,run:false,t0:0,burst:0,glow:0,act:0,vis:false,w:0,h:0};
   function size(){const w=tv.clientWidth,h=tv.clientHeight; if(!w||!h) return; st.w=w; st.h=h; const p=Math.round(h*0.34), W=w+2*p, H=h+2*p;
     cv.style.cssText='position:absolute;left:'+(-p)+'px;top:'+(-p)+'px;width:'+W+'px;height:'+H+'px;pointer-events:none;z-index:1';
-    rd.setPixelRatio(Math.min(devicePixelRatio||1,2)); rd.setSize(W,H,false);
+    PXU.value=(devicePixelRatio||1)>=1.9?2:1; rd.setPixelRatio(PXU.value); rd.setSize(W,H,false);
     cam.left=-W/2; cam.right=W/2; cam.top=H/2; cam.bottom=-H/2; cam.updateProjectionMatrix();
     mesh.scale.set(W,H,1); mat.uniforms.uRes.value.set(W,H); mat.uniforms.uFrame.value.set(w,h);}
   size(); addEventListener('resize',size);
