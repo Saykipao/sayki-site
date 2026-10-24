@@ -1399,7 +1399,7 @@ function fillFp(id){
 /* ---------- transition des films : une seule vague irisée qui traverse l'écran.
    Au-dessus de la vague, la nouvelle page ; en dessous, l'ancienne. Pas d'écran intermédiaire. ---------- */
 let filmOn=false;
-const WAVE_A=0.11, WAVE_B=0.16, WAVE_F=0.13;
+const WAVE_A=0.11, WAVE_B=0.16, WAVE_F=0.22;
 /* « woosh » : part très vite, freine au milieu (les deux pages cohabitent), file vers la fin */
 function woosh(k){k=Math.pow(k,1.3); const u=2*k-1, a=Math.abs(u); return 0.5+0.5*Math.sign(u)*(0.18*a+0.82*a*a*a);}
 /* bord de la vague (0 = haut, 1 = bas). La vague prend de l'avance là où l'on a cliqué (bd = sens de la bosse) */
@@ -1423,12 +1423,12 @@ const GLOW=(function(){
       float b=exp(-(x-uCx)*(x-uCx)/0.045)*sin(3.14159*uQ);
       float e=-${K(WAVE_A+WAVE_B+WAVE_F)}+uQ*${K(1+2*(WAVE_A+WAVE_B+WAVE_F))}+${K(WAVE_A)}*uAmp*f+${K(WAVE_B)}*b*uBd;
       float d=y-e;
-      float w=0.07+0.07*uSpd;
+      float w=0.13+0.06*uSpd;
       float m=clamp(0.5-d/(2.0*w),0.0,1.0);
       float edge=smoothstep(0.0,0.5,m)*smoothstep(1.0,0.5,m);
-      vec3 col=irid(d/w*0.22-uT*0.35+x*0.12)*edge*0.4;
+      vec3 col=irid(d/w*0.22-uT*0.35+x*0.12)*edge*0.3;
       float ds=d*uSide;
-      float hw=0.05+0.045*uSpd; float haze=smoothstep(-hw,hw*1.6,ds)*exp(-max(ds,0.0)/(0.12+0.1*uSpd))*0.36;
+      float haze=smoothstep(-0.18,0.32,ds)*(1.0-smoothstep(0.3,0.75,ds))*0.24;
       col+=vec3(0.294,0.118,0.58)*haze;
       col+=(hash(vUv*uRes+fract(uT))-0.5)*0.06*exp(-abs(d)/w);
       gl_FragColor=vec4(col,haze);}`));
@@ -1447,28 +1447,31 @@ const GLOW=(function(){
 /* la vague : el reste visible au-dessus (keep='above') ou en dessous ('below') d'un bord flou.
    q0 → q1 : 0 = bord tout en haut, 1 = tout en bas. side : côté de la page qui s'en va (1 = dessous, -1 = dessus). */
 const MASK_N=innerWidth<700?26:40;
+const EASE=[0,1/6,2/6,3/6,4/6,5/6,1].map(u=>[u,u*u*(3-2*u)]);
 function setMask(el,o,q,tm,amp,sp){
   /* bandes verticales dont le dégradé est incliné sur la pente de la vague : bord continu, sans couture */
-  const W=o.W, H=o.H, sw=o.sw, fpx=(0.1+0.09*sp)*H, L=[], above=o.keep==='above';
+  const W=o.W, H=o.H, sw=o.sw, fpx=(0.3+0.1*sp)*H, L=[], above=o.keep==='above';
   let yl=waveY(0,q,tm,o.cx,amp,o.bd)*H;
   for(let i=0;i<MASK_N;i++){
     const yr=waveY(Math.min((i+1)*sw/W,1.2),q,tm,o.cx,amp,o.bd)*H, sl=(yr-yl)/sw, n=Math.hypot(sl,1);
     const dx=-sl/n, dy=1/n, th=Math.atan2(dx,-dy)*180/Math.PI, len=Math.abs(sw*dx)+Math.abs(H*dy);
-    const t0=(((yl+yr)/2-H/2)*dy)/len*100+50, hf=fpx/2/len*100;
-    const a=(t0-hf).toFixed(2), b=(t0+hf).toFixed(2), g=th.toFixed(2);
-    L.push(above?`linear-gradient(${g}deg,#000 ${a}%,transparent ${b}%)`:`linear-gradient(${g}deg,transparent ${a}%,#000 ${b}%)`);
+    const t0=(((yl+yr)/2-H/2)*dy)/len*100+50, hf=fpx/2/len*100, g=th.toFixed(2);
+    L.push(`linear-gradient(${g}deg,`+EASE.map(([u,v])=>`rgba(0,0,0,${above?1-v:v}) ${(t0-hf+2*hf*u).toFixed(2)}%`).join(',')+')');
     yl=yr;
   }
   const st=L.join(','); el.style.webkitMaskImage=st; el.style.maskImage=st;
 }
 function clearMask(el){['webkitMaskImage','maskImage','webkitMaskSize','maskSize','webkitMaskPosition','maskPosition','webkitMaskRepeat','maskRepeat'].forEach(p=>el.style[p]='');}
-function wave(o){
-  const el=o.el;
-  if(RM){clearMask(el); o.done(); return;}
+function maskSetup(el,o){
   const bx=el.getBoundingClientRect(); o.W=bx.width||innerWidth; o.H=bx.height||innerHeight; o.sw=Math.ceil(o.W/MASK_N);
   const P=[]; for(let i=0;i<MASK_N;i++) P.push(i*o.sw+'px 0');
   const sz=o.sw+'px 100%';
   el.style.webkitMaskSize=sz; el.style.maskSize=sz; el.style.webkitMaskPosition=P.join(','); el.style.maskPosition=P.join(','); el.style.webkitMaskRepeat='no-repeat'; el.style.maskRepeat='no-repeat';
+}
+function wave(o){
+  const el=o.el;
+  if(RM){clearMask(el); o.done(); return;}
+  maskSetup(el,o);
   const s=performance.now(), t0=s/1000; let fin=false, lq=o.q0, lt=s;
   setMask(el,o,o.q0,0,0.55,0);
   const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); clearMask(el); if(GLOW) GLOW.hide(); o.done();};
@@ -1483,6 +1486,8 @@ function wave(o){
     if(k<1) requestAnimationFrame(step); else finish();
   })(s);
 }
+if(/[?&]wavedebug/.test(location.search)) window.__wave=(q,id)=>{fillFp(id||'elba'); fp.hidden=false; fp.classList.add('is-open'); root.classList.add('is-locked');
+  const o={el:fp,keep:'above',cx:0.5,bd:1,side:1}; maskSetup(fp,o); setMask(fp,o,q,0,0.55,0); if(GLOW){GLOW.show(); GLOW.draw({uQ:q,uT:0,uCx:0.5,uAmp:0.55,uSpd:0,uBd:1,uSide:1});}};
 let clickX=0.5;
 addEventListener('pointerdown',e=>{clickX=e.clientX/innerWidth;},true);
 
