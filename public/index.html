@@ -1446,35 +1446,43 @@ const GLOW=(function(){
 })();
 /* la vague : el reste visible au-dessus (keep='above') ou en dessous ('below') d'un bord flou.
    q0 → q1 : 0 = bord tout en haut, 1 = tout en bas. side : côté de la page qui s'en va (1 = dessous, -1 = dessus). */
-const MASK_N=innerWidth<700?26:40;
-const EASE=[0,1/6,2/6,3/6,4/6,5/6,1].map(u=>[u,u*u*(3-2*u)]);
-function setMask(el,o,q,tm,amp,sp){
-  /* bandes verticales dont le dégradé est incliné sur la pente de la vague : bord continu, sans couture */
-  const W=o.W, H=o.H, sw=o.sw, fpx=(0.3+0.1*sp)*H, L=[], above=o.keep==='above';
-  let yl=waveY(0,q,tm,o.cx,amp,o.bd)*H;
-  for(let i=0;i<MASK_N;i++){
-    const yr=waveY(Math.min((i+1)*sw/W,1.2),q,tm,o.cx,amp,o.bd)*H, sl=(yr-yl)/sw, n=Math.hypot(sl,1);
-    const dx=-sl/n, dy=1/n, th=Math.atan2(dx,-dy)*180/Math.PI, len=Math.abs(sw*dx)+Math.abs(H*dy);
-    const t0=(((yl+yr)/2-H/2)*dy)/len*100+50, hf=fpx/2/len*100, g=th.toFixed(2);
-    L.push(`linear-gradient(${g}deg,`+EASE.map(([u,v])=>`rgba(0,0,0,${above?1-v:v}) ${(t0-hf+2*hf*u).toFixed(2)}%`).join(',')+')');
-    yl=yr;
-  }
-  const st=L.join(','); el.style.webkitMaskImage=st; el.style.maskImage=st;
-}
-function clearMask(el){['webkitMaskImage','maskImage','webkitMaskSize','maskSize','webkitMaskPosition','maskPosition','webkitMaskRepeat','maskRepeat'].forEach(p=>el.style[p]='');}
+/* masque : une seule petite image (64 px de large) calculée pixel par pixel puis étirée à l'écran.
+   L'étirement lisse tout : un vrai fondu, sans couture ni ligne. Chaque image est décodée avant d'être posée. */
+const MK=document.createElement('canvas'), MKX=MK.getContext('2d');
 function maskSetup(el,o){
-  const bx=el.getBoundingClientRect(); o.W=bx.width||innerWidth; o.H=bx.height||innerHeight; o.sw=Math.ceil(o.W/MASK_N);
-  const P=[]; for(let i=0;i<MASK_N;i++) P.push(i*o.sw+'px 0');
-  const sz=o.sw+'px 100%';
-  el.style.webkitMaskSize=sz; el.style.maskSize=sz; el.style.webkitMaskPosition=P.join(','); el.style.maskPosition=P.join(','); el.style.webkitMaskRepeat='no-repeat'; el.style.maskRepeat='no-repeat';
+  const bx=el.getBoundingClientRect(); o.W=bx.width||innerWidth; o.H=bx.height||innerHeight;
+  const ar=o.W/o.H; MK.width=ar>=1?64:Math.round(64*ar); MK.height=ar>=1?Math.round(64/ar):64;
+  o.img=MKX.createImageData(MK.width,MK.height); o.pending=null; o.dec=false; o.ready=false;
+  ['webkitMaskSize','maskSize'].forEach(p=>el.style[p]='100% 100%'); ['webkitMaskRepeat','maskRepeat'].forEach(p=>el.style[p]='no-repeat');
+  ['webkitMaskPosition','maskPosition'].forEach(p=>el.style[p]='0 0');
 }
+function setMask(el,o,q,tm,amp,sp){
+  const w=MK.width, h=MK.height, d=o.img.data, f=0.3+0.1*sp, above=o.keep==='above';
+  for(let i=0;i<w;i++){
+    const e=waveY((i+0.5)/w,q,tm,o.cx,amp,o.bd);
+    for(let j=0;j<h;j++){
+      let u=((j+0.5)/h-e)/f+0.5; u=u<0?0:u>1?1:u; u=u*u*(3-2*u);
+      const a=above?1-u:u, k=(j*w+i)*4; d[k]=d[k+1]=d[k+2]=255; d[k+3]=Math.round(a*255);
+    }
+  }
+  MKX.putImageData(o.img,0,0);
+  o.pending=MK.toDataURL('image/png');
+  if(o.dec) return; o.dec=true;
+  (async()=>{ while(o.pending){ const url=o.pending; o.pending=null; const im=new Image(); im.src=url;
+      try{await im.decode();}catch(e){}
+      if(o.done_) break; const v=`url(${url})`; el.style.webkitMaskImage=v; el.style.maskImage=v;
+      if(!o.ready){o.ready=true; el.style.visibility='';} }
+    o.dec=false; })();
+}
+function clearMask(el){el.style.visibility=''; ['webkitMaskImage','maskImage','webkitMaskSize','maskSize','webkitMaskPosition','maskPosition','webkitMaskRepeat','maskRepeat'].forEach(p=>el.style[p]='');}
 function wave(o){
   const el=o.el;
   if(RM){clearMask(el); o.done(); return;}
+  if((o.keep==='above')===(o.q0===0)) el.style.visibility='hidden'; /* invisible au départ : on attend le 1er masque */
   maskSetup(el,o);
   const s=performance.now(), t0=s/1000; let fin=false, lq=o.q0, lt=s;
   setMask(el,o,o.q0,0,0.55,0);
-  const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); clearMask(el); if(GLOW) GLOW.hide(); o.done();};
+  const finish=()=>{if(fin) return; fin=true; o.done_=true; clearTimeout(safe); clearMask(el); if(GLOW) GLOW.hide(); o.done();};
   const safe=setTimeout(finish,o.dur+400);
   if(GLOW) GLOW.show();
   (function step(n){ if(fin) return;
