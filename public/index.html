@@ -130,7 +130,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .is-gl .hero-media::after{display:none}
 .hero-tc{position:absolute;top:calc(100px + env(safe-area-inset-top,0px));right:max(var(--pad), env(safe-area-inset-right,0px), calc((100% - 1560px) / 2));text-align:right;display:grid;gap:4px}
 .hero-tc b{font-weight:500;color:var(--violet-clair)}
-.h1{font-size:clamp(80px,15vw,300px);line-height:.88;display:flex;flex-direction:column}
+.h1{font-size:clamp(56px,11.2vw,226px);line-height:.88;display:flex;flex-direction:column}
 .h1 .ln{display:block;overflow:hidden;padding:.14em .12em .22em 0;margin:-.14em -.12em -.22em 0;will-change:transform}
 .h1 .ln>span{display:block;transition:transform 1.3s var(--ease-out);transition-delay:calc(var(--d) * 100ms + 150ms)}
 .js-intro:not(.is-in) .h1 .ln>span{transform:translateY(110%)}
@@ -202,7 +202,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .manifesto{position:relative;height:260vh}
 @media (max-width:899px){.manifesto{height:190vh}}
 .hero-sub{display:none}
-@media (max-width:640px){.hero-sub{display:block;position:relative;margin:16px 0 0;font-size:min(21px, calc((100vw - 2 * var(--pad)) / 20.4));line-height:1.22;font-weight:500;letter-spacing:-.01em;color:#fff;text-shadow:0 1px 18px rgba(21,10,38,.6);transition:opacity 1s var(--ease-out) .5s}.hero-sub span{display:block;white-space:nowrap}.js-intro:not(.is-in) .hero-sub{opacity:0}.intro .hero-foot p strong{display:none}.hero-tc{display:none}.h1{font-size:calc((100vw - 2 * var(--pad)) / 3.75)}.h1 .ln>span{white-space:nowrap}}
+.m-br{display:none}
+.hf-desk{margin-top:clamp(24px,3vw,40px);position:relative}
+.hf-desk p{max-width:52ch}.hf-desk p strong{max-width:34ch}
+@media (min-width:641px){.intro{display:none}}
+@media (max-width:640px){.m-br{display:inline}.hf-desk{display:none}.hero-sub{display:block;position:relative;margin:16px 0 0;font-size:min(21px, calc((100vw - 2 * var(--pad)) / 20.4));line-height:1.22;font-weight:500;letter-spacing:-.01em;color:#fff;text-shadow:0 1px 18px rgba(21,10,38,.6);transition:opacity 1s var(--ease-out) .5s}.hero-sub span{display:block;white-space:nowrap}.js-intro:not(.is-in) .hero-sub{opacity:0}.intro .hero-foot p strong{display:none}.hero-tc{display:none}.h1{font-size:calc((100vw - 2 * var(--pad)) / 3.75)}.h1 .ln>span{white-space:nowrap}}
 .pin-in{height:100svh;position:sticky;top:0;overflow:hidden}
 .is-smooth .pin-in{position:relative}
 .manifesto .pin-in{display:grid;align-content:center}
@@ -486,11 +490,14 @@ html:not(.h-on) .track{gap:8px}
     </div>
     <div class="hero-tc mono" aria-hidden="true"><span>Showreel 2026 · 16:9 · 24 i/s</span><span>TC <b id="heroTc">00:00:00:00</b></span></div>
     <h1 class="display h1">
-      <span class="ln"><span style="--d:0">Devenez</span></span>
-      <span class="ln"><span style="--d:1">impossible</span></span>
-      <span class="ln"><span style="--d:2"><em>à oublier.</em></span></span>
+      <span class="ln"><span style="--d:0">Devenez <br class="m-br">impossible</span></span>
+      <span class="ln"><span style="--d:1"><em>à oublier.</em></span></span>
     </h1>
     <p class="hero-sub" aria-hidden="true"><span>Vos clients n’aiment pas qu’on leur vende.</span><span>Ils aiment qu’on leur raconte.</span></p>
+    <div class="hero-foot hf-desk">
+      <p><strong>Vos clients n’aiment pas qu’on leur vende. Ils aiment qu’on leur raconte.</strong> <span>Nous réalisons des films d’entreprise, des publicités narratives et des animations explicatives sans tournage, du concept au film final. Parce qu’une bonne idée n’a pas toujours besoin d’une caméra pour exister.</span></p>
+      <a class="down" href="#films">Voir les films <span aria-hidden="true">↓</span></a>
+    </div>
   </section>
 
   <section class="intro wrap" aria-label="Présentation">
