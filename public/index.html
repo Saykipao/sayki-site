@@ -1399,66 +1399,87 @@ function fillFp(id){
 /* ---------- transition des films : une seule vague irisée qui traverse l'écran.
    Au-dessus de la vague, la nouvelle page ; en dessous, l'ancienne. Pas d'écran intermédiaire. ---------- */
 let filmOn=false;
-const WAVE_A=0.11, WAVE_B=0.16;
-/* « woosh » : part très vite, freine fort au milieu (les deux pages cohabitent), repart très vite */
-function woosh(k){const u=2*k-1, a=Math.abs(u); return 0.5+0.5*Math.sign(u)*(0.18*a+0.82*a*a*a);}
-function wooshV(k){const a=Math.abs(2*k-1); return 0.18+2.46*a*a;} /* vitesse relative, max 2.64 */
-/* bord de la vague (0 = haut de l'écran, 1 = bas) ; la vague prend de l'avance là où l'on a cliqué */
-function waveY(x,q,tm,cx,amp){
+const WAVE_A=0.11, WAVE_B=0.16, WAVE_F=0.13;
+/* « woosh » : part très vite, freine au milieu (les deux pages cohabitent), file vers la fin */
+function woosh(k){k=Math.pow(k,1.3); const u=2*k-1, a=Math.abs(u); return 0.5+0.5*Math.sign(u)*(0.18*a+0.82*a*a*a);}
+/* bord de la vague (0 = haut, 1 = bas). La vague prend de l'avance là où l'on a cliqué (bd = sens de la bosse) */
+function waveY(x,q,tm,cx,amp,bd){
   const f=0.55*Math.sin(6.0*x+tm*1.3)+0.3*Math.sin(13.0*x-tm*2.1+1.7)+0.15*Math.sin(23.0*x+tm*3.0);
   const b=Math.exp(-(x-cx)*(x-cx)/0.045)*Math.sin(Math.PI*q);
-  return -WAVE_A-WAVE_B+q*(1+2*WAVE_A+2*WAVE_B)+WAVE_A*amp*f+WAVE_B*b;
+  return -WAVE_A-WAVE_B-WAVE_F+q*(1+2*(WAVE_A+WAVE_B+WAVE_F))+WAVE_A*amp*f+WAVE_B*b*bd;
 }
 const GLOW=(function(){
   const c=document.createElement('canvas'); c.id='wipe'; c.setAttribute('aria-hidden','true'); document.body.appendChild(c);
   const gl=c.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false}); if(!gl) return null;
   const sh=(type,src)=>{const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s;};
-  const pr=gl.createProgram();
+  const pr=gl.createProgram(), K=v=>v.toFixed(4);
   gl.attachShader(pr,sh(gl.VERTEX_SHADER,'attribute vec2 p; varying vec2 vUv; void main(){vUv=p*0.5+0.5; gl_Position=vec4(p,0.0,1.0);}'));
   gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,`precision mediump float; varying vec2 vUv;
-    uniform float uQ; uniform float uT; uniform float uCx; uniform float uAmp; uniform float uSpd; uniform vec2 uRes;
+    uniform float uQ; uniform float uT; uniform float uCx; uniform float uAmp; uniform float uSpd; uniform float uBd; uniform float uSide; uniform vec2 uRes;
     float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
     vec3 irid(float t){return 0.5+0.5*cos(6.28318*(vec3(0.0,0.33,0.67)+t));}
     void main(){float x=vUv.x, y=1.0-vUv.y;
       float f=0.55*sin(6.0*x+uT*1.3)+0.3*sin(13.0*x-uT*2.1+1.7)+0.15*sin(23.0*x+uT*3.0);
       float b=exp(-(x-uCx)*(x-uCx)/0.045)*sin(3.14159*uQ);
-      float e=-${WAVE_A.toFixed(3)}-${WAVE_B.toFixed(3)}+uQ*(1.0+${(2*WAVE_A).toFixed(3)}+${(2*WAVE_B).toFixed(3)})+${WAVE_A.toFixed(3)}*uAmp*f+${WAVE_B.toFixed(3)}*b;
-      float d=y-e;                                  /* <0 : nouvelle page, >0 : page qu'on quitte */
-      float w=0.06+0.07*uSpd;                      /* la frange s'étire quand ça va vite */
-      float band=exp(-abs(d)/w);
+      float e=-${K(WAVE_A+WAVE_B+WAVE_F)}+uQ*${K(1+2*(WAVE_A+WAVE_B+WAVE_F))}+${K(WAVE_A)}*uAmp*f+${K(WAVE_B)}*b*uBd;
+      float d=y-e;
+      float w=0.07+0.07*uSpd;
       float m=clamp(0.5-d/(2.0*w),0.0,1.0);
       float edge=smoothstep(0.0,0.5,m)*smoothstep(1.0,0.5,m);
-      vec3 col=irid(d/w*0.22-uT*0.35+x*0.12)*edge*0.45;   /* les reflets des vignettes, parallèles au bord */
-      float haze=d>0.0?exp(-d/(0.08+0.1*uSpd))*0.42:0.0;        /* la page qu'on quitte vire au violet, comme le duotone */
-      vec3 vio=vec3(0.294,0.118,0.58);
-      col+=vio*haze;
-      col+=(hash(vUv*uRes+fract(uT))-0.5)*0.07*band;
+      vec3 col=irid(d/w*0.22-uT*0.35+x*0.12)*edge*0.4;
+      float ds=d*uSide;
+      float haze=ds>0.0?exp(-ds/(0.1+0.1*uSpd))*0.4:0.0;
+      col+=vec3(0.294,0.118,0.58)*haze;
+      col+=(hash(vUv*uRes+fract(uT))-0.5)*0.06*exp(-abs(d)/w);
       gl_FragColor=vec4(col,haze);}`));
   gl.linkProgram(pr); if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) return null;
   gl.useProgram(pr);
   const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   const loc=gl.getAttribLocation(pr,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-  const U=n=>gl.getUniformLocation(pr,n), uQ=U('uQ'), uT=U('uT'), uCx=U('uCx'), uAmp=U('uAmp'), uSpd=U('uSpd'), uR=U('uRes');
+  const U={}; ['uQ','uT','uCx','uAmp','uSpd','uBd','uSide','uRes'].forEach(n=>U[n]=gl.getUniformLocation(pr,n));
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
   return {
     show(){const d=Math.min(devicePixelRatio||1,1.5); c.width=Math.ceil(innerWidth*d); c.height=Math.ceil(innerHeight*d); gl.viewport(0,0,c.width,c.height); c.style.display='block';},
-    draw(q,tm,cx,amp,spd){gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(uQ,q); gl.uniform1f(uT,tm); gl.uniform1f(uCx,cx); gl.uniform1f(uAmp,amp); gl.uniform1f(uSpd,spd); gl.uniform2f(uR,c.width,c.height); gl.drawArrays(gl.TRIANGLES,0,3);},
+    draw(o){gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); for(const k in o) gl.uniform1f(U[k],o[k]); gl.uniform2f(U.uRes,c.width,c.height); gl.drawArrays(gl.TRIANGLES,0,3);},
     hide(){c.style.display='none';}
   };
 })();
-/* reveal=true : la page film apparaît au-dessus de la vague ; false : elle s'en va au-dessus.
-   cx : position horizontale du clic (0..1), la vague part de là. */
-function wave(reveal,dur,cx,done){
-  if(RM){fp.style.clipPath=''; done(); return;}
-  const N=64, s=performance.now(), t0=s/1000; let fin=false;
-  const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); fp.style.clipPath=''; if(GLOW) GLOW.hide(); done();};
-  const safe=setTimeout(finish,dur+400);
+/* la vague : el reste visible au-dessus (keep='above') ou en dessous ('below') d'un bord flou.
+   q0 → q1 : 0 = bord tout en haut, 1 = tout en bas. side : côté de la page qui s'en va (1 = dessous, -1 = dessus). */
+const MASK_N=innerWidth<700?26:40;
+function setMask(el,o,q,tm,amp,sp){
+  /* bandes verticales dont le dégradé est incliné sur la pente de la vague : bord continu, sans couture */
+  const W=o.W, H=o.H, sw=o.sw, fpx=(0.1+0.09*sp)*H, L=[], above=o.keep==='above';
+  let yl=waveY(0,q,tm,o.cx,amp,o.bd)*H;
+  for(let i=0;i<MASK_N;i++){
+    const yr=waveY(Math.min((i+1)*sw/W,1.2),q,tm,o.cx,amp,o.bd)*H, sl=(yr-yl)/sw, n=Math.hypot(sl,1);
+    const dx=-sl/n, dy=1/n, th=Math.atan2(dx,-dy)*180/Math.PI, len=Math.abs(sw*dx)+Math.abs(H*dy);
+    const t0=(((yl+yr)/2-H/2)*dy)/len*100+50, hf=fpx/2/len*100;
+    const a=(t0-hf).toFixed(2), b=(t0+hf).toFixed(2), g=th.toFixed(2);
+    L.push(above?`linear-gradient(${g}deg,#000 ${a}%,transparent ${b}%)`:`linear-gradient(${g}deg,transparent ${a}%,#000 ${b}%)`);
+    yl=yr;
+  }
+  const st=L.join(','); el.style.webkitMaskImage=st; el.style.maskImage=st;
+}
+function clearMask(el){['webkitMaskImage','maskImage','webkitMaskSize','maskSize','webkitMaskPosition','maskPosition','webkitMaskRepeat','maskRepeat'].forEach(p=>el.style[p]='');}
+function wave(o){
+  const el=o.el;
+  if(RM){clearMask(el); o.done(); return;}
+  const bx=el.getBoundingClientRect(); o.W=bx.width||innerWidth; o.H=bx.height||innerHeight; o.sw=Math.ceil(o.W/MASK_N);
+  const P=[]; for(let i=0;i<MASK_N;i++) P.push(i*o.sw+'px 0');
+  const sz=o.sw+'px 100%';
+  el.style.webkitMaskSize=sz; el.style.maskSize=sz; el.style.webkitMaskPosition=P.join(','); el.style.maskPosition=P.join(','); el.style.webkitMaskRepeat='no-repeat'; el.style.maskRepeat='no-repeat';
+  const s=performance.now(), t0=s/1000; let fin=false, lq=o.q0, lt=s;
+  setMask(el,o,o.q0,0,0.55,0);
+  const finish=()=>{if(fin) return; fin=true; clearTimeout(safe); clearMask(el); if(GLOW) GLOW.hide(); o.done();};
+  const safe=setTimeout(finish,o.dur+400);
   if(GLOW) GLOW.show();
   (function step(n){ if(fin) return;
-    const k=Math.min((n-s)/dur,1), q=woosh(k), sp=wooshV(k)/2.64, amp=0.55+0.9*sp, tm=n/1000-t0;
-    const pts=[]; for(let i=0;i<=N;i++){const x=reveal?1-i/N:i/N; pts.push((x*100).toFixed(2)+'% '+(waveY(x,q,tm,cx,amp)*100).toFixed(2)+'%');}
-    fp.style.clipPath='polygon('+(reveal?'0% -40%,100% -40%,'+pts.join(','):pts.join(',')+',100% 140%,0% 140%')+')';
-    if(GLOW) GLOW.draw(q,tm,cx,amp,sp);
+    const k=Math.min((n-s)/o.dur,1), q=o.q0+(o.q1-o.q0)*woosh(k), tm=n/1000-t0;
+    const sp=Math.min(Math.abs(q-lq)/Math.max(n-lt,1)*o.dur/2.6,1); lq=q; lt=n;
+    const amp=0.55+0.9*sp;
+    setMask(el,o,q,tm,amp,sp);
+    if(GLOW) GLOW.draw({uQ:q,uT:tm,uCx:o.cx,uAmp:amp,uSpd:sp,uBd:o.bd,uSide:o.side});
     if(k<1) requestAnimationFrame(step); else finish();
   })(s);
 }
@@ -1503,17 +1524,19 @@ addEventListener('keydown',e=>{ if(e.code!=='Space'||fp.hidden||pl.hidden) retur
 
 function openFilm(id){
   if(busy) return; busy=true; lastFocus=document.activeElement;
-  fillFp(id); fp.style.clipPath='polygon(0 0,100% 0,100% 0,0 0)'; fp.hidden=false; fp.scrollTop=0; fp.classList.add('is-open');
+  fillFp(id); fp.style.opacity='0'; fp.hidden=false; fp.scrollTop=0; fp.classList.add('is-open');
   root.classList.add('is-locked');
   startFilm();
-  wave(true,1500,clickX,()=>{busy=false; filmOn=true; $('#fpClose').focus({preventScroll:true});});
+  wave({el:fp,keep:'above',q0:0,q1:1,dur:1150,cx:clickX,bd:1,side:1,done:()=>{busy=false; filmOn=true; $('#fpClose').focus({preventScroll:true});}});
+  fp.style.opacity='';
 }
 function closeFilm(){
   if(busy||fp.hidden) return; busy=true; filmOn=false;
-  wave(false,1350,clickX,()=>{
+  /* fermeture : la vague remonte, du bas vers le haut, et rend le site */
+  wave({el:fp,keep:'above',q0:1,q1:0,dur:1050,cx:clickX,bd:-1,side:-1,done:()=>{
     stopFilm(); fp.hidden=true; fp.classList.remove('is-open'); root.classList.remove('is-locked');
     busy=false; if(lastFocus) lastFocus.focus({preventScroll:true});
-  });
+  }});
 }
 document.addEventListener('click',e=>{const a=e.target.closest('[data-open]'); if(a){e.preventDefault();openFilm(a.dataset.open);}});
 $('#fpClose').addEventListener('click',closeFilm);
@@ -1522,7 +1545,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'){ if(!fp.hidden) closeFilm();
 /* ================= Amorce + intro ================= */
 const ld=$('#ld'), ldBar=$('#ldBar');
 {const SAY=["Silence sur le plateau… Ah non, il n’y a pas de plateau.", "Moteur… Ça tourne. Enfin, ça charge.", "Bienvenue. On allume les projecteurs.", "On cherche la bonne prise. Toutes sont bonnes, il n’y a pas de tournage.", "Bienvenue. Mettez-vous à l’aise, on installe les histoires.", "Le café coule. Les films aussi.", "Chargement de bonnes idées en cours.", "Bienvenue. Ici, personne ne crie « coupez »."]; $('#ldSay').textContent=SAY[Math.floor(Math.random()*SAY.length)];}
-function intro(){root.classList.add('is-in'); if(GL){const u=GL.hero.mat.uniforms; tween(1600,p=>{u.uIntro.value=p;});}}
+function intro(viaWave){root.classList.add('is-in'); if(GL){const u=GL.hero.mat.uniforms; if(viaWave) u.uIntro.value=1; else tween(1600,p=>{u.uIntro.value=p;});}}
 if(!RM){
   root.classList.add('js-intro','is-loading');
   /* ce qui compte vraiment avant d'entrer : polices, showreel, page */
@@ -1539,8 +1562,10 @@ if(!RM){
     if(shown<1) requestAnimationFrame(tick); else if(!leaving){leaving=true; leave();}
   })(t0);
   function leave(){
-    ld.classList.add('out');
-    setTimeout(()=>{ld.classList.add('gone'); intro(); root.classList.remove('is-loading'); setTimeout(()=>{ld.hidden=true;},800);},420);
+    ld.classList.add('out'); ld.style.animation='none';
+    setTimeout(()=>{ intro(true);
+      wave({el:ld,keep:'below',q0:0,q1:1,dur:1300,cx:0.5,bd:1,side:1,done:()=>{ld.hidden=true; root.classList.remove('is-loading');}});
+    },160);
   }
 }else{ld.hidden=true; intro();}
 
