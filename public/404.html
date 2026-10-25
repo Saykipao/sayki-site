@@ -601,7 +601,7 @@ html:not(.h-on) .track{gap:8px}
 <main id="smooth">
   <section class="hero wrap" id="top" aria-label="Sayki Studio">
     <div class="hero-media" id="heroMedia">
-      <video id="heroVid" poster="assets/intro.jpg" autoplay muted loop playsinline preload="auto" crossorigin="anonymous"><source src="https://vz-4410841f-776.b-cdn.net/81f6e5f9-4d5e-446d-8448-a4ddac0ddce3/play_1080p.mp4" type="video/mp4" media="(min-width: 900px)"><source src="https://vz-4410841f-776.b-cdn.net/81f6e5f9-4d5e-446d-8448-a4ddac0ddce3/play_720p.mp4" type="video/mp4"><source src="assets/intro.mp4" type="video/mp4"></video>
+      <video id="heroVid" poster="assets/intro.jpg" autoplay muted loop playsinline preload="auto" crossorigin="anonymous"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_1080p.mp4" type="video/mp4" media="(min-width: 900px)"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_720p.mp4" type="video/mp4"><source src="assets/intro.mp4" type="video/mp4"></video>
     </div>
     <div class="hero-tc mono" aria-hidden="true"><span>Showreel 2026 · 16:9 · 24 i/s</span><span>TC <b id="heroTc">00:00:00:00</b></span></div>
     <div class="display h1">
@@ -857,8 +857,8 @@ html:not(.h-on) .track{gap:8px}
       <div class="st-grid">
         <div class="st-main">
           <h2 class="display t-xl split" data-glow>Le <em>studio</em></h2>
-          <p class="studio-lead">Derrière Sayki, Ludovic Pahaut : directeur artistique, réalisateur et formateur IA.</p>
-          <p class="studio-p">Vingt ans de direction artistique pour L’Oréal, Disney, Tomorrowland, Proximus ou Cofidis. Les outils ont changé. L’exigence, non : d’abord la stratégie, ensuite l’image, enfin le film.</p>
+          <p class="studio-lead">Derrière Sayki, il y a Ludovic.<br>Designer multidisciplinaire, directeur artistique, réalisateur IA.</p>
+          <p class="studio-p">Vingt ans à construire des univers de marque, de Peugeot à Disney, de Proximus à Tomorrowland, en passant par L’Oréal et Cofidis. Les outils ont changé. L’exigence, non.</p>
         </div>
         <dl class="st-facts">
           <div><dt class="display">20+</dt><dd>ans de direction artistique</dd></div>
@@ -1239,7 +1239,7 @@ filterBtns.forEach(b=>b.addEventListener('click',()=>{
 
 /* ================= Petits effets ================= */
 const heroVid=$('#heroVid'), heroTc=$('#heroTc');
-const INTRO_B='https://vz-4410841f-776.b-cdn.net/81f6e5f9-4d5e-446d-8448-a4ddac0ddce3/play_'+(matchMedia('(min-width: 900px)').matches?'1080p':'720p')+'.mp4';
+const INTRO_B='https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_'+(matchMedia('(min-width: 900px)').matches?'1080p':'720p')+'.mp4';
 let INTRO=INTRO_B; $('#tvVid').setAttribute('src',INTRO); $('#tvVid').addEventListener('error',e=>{const v=e.target; if((v.currentSrc||v.src).indexOf('b-cdn.net')>=0){ v.src='assets/intro.mp4'; }});
 heroVid.addEventListener('loadedmetadata',()=>{ if(heroVid.currentSrc.indexOf('b-cdn.net')<0){ INTRO='assets/intro.mp4'; } });
 /* une vidéo qu'on ne voit pas ne se décode pas */
