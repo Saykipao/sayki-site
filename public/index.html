@@ -378,7 +378,7 @@ html:not(.h-on) .track{gap:8px}
 .tv{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0d0619;padding:0;border:0;-webkit-tap-highlight-color:transparent;isolation:isolate;will-change:transform;transform-origin:50% 50%}
 .tv::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background-image:linear-gradient(rgba(0,0,0,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.5) 1px,transparent 1px);background-size:3px 3px;opacity:.13}
 .is-gl .tv::after{display:none}
-.media::after,#preview::after,.fp-media::after,.studio-media::after,.hero-media::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background-image:linear-gradient(rgba(0,0,0,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.5) 1px,transparent 1px);background-size:3px 3px;opacity:.13}
+.studio-media::after,.hero-media::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background-image:linear-gradient(rgba(0,0,0,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.5) 1px,transparent 1px);background-size:3px 3px;opacity:.13}
 .is-gl .media::after,.is-gl .studio-media::after,.is-gl .hero-media::before{display:none}
 .is-gl .tv{background:transparent;overflow:visible}
 .tv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
@@ -1117,8 +1117,6 @@ void main(){
   vec3 duo=gmap(lum*1.08);
   vec3 col=mix(duo,real,m);
   col+=irid(d*2.5-uTime*0.35)*edge*0.55;
-  col*=1.0-0.06*pgrid()*(1.0-m*0.4);
-  col+=(hash(uv*uRes+fract(uTime))-0.5)*0.07;
   gl_FragColor=vec4(col,uAlpha);
 }`;
 const FS_HERO=COMMON+`
