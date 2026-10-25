@@ -572,7 +572,7 @@ html:not(.h-on) .track{gap:8px}
 
   <section class="sec wrap" id="films">
     <div class="sec-hd">
-      <h2 class="display t-xl split" data-glow>Films<sup id="filmCount">12</sup></h2>
+      <h2 class="display t-xl split" data-glow>Films<sup id="filmCount">13</sup></h2>
       <div class="filters" role="group" aria-label="Filtrer les films">
         <button aria-pressed="true" data-f="all">Tous</button>
         <button aria-pressed="false" data-f="explicatif">Explicatifs</button>
@@ -586,7 +586,7 @@ html:not(.h-on) .track{gap:8px}
       </div>
     </div>
     <div class="grid" id="grid"></div>
-    <div class="more" id="more"><button type="button" id="moreBtn" data-cursor="Voir|plus"><span>Voir plus</span><b class="mono" id="moreN">+5</b><i aria-hidden="true"></i></button></div>
+    <div class="more" id="more"><button type="button" id="moreBtn" data-cursor="Voir|plus"><span>Voir plus</span><b class="mono" id="moreN">+6</b><i aria-hidden="true"></i></button></div>
   </section>
 
   <section class="manifesto pin" id="manifeste" aria-label="Manifeste">
@@ -764,6 +764,8 @@ const FILMS={
     defi:'Faire sentir un parfum à travers un écran. Carré Blanc, de la forêt au flacon, en quinze secondes et en vertical.'},
   laforge:{t:'La Forge',hook:'Une identité qui transpire',type:'Identité visuelle',sect:'Sport',client:'La Forge',tc:'60 s',fmt:'16:9 · 1920×1080',fps:'30 i/s',tags:['identite'],v:false,
     defi:'Présenter l’identité visuelle d’une salle de sport : logo, couleurs, typographies et images de campagne, réunis dans un seul film.'},
+  arkoesp:{t:'Arkopharma Espagne',hook:'La pharmacienne qui a toujours une plante d’avance',type:'Film de notoriété',sect:'Pharma',client:'Arkopharma Espagne',tc:'60 s',fmt:'16:9 · 3840×2160',fps:'24 i/s',tags:['notoriete'],v:false,
+    defi:'Faire connaître Arkopharma en Espagne. Une rue au soleil, une pharmacie de quartier et une pharmacienne qui a toujours la bonne plante à conseiller.'},
   sorcery:{t:'Sorcery Systems',hook:'La magie, version charte graphique',type:'Identité visuelle',sect:'Tech · Santé',client:'Sorcery Systems',tc:'60 s',fmt:'16:9 · 1920×1080',fps:'25 i/s',tags:['identite'],v:false,
     defi:'Présenter l’identité de Sorcery Systems, des solutions digitales sur mesure pour le secteur de la santé : logo, couleurs, typographie et éléments graphiques, mis en mouvement.'},
   rall:{t:'RALL',hook:'La mascotte entre sur le terrain',type:'Avatar de marque',sect:'Football',client:'RALL',tc:'8 s',fmt:'9:16 · 1080×1920',fps:'24 i/s',tags:['avatar'],v:true,
@@ -785,7 +787,7 @@ const FILMS={
   reveal:{t:'Sayki reveal',hook:'Notre logo, à l’encre',type:'R&D',sect:'Motion design',client:'Sayki Studio',tc:'13 s',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'Un test d’animation pour le reveal du logo Sayki.'}
 };
-const ORDER=['aurobindo','vocli','bwplus','elba','delforge','laforge','fid', 'arkopharma','smits','baudouin','sorcery','rall', 'loophole','sayki','disney','ikari','ascension','iam','reveal'];
+const ORDER=['aurobindo','vocli','bwplus','elba','delforge','laforge','fid', 'arkoesp','smits','arkopharma','baudouin','rall','sorcery', 'loophole','sayki','disney','ikari','ascension','iam','reveal'];
 const PAGE=7;
 /* vignettes : les films verticaux ont une version horizontale sur mobile */
 const MOB=matchMedia('(max-width:899px)').matches;
