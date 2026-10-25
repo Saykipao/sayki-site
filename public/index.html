@@ -299,10 +299,14 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .frame{position:relative;border-top:1px solid var(--trait);padding:clamp(28px,3vw,44px) 0 0;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px clamp(20px,3vw,48px);align-content:start}
 .h-on .frame{width:min(44vw,620px);padding-right:clamp(20px,3vw,56px)}
 @media (max-width:899px){.h-on .frame{width:78vw;padding-right:24px}.h-on .steps-hd{margin-bottom:28px}}
-.frame .n{font-family:var(--f-display);font-style:italic;font-size:clamp(90px,11vw,200px);line-height:.8;color:var(--violet);grid-row:1/3}
+.frame .n{font-family:var(--f-display);font-style:italic;font-size:clamp(90px,11vw,200px);line-height:.8;color:var(--violet);grid-row:1/4}
 .frame h3{align-self:end}
 .frame p{margin:0;color:var(--cendre);max-width:36ch;align-self:start}
-@media (max-width:520px){.frame{grid-template-columns:minmax(0,1fr)}.frame .n{grid-row:auto}}
+.frame .val{grid-column:2;display:flex;gap:10px;align-items:baseline;margin-top:10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--violet-clair);max-width:40ch;line-height:1.5}
+.frame .val::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#9E37FF,#DE50D2);box-shadow:0 0 10px rgba(222,80,210,.6);transform:translateY(-1px)}
+.steps-intro{max-width:52ch;margin:22px 0 0;color:var(--cendre);font-size:clamp(16px,1.25vw,19px)}
+.h-on .steps-intro{margin-top:16px}
+@media (max-width:520px){.frame{grid-template-columns:minmax(0,1fr)}.frame .n{grid-row:auto}.frame .val{grid-column:1}}
 .no-pin #methode .pin-in{padding-block:0}
 html:not(.h-on) #methode .pin-in{height:auto;position:relative;overflow:visible;padding-bottom:var(--sec)}
 html:not(.h-on) .track{gap:8px}
@@ -619,12 +623,14 @@ html:not(.h-on) .track{gap:8px}
 
   <section class="pin" id="methode" aria-labelledby="methode-t">
     <div class="pin-in">
-      <div class="steps-hd wrap"><p class="mono kicker">Méthode</p><h2 class="display t-xl split" id="methode-t" data-glow>Comment nous <em>travaillons</em></h2></div>
+      <div class="steps-hd wrap"><p class="mono kicker">Méthode</p><h2 class="display t-l split" id="methode-t" data-glow>La stratégie <em>d’abord.</em> La vidéo ensuite.</h2><p class="steps-intro">Nous sommes avant tout un studio de stratégie et de direction artistique. L’intelligence artificielle nous sert à fabriquer, pas à réfléchir. À chaque étape, vous validez avant que nous passions à la suivante.</p></div>
       <ol class="track wrap" id="track" style="list-style:none;margin:0">
-        <li class="frame"><span class="n" aria-hidden="true">1</span><h3 class="display t-m">Comprendre</h3><p>Votre entreprise, vos clients, ce qu’ils doivent ressentir et retenir. Nous commençons toujours par écouter.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">2</span><h3 class="display t-m">Écrire</h3><p>L’idée et l’histoire d’abord, avec une scénariste de cinéma d’animation quand le film le demande. Vous validez avant la première image, votre service médical ou juridique aussi.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">3</span><h3 class="display t-m">Réaliser</h3><p>Ensuite seulement, la technique. Univers, personnages, voix, montage, musique, sans caméra ni plateau.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">4</span><h3 class="display t-m">Décliner</h3><p>16:9 pour l’écran, 9:16 et 1:1 pour les réseaux, en plusieurs langues si besoin.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">1</span><h3 class="display t-m">Comprendre</h3><p>Votre entreprise, vos clients, ce qu’ils doivent ressentir et retenir. Nous posons la stratégie : le message, le ton, le format. Nous commençons toujours par écouter.</p><p class="val mono">Vous validez la stratégie.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">2</span><h3 class="display t-m">Écrire</h3><p>Le concept, le script, la voix off. Chaque mot est pesé avant la première image, avec une scénariste de cinéma d’animation quand le film le demande.</p><p class="val mono">Vous validez le script. Votre service médical ou juridique aussi.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">3</span><h3 class="display t-m">Imaginer</h3><p>La direction artistique : l’univers, les couleurs, la lumière, les personnages. L’IA exécute, le directeur artistique décide.</p><p class="val mono">Vous validez l’univers et les personnages.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">4</span><h3 class="display t-m">Storyboarder</h3><p>Le film plan par plan, en images fixes au trait crayonné, avec la voix off quand le film en a une. Vous voyez le film avant qu’il existe.</p><p class="val mono">Vous validez le storyboard et la voix.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">5</span><h3 class="display t-m">Réaliser</h3><p>Ensuite seulement, la vidéo : animation, montage, musique, sans caméra ni plateau. Pas de surprise : tout ce qui compte a déjà été validé.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">6</span><h3 class="display t-m">Décliner</h3><p>16:9 pour l’écran, 9:16 et 1:1 pour les réseaux, en plusieurs langues si besoin.</p></li>
       </ol>
     </div>
   </section>
