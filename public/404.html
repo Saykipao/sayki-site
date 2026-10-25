@@ -609,7 +609,7 @@ html:not(.h-on) .track{gap:8px}
       <span class="ln"><span style="--d:1">Ils aiment les <em>histoires.</em></span></span>
     </div>
     <div class="hero-bot">
-      <p class="hero-sub"><span>On crée votre film sans tournage, du script à la version finale.</span><span class="mono"><i>Films explicatifs</i> / <i>publicités</i> / <i>films d’événement</i> / <i>personnages de marque</i></span></p>
+      <p class="hero-sub"><span>On crée votre film sans tournage, du script à la version finale.</span><span class="mono"><i>Films explicatifs</i> / <i>publicités</i> / <i>films d’événement</i> / <i>identités animées</i> / <i>personnages de marque</i></span></p>
       <a class="down" href="#films">Voir les films <span aria-hidden="true">↓</span></a>
     </div>
   </section>
@@ -799,8 +799,8 @@ html:not(.h-on) .track{gap:8px}
       <div class="svc-r"><p class="svc-body">Un explicatif qu’on regarde jusqu’au bout. Une pub qui raconte au lieu de crier. Le film qui réveille la salle après le lunch. Toujours une histoire, jamais de tournage.</p><p class="svc-tags mono">Explicatifs <i>/</i> Notoriété <i>/</i> Publicités narratives <i>/</i> Événements</p><p class="svc-foot mono">Chaque film existe en 16:9, 9:16 et 1:1. Et en néerlandais, s’il le faut.</p></div>
     </article>
     <article class="svc-row" data-preview="smits">
-      <div><p class="svc-n mono">02</p><h3 class="display t-xl svc-name"><span class="sr">Personnages</span><span class="roll-src" aria-hidden="true">Personnages</span></h3><p class="display t-s svc-tag">Un logo, on l’oublie. Un personnage, on lui dit bonjour.</p></div>
-      <div class="svc-r"><p class="svc-body">Un ours en blouse de pharmacien, une mascotte qui dribble mieux que l’attaquant : votre marque mérite un visage qu’on a envie de revoir.</p><p class="svc-tags mono">Avatars de marque <i>/</i> Mascottes <i>/</i> Personnages récurrents</p></div>
+      <div><p class="svc-n mono">02</p><h3 class="display t-xl svc-name"><span class="sr">Identités &amp; personnages</span><span class="roll-src" aria-hidden="true">Identités &amp; personnages</span></h3><p class="display t-s svc-tag">Un logo, on l’oublie. Un logo qui bouge, un peu moins. Un personnage, on lui dit bonjour.</p></div>
+      <div class="svc-r"><p class="svc-body">Votre identité ne tient plus sur une carte de visite. Elle bouge, elle parle, elle a parfois des oreilles d’ours. Logo animé, univers visuel, personnage de marque : nous donnons à votre marque une forme qui vit à l’écran.</p><p class="svc-tags mono">Identités animées <i>/</i> Logos animés <i>/</i> Avatars de marque <i>/</i> Mascottes</p></div>
     </article>
     <article class="svc-row" data-preview="loophole">
       <div><p class="svc-n mono">03</p><h3 class="display t-xl svc-name"><span class="sr">Univers</span><span class="roll-src" aria-hidden="true">Univers</span></h3><p class="display t-s svc-tag">Pour les histoires trop grandes pour un seul film.</p></div>
@@ -1369,7 +1369,7 @@ void main(){
   float e=smoothstep(0.0,0.5,1.0-w)*smoothstep(1.0,0.5,1.0-w);
   col=mix(col,bg,w);
   col+=irid(uv.x*2.0+uTime*0.3)*e*0.6*(1.0-uIntro*0.2);
-  col+=(hash(uv*uRes+fract(uTime))-0.5)*0.06;
+  col+=(hash(uv*uRes+fract(uTime))-0.5)*0.035;
   col=mix(col,vec3(0.082,0.039,0.149),clamp(uDim*(0.62+0.25*smoothstep(0.75,0.0,uv.x)+0.3*smoothstep(0.55,0.1,uv.y)),0.0,0.93));
   float ea=uEdge>0.0?smoothstep(0.0,uEdge,uv.y)*smoothstep(1.0,1.0-uEdge,uv.y):1.0;
   gl_FragColor=vec4(col,uAlpha*ea);
@@ -1453,7 +1453,7 @@ function initGL(){
   const geo=new THREE.PlaneGeometry(1,1,48,48);
   const loader=new THREE.TextureLoader();
   let W=0,H=0;
-  function resize(){W=innerWidth;H=innerHeight;PXU.value=((devicePixelRatio||1)>=1.9&&W*H*4<=6.2e6)?2:1; renderer.setPixelRatio(PXU.value);renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/4),Math.ceil(H/4));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
+  function resize(){W=innerWidth;H=innerHeight;PXU.value=(devicePixelRatio||1)>=1.9?(W*H*4<=1.05e7?2:1.5):((devicePixelRatio||1)>=1.4?1.5:1); renderer.setPixelRatio(PXU.value);renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/4),Math.ceil(H/4));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
   let bgRT=null;
   resize(); addEventListener('resize',resize);
 
