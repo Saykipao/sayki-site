@@ -622,7 +622,7 @@ html:not(.h-on) .track{gap:8px}
 <main id="smooth">
   <section class="hero wrap" id="top" aria-label="Sayki Studio">
     <div class="hero-media" id="heroMedia">
-      <video id="heroVid" poster="assets/intro.jpg" autoplay muted loop playsinline preload="auto"><source src="assets/intro-m.mp4" type="video/mp4" media="(max-width: 640px)"><source src="assets/intro.mp4" type="video/mp4"></video>
+      <video id="heroVid" poster="assets/intro.jpg" autoplay muted loop playsinline preload="auto" crossorigin="anonymous"><source src="https://vz-4410841f-776.b-cdn.net/81f6e5f9-4d5e-446d-8448-a4ddac0ddce3/play_1080p.mp4" type="video/mp4" media="(min-width: 900px)"><source src="https://vz-4410841f-776.b-cdn.net/81f6e5f9-4d5e-446d-8448-a4ddac0ddce3/play_720p.mp4" type="video/mp4"><source src="assets/intro.mp4" type="video/mp4"></video>
     </div>
     <div class="hero-tc mono" aria-hidden="true"><span>Showreel 2026 · 16:9 · 24 i/s</span><span>TC <b id="heroTc">00:00:00:00</b></span></div>
     <h1 class="display h1">
@@ -911,7 +911,7 @@ html:not(.h-on) .track{gap:8px}
       <div class="tv-wrap" id="tvWrap">
         <span class="tv-halo" aria-hidden="true"></span>
         <button class="tv" id="tv" type="button" data-cursor="Zapper" aria-label="Passer au film suivant">
-                    <video id="tvVid" src="assets/intro.mp4" data-src-m="assets/intro-m.mp4" poster="assets/intro.jpg" autoplay muted loop playsinline preload="metadata"></video>
+                    <video id="tvVid" src="assets/intro.mp4" poster="assets/intro.jpg" autoplay muted loop playsinline preload="metadata" crossorigin="anonymous"></video>
         </button>
       </div>
       <div class="cta-foot">
@@ -1260,6 +1260,9 @@ filterBtns.forEach(b=>b.addEventListener('click',()=>{
 
 /* ================= Petits effets ================= */
 const heroVid=$('#heroVid'), heroTc=$('#heroTc');
+const INTRO_B='https://vz-4410841f-776.b-cdn.net/81f6e5f9-4d5e-446d-8448-a4ddac0ddce3/play_'+(matchMedia('(min-width: 900px)').matches?'1080p':'720p')+'.mp4';
+let INTRO=INTRO_B; $('#tvVid').setAttribute('src',INTRO); $('#tvVid').addEventListener('error',e=>{const v=e.target; if((v.currentSrc||v.src).indexOf('b-cdn.net')>=0){ v.src='assets/intro.mp4'; }});
+heroVid.addEventListener('loadedmetadata',()=>{ if(heroVid.currentSrc.indexOf('b-cdn.net')<0){ INTRO='assets/intro.mp4'; } });
 /* une vidéo qu'on ne voit pas ne se décode pas */
 if('IntersectionObserver' in window){
   const vio=new IntersectionObserver(es=>es.forEach(x=>{const v=x.target; if(x.isIntersecting){if(v.paused&&!v.dataset.hold) v.play().catch(()=>{});} else if(!v.paused) v.pause();}),{rootMargin:'200px 0px'});
@@ -1527,7 +1530,7 @@ function initGL(){
   const pool=new Map();
   function getV(src,pre){
     let p=pool.get(src);
-    if(!p){const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.preload=pre?'auto':'metadata'; v.src=src;
+    if(!p){const v=document.createElement('video'); v.crossOrigin='anonymous'; v.muted=true; v.loop=true; v.playsInline=true; v.preload=pre?'auto':'metadata'; v.src=src;
       p={v,tex:mkT(v),res:new THREE.Vector2(1280,720)}; v.addEventListener('loadedmetadata',()=>{if(v.videoWidth)p.res.set(v.videoWidth,v.videoHeight);}); pool.set(src,p);}
     else if(pre&&p.v.preload!=='auto'){p.v.preload='auto'; p.v.load();}
     return p;
@@ -2039,10 +2042,10 @@ $$('.acc-h').forEach(b=>b.addEventListener('click',()=>{
 })();
 /* la vidéo qu'on zappe */
 const tv=$('#tv'), tvWrap=$('#tvWrap'), tvVid=$('#tvVid'), zapMsg=$('#zapMsg'), ctaBtn=$('#contact .btn');
-const CH=[{src:(innerWidth<=640&&!GL)?'assets/intro-m.mp4':'assets/intro.mp4',n:'Showreel'}].concat(ORDER.map(id=>({src:'assets/'+id+(FILMS[id].v&&!FILMS[id].ht?'-h':'')+'.mp4',n:FILMS[id].t})));
+const CH=[{src:INTRO,n:'Showreel'}].concat(ORDER.map(id=>({src:'assets/'+id+(FILMS[id].v&&!FILMS[id].ht?'-h':'')+'.mp4',n:FILMS[id].t})));
 const LINES=["Ah. Vous zappez.", "Comme vos clients devant une pub ennuyeuse.", "Vous voyez le problème.", "Respirez. Les films ne vont pas s’enfuir.", "Vous cherchez la chaîne météo ?", "Ce film-là a demandé trois semaines. Vous lui avez donné une seconde.", "Ça va, le poignet ?", "Vous savez qu’on peut aussi regarder un film en entier ?", "C’est exactement ce que vos clients font à vos vidéos.", "Ce n’est pas un jeu. Bon, d’accord, c’est un jeu.", "Plus vous cliquez, plus ça brille. Vous avez remarqué.", "Bon, quand vous aurez fini de cliquer comme un malade, on parle de votre film ?", "Votre index fait plus de sport que vous cette semaine.", "Ce n’est pas un bouton d’ascenseur. Appuyer plus fort n’accélère rien.", "Chaque clic, c’est un client qui zappe. Sauf ici, où c’est vous.", "Vous êtes du genre à lire la fin du livre en premier, non ?", "Votre souris demande une pause syndicale.", "Encore un clic et on vous facture le chauffage.", "Vous zappez plus vite que votre ado. Chapeau.", "Il n’y a pas de pub entre les films. La pub, c’est nous.", "Votre patron pense que vous travaillez. Continuez.", "À ce rythme, vous aurez tout vu avant le café.", "Clic. Clic. Clic. On vous entend d’ici.", "Vous testez la solidité du site ? Il tient.", "Si votre public clique aussi vite, il vous faut un film. Vite.", "Promis, le prochain est encore mieux. Ou pas. Cliquez pour voir.", "Si vous cherchez le bouton « Passer la pub », ce n’est pas celui-là.", "Votre souris vient de nous envoyer un SOS.", "Le zapping, c’est comme les chips. Impossible de s’arrêter.", "Imaginez ce clic sur « Réserver mes 30 minutes ». Joli, non ?", "Le bouton violet, à gauche, commence à être jaloux.", "Vos clients zappent. Nous, on les fait rester.", "C’est votre pause-café, ça ?", "Vous faites ça aussi devant Netflix ?", "Pendant ce temps, votre concurrent prépare son film.", "On sent une forme d’engagement.", "On ne juge pas. Enfin, un peu.", "Ce rythme-là, en salle de montage, on appelle ça « nerveux ».", "Vous êtes à deux doigts de devenir monteur.", "Doucement, vous allez chauffer l’écran.", "Votre doigt mériterait un contrat d’exclusivité.", "Ça, c’est de l’engagement.", "Vous zappez comme on mange des cacahuètes à l’apéro.", "Votre souris a des courbatures. Elle nous l’a dit.", "Vous cliquez plus vite qu’un stagiaire un vendredi à 17 h.", "Ça vous détend ? Tant mieux.", "Attention, le zapping crée une forte dépendance.", "Ce film vous a plu ? Vous ne le saurez jamais.", "Le site n’a pas de fin. La patience de vos clients, si.", "Cliquer, c’est bien. Réserver, c’est mieux.", "Félicitations, vous avez trouvé le vrai contenu du site.", "À ce stade, c’est du cardio.", "Quelqu’un dans votre bureau vous regarde bizarrement.", "Votre score n’est enregistré nulle part. Cliquez quand même.", "Ce n’est plus du zapping, c’est de la percussion.", "On vous sent prêt pour une réunion de trente minutes.", "Ces films sont encore plus beaux en grand. Au studio. Avec un café.", "Le café est prêt. Vous, vous cliquez encore.", "Ce que vous ressentez là, une pub ennuyeuse le ressent tous les jours.", "Un film qui raconte une histoire, on ne le zappe pas. Vous voyez où on veut en venir.", "Vous zappez avec style. Ça compte.", "Rassurez-vous, nos films ne sont pas vexés.", "C’est beau, un visiteur qui ne lâche rien.", "Vous n’êtes pas obligé de tout voir aujourd’hui. Mais ça nous ferait plaisir.", "Votre clavier se sent délaissé.", "Ce clic-là était particulièrement réussi.", "Celui-là aussi.", "On commence à s’attacher.", "Vous voulez qu’on vous laisse seul avec l’écran ?", "On vous a vu hésiter. Et puis, clic.", "L’IA n’y est pour rien. C’est vous qui cliquez.", "Promis, on ne dira rien à votre service marketing.", "Si chaque clic était un euro de budget, on serait déjà amis.", "Vous avez l’œil d’un directeur artistique. Et le doigt d’un batteur.", "Votre écran demande un congé maladie.", "On a vérifié : cet écran ne se casse pas. Inutile d’insister.", "Vous connaissez maintenant nos films mieux que notre comptable.", "Ici, zapper est autorisé. Chez vos clients, beaucoup moins.", "Un jour, quelqu’un zappera votre film ici. Il s’arrêtera net.", "Si vous cliquez pour trouver la fin, il n’y en a pas. Il y a le vôtre.", "Toujours là ? Nous aussi.", "Votre attention vaut de l’or. Vous la dépensez joyeusement.", "Mettez-vous deux secondes à la place du film.", "Ici, l’impatience est récompensée. Ailleurs, elle coûte des clients.", "Il paraît qu’un bon film se regarde jusqu’au bout. On dit ça, on ne dit rien.", "Vous pourriez faire ça toute la journée. Nous aussi, mais on a des films à livrer.", "On a fait ces films pour être regardés. Pas pour être cliqués. Mais bon.", "Ce rythme-là, c’est un clip, pas une visite.", "Prenez une seconde. Juste une. Voilà. Reprenez.", "On adore votre énergie. Imaginez-la dans un brief.", "Votre doigt vient de battre son record personnel.", "Vos réunions sont aussi rythmées ?", "Un film par clic. On vous fait un prix de gros ?", "Ceci n’est pas une machine à sous. Vous gagnez quand même un film.", "Encore dix clics et vous êtes officiellement accro.", "Ça devient sérieux. On prépare le café.", "C’est le moment où, d’habitude, les gens réservent.", "Vous êtes encore là. On adore. On s’inquiète un peu aussi.", "Dernière ligne droite. Vous y êtes presque.", "Cent clics. Respect. Maintenant, appelez-nous."];
 let ch=0,zaps=0,allSeen=false,lineQ=[];
-if(innerWidth<=640&&!GL){tvVid.src=tvVid.dataset.srcM;}
+
 const seen=new Set([0]);
 function pop(el){el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');}
 function say(m){zapMsg.textContent=m; zapMsg.classList.remove('flash'); void zapMsg.offsetWidth; zapMsg.classList.add('flash');}
@@ -2080,7 +2083,7 @@ function initMiniZap(){
   const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,-1000,1000);
   const mkT=mkVT;
   const pool=new Map();
-  function getV(src){let p=pool.get(src); if(!p){const v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.preload='auto'; v.src=src;
+  function getV(src){let p=pool.get(src); if(!p){const v=document.createElement('video'); v.crossOrigin='anonymous'; v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.preload='auto'; v.src=src;
     p={v,tex:mkT(v),res:new THREE.Vector2(16,9)}; v.addEventListener('loadedmetadata',()=>{if(v.videoWidth)p.res.set(v.videoWidth,v.videoHeight);}); pool.set(src,p);} return p;}
   const first=getV(CH[0].src);
   const mat=new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:FS_ZAP,transparent:true,depthTest:false,uniforms:{uPx:PXU,
