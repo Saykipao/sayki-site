@@ -1636,6 +1636,7 @@ addEventListener('keydown',e=>{ if(e.code!=='Space'||fp.hidden||pl.hidden) retur
 
 function openFilm(id){
   if(busy) return; busy=true; lastFocus=document.activeElement;
+  cursor.classList.remove('big');
   fillFp(id); fp.style.opacity='0'; fp.hidden=false; fp.scrollTop=0; fp.classList.add('is-open');
   root.classList.add('is-locked');
   startFilm();
@@ -1832,7 +1833,7 @@ setInterval(()=>{const s=Math.floor((Date.now()-t0visit)/1000); visit.textConten
 let mqX=0,mqDir=1,lmx=mx,lmy=my,mSpeed=0;
 const heroEl=$('#top'), lines=$$('.h1 .ln');
 function frame(t){
-  if(filmOn){requestAnimationFrame(frame);return;}
+  if(filmOn){ if(FINE){cx+=(mx-cx)*0.2; cy+=(my-cy)*0.2; cursor.style.transform=`translate3d(${cx}px,${cy}px,0)`;} requestAnimationFrame(frame);return;}
   const active=(t-lastInput)<1600||Math.abs(scrollY-cur)>0.5||Math.abs(velS)>0.15||TVM.heat>0.02||open||busy;
   if(t-lastFrame<(active?15.5:32)){requestAnimationFrame(frame);return;}
   lastFrame=t;
