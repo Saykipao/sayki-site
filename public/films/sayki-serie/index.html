@@ -453,7 +453,6 @@ html:not(.h-on) .track{gap:8px}
 .tv{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0d0619;padding:0;border:0;-webkit-tap-highlight-color:transparent;isolation:isolate;will-change:transform;transform-origin:50% 50%}
 .tv::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background-image:linear-gradient(rgba(0,0,0,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.5) 1px,transparent 1px);background-size:3px 3px;opacity:.13}
 .is-gl .tv::after{display:none}
-.studio-media::after,.hero-media::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background-image:linear-gradient(rgba(0,0,0,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.5) 1px,transparent 1px);background-size:3px 3px;opacity:.13}
 .is-gl .media::after,.is-gl .studio-media::after,.is-gl .hero-media::before{display:none}
 .is-gl .tv{background:transparent;overflow:visible}
 .tv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
@@ -1031,7 +1030,7 @@ const FILMS={
 const ORDER=['aurobindo','vocli','bwplus','elba','delforge','laforge','fid', 'arkoesp','smits','arkopharma','baudouin','rall','sorcery', 'loophole','sayki','sayki2','disney','ikari','ascension','iam','reveal'];
 const PAGE=7;
 /* films complets sur Bunny Stream (lecteur maison) */
-const BUNNY={reveal:'d1a5cd7d-084b-495f-990a-02579e3331e5',disney:'d919dd2e-72e5-442d-97ae-a22193ac32ec',arkoesp:'d269fd23-a063-442b-b91a-8db04e9b5917',ascension:'ebf6c5fc-2afb-4d24-80fa-a3ca22b374d8',delforge:'ec49f7c6-3fb7-4d34-bee4-1fedd0047bfb',sayki:'f92ac12d-9dd5-4013-a06c-d7c53e54298d',sayki2:'ec1474a6-2e23-4feb-a4f5-7bde1477282f',ikari:'dbc5637b-13ae-4292-a130-6e8e8081f4c8',iam:'66162f40-6222-4e4a-b07c-f6be09b8f4e3',baudouin:'f7470fba-d26b-4198-84ae-75980fce39e3',laforge:'1e305081-951a-4175-8fe2-0e6ef90df8df',rall:'226a094a-6416-4505-a4a1-248d3ea1ac82',fid:'37e87960-049a-4df0-9ad4-e79759337e30',elba:'e36ffa3f-dbd9-4067-842f-6e3b3a161359',arkopharma:'82f063a6-0ec2-46ed-844b-498faf2ad51c',vocli:'6b06c60f-0321-4702-9ba7-c2982a9e3181',bwplus:'f05d871b-2a08-4b34-b772-ed1eed9d90ad',smits:'559c809b-78c2-4a31-ab45-28ac6ec1e816',loophole:'e04e0292-f37e-4def-9baa-48c687562732'};
+const BUNNY={sorcery:'2175faba-81f3-42e3-bd90-bb06fdeedf87',reveal:'d1a5cd7d-084b-495f-990a-02579e3331e5',disney:'d919dd2e-72e5-442d-97ae-a22193ac32ec',arkoesp:'d269fd23-a063-442b-b91a-8db04e9b5917',ascension:'ebf6c5fc-2afb-4d24-80fa-a3ca22b374d8',delforge:'ec49f7c6-3fb7-4d34-bee4-1fedd0047bfb',sayki:'f92ac12d-9dd5-4013-a06c-d7c53e54298d',sayki2:'ec1474a6-2e23-4feb-a4f5-7bde1477282f',ikari:'dbc5637b-13ae-4292-a130-6e8e8081f4c8',iam:'66162f40-6222-4e4a-b07c-f6be09b8f4e3',baudouin:'f7470fba-d26b-4198-84ae-75980fce39e3',laforge:'1e305081-951a-4175-8fe2-0e6ef90df8df',rall:'226a094a-6416-4505-a4a1-248d3ea1ac82',fid:'37e87960-049a-4df0-9ad4-e79759337e30',elba:'e36ffa3f-dbd9-4067-842f-6e3b3a161359',arkopharma:'82f063a6-0ec2-46ed-844b-498faf2ad51c',vocli:'6b06c60f-0321-4702-9ba7-c2982a9e3181',bwplus:'f05d871b-2a08-4b34-b772-ed1eed9d90ad',smits:'559c809b-78c2-4a31-ab45-28ac6ec1e816',loophole:'e04e0292-f37e-4def-9baa-48c687562732'};
 for(const k in BUNNY) if(FILMS[k]) FILMS[k].bunny='788157/'+BUNNY[k];
 /* vignettes : les films verticaux ont une version horizontale sur mobile */
 const SLUG={aurobindo:'aurobindo',vocli:'mint-dentistes',bwplus:'bw-plus',elba:'elba',delforge:'guy-delforge',laforge:'la-forge',fid:'fid-manager',arkoesp:'arkopharma-espagne',smits:'pharmacie-smits',arkopharma:'arkopharma-le-pharmacien',baudouin:'invitation-privee',rall:'rall',sorcery:'sorcery-systems',loophole:'the-loop-hole-project',sayki:'sayki-serie',sayki2:'sayki-clip',disney:'disney-a-la-maison',ikari:'ikari',ascension:'l-ascension',iam:'iam',reveal:'sayki-reveal'};
@@ -1400,7 +1399,6 @@ void main(){
   col+=irid(uv.x*2.0+uTime*0.3)*e*0.6*(1.0-uIntro*0.2);
   col+=(hash(uv*uRes+fract(uTime))-0.5)*0.06;
   col=mix(col,vec3(0.082,0.039,0.149),clamp(uDim*(0.62+0.25*smoothstep(0.75,0.0,uv.x)+0.3*smoothstep(0.55,0.1,uv.y)),0.0,0.93));
-  col*=1.0-0.06*pgrid()*(1.0-lens*0.7);
   float ea=uEdge>0.0?smoothstep(0.0,uEdge,uv.y)*smoothstep(1.0,1.0-uEdge,uv.y):1.0;
   gl_FragColor=vec4(col,uAlpha*ea);
 }`;
