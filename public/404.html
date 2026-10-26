@@ -195,7 +195,8 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .hero-tc{position:absolute;top:calc(100px + env(safe-area-inset-top,0px));right:max(var(--pad), env(safe-area-inset-right,0px), calc((100% - 1560px) / 2));text-align:right;display:grid;gap:4px}
 .hero-tc b{font-weight:500;color:var(--violet-clair)}
 .h1{position:relative;z-index:1;margin:0;font-family:var(--f-cond);font-weight:500;text-transform:uppercase;font-size:clamp(26px,min(3.6vw, calc((100svh - 260px) / 6.5)),68px);line-height:1.04;letter-spacing:.012em;display:flex;flex-direction:column;align-items:center;text-wrap:balance;text-shadow:0 1px 2px rgba(21,10,38,.25),0 4px 34px rgba(21,10,38,.45)}
-.h1 em{font-style:normal;color:var(--violet-clair)}
+.h1 em{font-family:var(--f-display);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em;font-size:1.62em;line-height:.6;color:var(--violet-clair);padding-left:.04em;text-shadow:0 2px 40px rgba(158,55,255,.35)}
+.h1 .ln-h{padding-top:.32em;margin-top:-.2em;padding-bottom:.36em}
 .h1 .ln{display:block;overflow:hidden;padding:.14em .12em .22em;margin:-.14em -.12em -.22em;will-change:transform}
 .h1 .ln>span{display:block;transition:transform 1.3s var(--ease-out);transition-delay:calc(var(--d) * 100ms + 150ms)}
 .js-intro:not(.is-in) .h1 .ln>span{transform:translateY(110%)}
@@ -204,11 +205,6 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .down{display:inline-flex;align-items:center;gap:12px;font-weight:500;border-bottom:1px solid var(--ecran);padding-bottom:4px}
 
 /* ---------- Références ---------- */
-.lede{position:relative;z-index:2;padding-block:clamp(110px,14vw,220px) clamp(40px,5vw,80px);text-align:left}
-.lede p{margin:0;max-width:24ch;font-size:clamp(34px,4.3vw,84px);line-height:1;color:var(--ecran);text-wrap:balance;opacity:0;transform:translateY(28px);transition:opacity 1.2s var(--ease-out),transform 1.4s var(--ease-out)}
-.lede.in p{opacity:1;transform:none}
-.lede p em{color:var(--ecran)}
-@media (prefers-reduced-motion:reduce){.lede p{opacity:1;transform:none;transition:none}}
 .refs{padding-block:clamp(48px,6vw,90px) clamp(20px,3vw,40px)}
 .refs-l{color:var(--cendre);margin-bottom:18px}
 .marquee{overflow:hidden;white-space:nowrap;border-block:1px solid var(--trait);padding-block:clamp(14px,1.6vw,24px)}
@@ -291,7 +287,9 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .is-smooth .pin-in{position:relative}
 .manifesto .pin-in{display:grid;align-content:center}
 .mani{font-size:var(--t-l);max-width:16ch;position:relative;z-index:1}
-#mani{font-size:clamp(34px,4.3vw,84px);line-height:1.04;max-width:24ch}
+#mani,#mani0{font-size:clamp(34px,4.3vw,84px);line-height:1.04;max-width:24ch}
+.manifesto.lede{height:220vh}
+@media (max-width:899px){.manifesto.lede{height:170vh}}
 .mani .mw{transition:opacity .2s linear}
 .mani em .mw{color:var(--ecran)}
 @media (max-width:860px){.mani{max-width:12ch}}
@@ -622,16 +620,18 @@ html:not(.h-on) .track{gap:8px}
     <div class="hero-tc mono" aria-hidden="true"><span>Showreel 2026 · 16:9 · 24 i/s</span><span>TC <b id="heroTc">00:00:00:00</b></span></div>
     <h1 class="h1">
       <span class="ln"><span style="--d:0">Vos clients n’aiment pas les vidéos.</span></span>
-      <span class="ln"><span style="--d:1">Ils aiment les <em>histoires.</em></span></span>
+      <span class="ln ln-h"><span style="--d:1">Ils aiment les <em>histoires.</em></span></span>
     </div>
     <div class="hero-bot">
-      <p class="hero-sub"><span>On crée votre film sans tournage, du script à la version finale.</span><span class="mono"><i>Films explicatifs</i> / <i>publicités narratives</i> / <i>films d’entreprise</i> / <i>univers de marque</i> / <i>personnages</i></span></p>
+      <p class="hero-sub"><span>Nous créons votre film sans tournage, du script à la version finale.</span><span class="mono"><i>Films explicatifs</i> / <i>publicités narratives</i> / <i>films d’entreprise</i> / <i>univers de marque</i> / <i>personnages</i></span></p>
       <a class="down" href="#films">Voir les films <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
-  <section class="lede wrap" id="lede" aria-label="Notre conviction">
-    <p class="display">Dans un secteur où les images deviennent de plus en plus faciles à produire, nous pensons que c’est notre devoir de créatifs d’aider les marques à mieux se raconter <em>pour gagner la bataille de l’attention.</em></p>
+  <section class="manifesto pin lede" id="lede" aria-label="Notre conviction">
+    <div class="pin-in wrap">
+      <p class="display mani" id="mani0">Dans un secteur où les images deviennent de plus en plus faciles à produire, nous pensons que c’est notre devoir de créatifs d’aider les marques à mieux se raconter <em>pour gagner la bataille de l’attention.</em></p>
+    </div>
   </section>
 
   <section class="sec wrap" id="films">
@@ -1107,6 +1107,15 @@ const mani=$('#mani');
   const frag=document.createDocumentFragment(); [...mani.childNodes].forEach(n=>proc(n,frag)); mani.textContent=''; mani.appendChild(frag);
 })();
 const words=$$('.mw',mani);
+const mani0=$('#mani0'), ledeSec=$('#lede'), ledeIn=$('.pin-in',ledeSec);
+(function(){
+  const proc=(node,parent)=>{
+    if(node.nodeType===3){node.textContent.split(/([ \n\t]+)/).forEach(p=>{if(!p)return; if(/^[ \n\t]+$/.test(p)){parent.appendChild(document.createTextNode(' '));return;} const w=document.createElement('span'); w.className='mw'; w.textContent=p; parent.appendChild(w);});}
+    else if(node.nodeType===1){const c=node.cloneNode(false); parent.appendChild(c); [...node.childNodes].forEach(n=>proc(n,c));}
+  };
+  const frag=document.createDocumentFragment(); [...mani0.childNodes].forEach(n=>proc(n,frag)); mani0.textContent=''; mani0.appendChild(frag);
+})();
+const words0=$$('.mw',mani0);
 const mani2=$('#mani2'), agSec=$('#agences'), agIn=$('.pin-in',agSec), agFoot=$('.ag-foot',agSec);
 (function(){
   const proc=(node,parent)=>{
@@ -1156,7 +1165,7 @@ function setupPins(){
   else{meth.style.height=''; track.style.transform=''; methIn.style.transform='';}
 }
 setupPins(); addEventListener('resize',setupPins);
-(function(){const l=$('#lede'); if(!l) return; if('IntersectionObserver' in window) new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting){ l.classList.add('in'); o.disconnect(); } },{threshold:.35}).observe(l); else l.classList.add('in');})();
+
 /* mobile : la méthode se parcourt comme les témoignages (glisser, flèches, barre) */
 (function(){ const prev=$('#mtPrev'), next=$('#mtNext'), bar=$('#mtBar'); if(!prev||!bar) return; const cards=$$('.frame',track);
   const gap=()=>parseFloat(getComputedStyle(track).columnGap)||16;
@@ -1169,6 +1178,10 @@ setupPins(); addEventListener('resize',setupPins);
 function pinOffset(sec){const r=sec.getBoundingClientRect(), span=r.height-innerHeight; const off=clamp(-r.top,0,Math.max(span,0)); return {off,p:span>0?off/span:0};}
 function pinUpdate(){
   if(!PIN) return;
+  const l0=pinOffset(ledeSec);
+  if(SMOOTH) ledeIn.style.transform=`translate3d(0,${l0.off.toFixed(1)}px,0)`;
+  const lit0=l0.p*(words0.length+3)-0.5;
+  words0.forEach((w,i)=>{w.style.opacity=(0.14+0.86*clamp(lit0-i,0,1)).toFixed(3);});
   const m=pinOffset(maniSec);
   if(SMOOTH) maniIn.style.transform=`translate3d(0,${m.off.toFixed(1)}px,0)`;
   const lit=m.p*(words.length+3)-0.5;
@@ -2030,6 +2043,7 @@ let glowEl=null;
 $$('[data-glow]').forEach(el=>{el.addEventListener('mouseenter',()=>{glowEl=el;});el.addEventListener('mouseleave',()=>{if(glowEl===el)glowEl=null;});});
 function focusNow(){
   let el=glowEl, a=1;
+  if(!el&&PIN){const r=ledeSec.getBoundingClientRect(); if(r.top<innerHeight*0.5&&r.bottom>innerHeight*0.5){el=mani0; a=0.85;}}
   if(!el&&PIN){const r=maniSec.getBoundingClientRect(); if(r.top<innerHeight*0.5&&r.bottom>innerHeight*0.5){el=mani; a=0.85;}}
   if(!el&&PIN){const r=agSec.getBoundingClientRect(); if(r.top<innerHeight*0.5&&r.bottom>innerHeight*0.5){el=mani2; a=0.85;}}
   if(!el) return null;
