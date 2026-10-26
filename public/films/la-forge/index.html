@@ -1469,8 +1469,8 @@ function initGL(){
   const camera=new THREE.PerspectiveCamera(45,1,10,6000);
   const geo=new THREE.PlaneGeometry(1,1,48,48);
   const loader=new THREE.TextureLoader();
-  let W=0,H=0;
-  function resize(){W=innerWidth;H=innerHeight;PXU.value=(devicePixelRatio||1)>=1.9?(W*H*4<=1.05e7?2:1.5):((devicePixelRatio||1)>=1.4?1.5:1); renderer.setPixelRatio(PXU.value);renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/4),Math.ceil(H/4));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
+  let W=0,H=0,Q=2,fc=0;
+  function resize(){W=innerWidth;H=innerHeight;PXU.value=Q<2?1:(devicePixelRatio||1)>=1.9?(W*H*4<=1.05e7?2:1.5):((devicePixelRatio||1)>=1.4?1.5:1); renderer.setPixelRatio(PXU.value);renderer.setSize(W,H,false);if(bgRT)bgRT.setSize(Math.ceil(W/4),Math.ceil(H/4));camera.aspect=W/H;camera.position.z=(H/2)/Math.tan(THREE.MathUtils.degToRad(22.5));camera.updateProjectionMatrix();}
   let bgRT=null;
   resize(); addEventListener('resize',resize);
 
@@ -1675,20 +1675,54 @@ function initGL(){
       const at=it.el.classList.contains('is-out')?0:it.alphaT; it.a+=(at-it.a)*0.12; u.uAlpha.value=it.a;
       if(it.trans) u.uProg.value=it.trans.p;
     }
-    renderer.setRenderTarget(bgRT); renderer.render(bgScene,camera); renderer.setRenderTarget(null);
+    if(Q===2||((fc++)&1)===0){ renderer.setRenderTarget(bgRT); renderer.render(bgScene,camera); renderer.setRenderTarget(null); }
     renderer.render(scene,camera);
   }
-  return {update,items,hero,zapTo,zapPreload};
+  function setQuality(q){ Q=q; resize(); }
+  function destroy(){ try{renderer.dispose(); renderer.forceContextLoss();}catch(e){} }
+  return {update,items,hero,zapTo,zapPreload,setQuality,destroy};
 }
 let open=false;
+/* ---------- niveaux de performance ----------
+   2 = complet · 1 = allégé (résolution réduite, fond calculé une image sur deux) · 0 = essentiel (sans WebGL, version mobile).
+   On part du niveau complet (sauf carte graphique logicielle), on mesure la fluidité réelle, et on ne descend jamais qu'une marche à la fois. */
+const PERF={tier:2,win:[],prev:0,bad:0,fps:0,sent:false,cores:navigator.hardwareConcurrency||0,mem:navigator.deviceMemory||0,gpu:'',why:''};
+const PERF_NAMES=['essentiel','allégé','complet'];
+(function(){
+  try{const c=document.createElement('canvas'); const g=c.getContext('webgl')||c.getContext('experimental-webgl');
+    if(g){const e=g.getExtension('WEBGL_debug_renderer_info'); PERF.gpu=String((e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):g.getParameter(g.RENDERER))||'').slice(0,120); const l=g.getExtension('WEBGL_lose_context'); if(l) l.loseContext();}
+  }catch(e){}
+  if(/swiftshader|llvmpipe|softpipe|software|basic render/i.test(PERF.gpu)){PERF.tier=0; PERF.why='carte graphique logicielle';}
+  else if((PERF.cores&&PERF.cores<=2)||(PERF.mem&&PERF.mem<=2)){PERF.tier=1; PERF.why='petite machine';}
+  const f=new URLSearchParams(location.search).get('perf'); if(f!==null&&/^[012]$/.test(f)){PERF.tier=+f; PERF.why='forcé'; PERF.lock=true;}
+})();
+function perfReport(raison){ try{ if(window.posthog&&posthog.register) posthog.register({niveau_perf:PERF_NAMES[PERF.tier]}); }catch(e){}
+  sk('performance',{niveau:PERF_NAMES[PERF.tier],images_par_seconde:PERF.fps||null,raison:raison||PERF.why||'mesure',gpu:PERF.gpu,coeurs:PERF.cores,memoire_go:PERF.mem}); }
 function tryGL(){
-  if(GL||!FINE||RM||innerWidth<640) return;
-  try{GL=initGL();root.classList.add('is-gl');}catch(err){console.warn('WebGL indisponible',err);GL=null;}
+  if(GL||!FINE||RM||innerWidth<640||PERF.tier===0) return;
+  try{GL=initGL();root.classList.add('is-gl'); if(PERF.tier===1) GL.setQuality(1);}catch(err){console.warn('WebGL indisponible',err);GL=null;}
 }
 tryGL(); addEventListener('resize',tryGL);
+function glOff(){ if(!GL) return; GL.destroy(); GL=null; root.classList.remove('is-gl'); domFallback();
+  try{ $$('video').forEach(v=>{ if(v.autoplay&&v.paused) v.play().catch(()=>{}); }); }catch(e){} }
+function setTier(n,raison){ if(n>=PERF.tier) return; PERF.tier=n; console.info('[Sayki] niveau de performance :',PERF_NAMES[n],raison||'');
+  if(n===1&&GL) GL.setQuality(1); if(n===0) glOff(); perfReport(raison); }
+/* mesure : intervalle médian entre deux images, par fenêtres de 1,5 s, seulement quand le visiteur bouge ou fait défiler */
+function perfTick(t){ const dt=t-PERF.prev; PERF.prev=t;
+  if(!GL||PERF.lock) return;
+  if(document.hidden||busy||filmOn||root.classList.contains('is-loading')||dt>1000||t<4000){PERF.win.length=0; PERF.sum=0; return;}
+  if(!((t-lastInput)<1600||Math.abs(velS)>0.15)) return;
+  PERF.win.push(dt); PERF.sum=(PERF.sum||0)+dt; if(PERF.sum<1500||PERF.win.length<12) return; PERF.sum=0;
+  const s=PERF.win.slice().sort((a,b)=>a-b); PERF.win.length=0; PERF.fps=Math.round(1000/s[s.length>>1]);
+  if(!PERF.sent){PERF.sent=true; perfReport('première mesure');}
+  if(PERF.fps<45){ if(++PERF.bad>=2){ PERF.bad=0; setTier(PERF.tier-1,PERF.fps+' images/s'); } } else PERF.bad=0;
+}
+addEventListener('load',()=>setTimeout(()=>{ if(PERF.tier<2&&!PERF.sent){PERF.sent=true; perfReport();} },5000),{once:true});
 
 /* sans WebGL : vignettes vivantes */
-if(!GL){
+let domOn=false;
+function domFallback(){
+  if(domOn) return; domOn=true;
   const films=$$('.film');
   if(FINE){films.forEach(el=>{const m=$('.media',el);m.addEventListener('mouseenter',()=>live(el,true));m.addEventListener('mouseleave',()=>live(el,false));});}
   else if('IntersectionObserver' in window){
@@ -1696,6 +1730,7 @@ if(!GL){
     films.forEach(el=>io.observe(el));
   }
 }
+if(!GL) domFallback();
 
 /* ================= Page film ================= */
 const fp=$('#fp'), fpVid=$('#fpVid'), fpMedia=$('#fpMedia');
@@ -2168,6 +2203,7 @@ setInterval(()=>{const s=Math.floor((Date.now()-t0visit)/1000); visit.textConten
 let mqX=0,mqDir=1,lmx=mx,lmy=my,mSpeed=0;
 const heroEl=$('#top'), lines=$$('.h1 .ln');
 function frame(t){
+  perfTick(t);
   if(filmOn){ if(FINE){cx+=(mx-cx)*0.2; cy+=(my-cy)*0.2; cursor.style.transform=`translate3d(${cx}px,${cy}px,0)`;} requestAnimationFrame(frame);return;}
   const active=(t-lastInput)<1600||Math.abs(scrollY-cur)>0.5||Math.abs(velS)>0.15||TVM.heat>0.02||open||busy;
   if(t-lastFrame<(active?15.5:32)){requestAnimationFrame(frame);return;}
