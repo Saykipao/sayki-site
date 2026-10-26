@@ -588,7 +588,12 @@ html:not(.h-on) .track{gap:8px}
 .st-ph{position:relative;margin:0;aspect-ratio:16/9;border:1px dashed rgba(243,238,249,.22);border-radius:4px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.02) 0 12px,transparent 12px 24px);display:grid;place-items:center}
 .st-ph span{font-size:11px;letter-spacing:.1em;color:var(--cendre)}
 .st-board{aspect-ratio:21/9}
-@media (max-width:760px){.fp.has-story .fp-meta{gap:16px 14px;padding-block:20px}.fp.has-story .fp-meta dd{font-size:11.5px}.fp-tools span{font-size:10px;padding:3px 8px}.st-sec{grid-template-columns:minmax(0,1fr)}.st-half,.st-pair{grid-template-columns:minmax(0,1fr)}.st-board{aspect-ratio:16/9}}
+.st-img{margin:clamp(20px,3vw,40px) 0}
+.st-img img{display:block;width:100%;height:auto;border-radius:4px;background:var(--nuit-2)}
+.st-img figcaption{margin-top:12px;font-size:11px;letter-spacing:.1em;color:var(--cendre)}
+.st-trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.4vw,20px)}
+.st-trio .st-img{margin:0}
+@media (max-width:760px){.st-trio{grid-template-columns:minmax(0,1fr)}.fp.has-story .fp-meta{gap:16px 14px;padding-block:20px}.fp.has-story .fp-meta dd{font-size:11.5px}.fp-tools span{font-size:10px;padding:3px 8px}.st-sec{grid-template-columns:minmax(0,1fr)}.st-half,.st-pair{grid-template-columns:minmax(0,1fr)}.st-board{aspect-ratio:16/9}}
 
 /* ---------- Curseur ---------- */
 #cursor{position:fixed;left:0;top:0;z-index:50;pointer-events:none;display:none}
@@ -1022,6 +1027,7 @@ html:not(.h-on) .track{gap:8px}
 <p>Glisser un discours stratégique, qui agit sur la logique, dans un arc narratif qui agit sur l’émotion. Faire comprendre, mais aussi faire ressentir.</p>
 <p>D’abord, le chaos du cabinet en solo. Ensuite, le centre de services de Mint, qui rend du temps au dentiste.</p>
 </div></section>
+<figure class="st-wide st-img"><img src="/assets/cas-vocli-1.jpg" alt="Planche de storyboard du film Mint Dentistes, six plans dessinés avec voix off et action" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Le storyboard, validé avant la première image</figcaption></figure>
 <section class="st-sec"><h3 class="mono">50 / 50</h3><div class="st-half">
 <div><b class="display">50 %</b><span class="mono">stratégie</span><p>Trouver le meilleur discours pour expliquer comment Mint aide ses dentistes, en mettant ses vrais atouts en avant.</p></div>
 <div><b class="display">50 %</b><span class="mono">emballage</span><p>Pour que la première impression, en réunion, soit la meilleure et la plus originale possible. C’est ça qui fait qu’on choisit Mint, et pas un autre.</p></div>
@@ -1031,11 +1037,12 @@ html:not(.h-on) .track{gap:8px}
 <p>Grégory, le fondateur, traverse son propre hall. Amélie, dentiste du réseau, manie son propre scanner. Charlotte s’occupe de l’administratif, dans le film comme dans la vie.</p>
 <p>Pierre, le dentiste débordé, est inventé. <em>Ses problèmes, beaucoup moins.</em></p>
 </div></section>
-<div class="st-wide st-pair">
-<figure class="st-ph"><span class="mono">Photo · la vraie clinique</span></figure>
-<figure class="st-ph"><span class="mono">Le même plan, dans le film</span></figure>
+<figure class="st-wide st-img"><img src="/assets/cas-vocli-4.jpg" alt="Les bureaux de Mint Dentistes : la photo réelle et leur version dans le film" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Les vrais bureaux de Mint, et leur version dans le film</figcaption></figure>
+<div class="st-wide st-trio">
+<figure class="st-img"><img src="/assets/cas-vocli-2.jpg" alt="Pierre, le dentiste débordé : planche personnage de face, de profil et de dos" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Pierre, de face, de profil, de dos</figcaption></figure>
+<figure class="st-img"><img src="/assets/cas-vocli-3.jpg" alt="Pierre, gros plan du visage de face et de profil" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Pierre, en gros plan</figcaption></figure>
+<figure class="st-img"><img src="/assets/cas-vocli-5.jpg" alt="Une patiente du film, gros plan de face et de profil" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Une patiente</figcaption></figure>
 </div>
-<div class="st-wide"><figure class="st-ph st-board"><span class="mono">Planche de storyboard</span></figure></div>
 <section class="st-sec"><h3 class="mono">Le résultat</h3><div>
 <p>Grégory lance le film en ouverture de chaque rendez-vous.</p>
 <p class="st-q display">Le film parle d’abord. <em>Grégory ensuite.</em></p>
@@ -1063,6 +1070,7 @@ html:not(.h-on) .track{gap:8px}
 <p>Glisser un discours stratégique, qui agit sur la logique, dans un arc narratif qui agit sur l’émotion. Faire comprendre, mais aussi faire ressentir.</p>
 <p>D’abord, le chaos du cabinet en solo. Ensuite, le centre de services de Mint, qui rend du temps au dentiste.</p>
 </div></section>
+<figure class="st-wide st-img"><img src="/assets/cas-vocli-1.jpg" alt="Planche de storyboard du film Mint Dentistes, six plans dessinés avec voix off et action" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Le storyboard, validé avant la première image</figcaption></figure>
 <section class="st-sec"><h3 class="mono">50 / 50</h3><div class="st-half">
 <div><b class="display">50 %</b><span class="mono">stratégie</span><p>Trouver le meilleur discours pour expliquer comment Mint aide ses dentistes, en mettant ses vrais atouts en avant.</p></div>
 <div><b class="display">50 %</b><span class="mono">emballage</span><p>Pour que la première impression, en réunion, soit la meilleure et la plus originale possible. C’est ça qui fait qu’on choisit Mint, et pas un autre.</p></div>
@@ -1072,11 +1080,12 @@ html:not(.h-on) .track{gap:8px}
 <p>Grégory, le fondateur, traverse son propre hall. Amélie, dentiste du réseau, manie son propre scanner. Charlotte s’occupe de l’administratif, dans le film comme dans la vie.</p>
 <p>Pierre, le dentiste débordé, est inventé. <em>Ses problèmes, beaucoup moins.</em></p>
 </div></section>
-<div class="st-wide st-pair">
-<figure class="st-ph"><span class="mono">Photo · la vraie clinique</span></figure>
-<figure class="st-ph"><span class="mono">Le même plan, dans le film</span></figure>
+<figure class="st-wide st-img"><img src="/assets/cas-vocli-4.jpg" alt="Les bureaux de Mint Dentistes : la photo réelle et leur version dans le film" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Les vrais bureaux de Mint, et leur version dans le film</figcaption></figure>
+<div class="st-wide st-trio">
+<figure class="st-img"><img src="/assets/cas-vocli-2.jpg" alt="Pierre, le dentiste débordé : planche personnage de face, de profil et de dos" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Pierre, de face, de profil, de dos</figcaption></figure>
+<figure class="st-img"><img src="/assets/cas-vocli-3.jpg" alt="Pierre, gros plan du visage de face et de profil" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Pierre, en gros plan</figcaption></figure>
+<figure class="st-img"><img src="/assets/cas-vocli-5.jpg" alt="Une patiente du film, gros plan de face et de profil" loading="lazy" decoding="async" width="1600" height="900"><figcaption class="mono">Une patiente</figcaption></figure>
 </div>
-<div class="st-wide"><figure class="st-ph st-board"><span class="mono">Planche de storyboard</span></figure></div>
 <section class="st-sec"><h3 class="mono">Le résultat</h3><div>
 <p>Grégory lance le film en ouverture de chaque rendez-vous.</p>
 <p class="st-q display">Le film parle d’abord. <em>Grégory ensuite.</em></p>
