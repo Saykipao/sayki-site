@@ -53,4 +53,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://sayki-site.ludovic-afd.workers.dev/sitemap.xml
+Sitemap: https://sayki.studio/sitemap.xml
