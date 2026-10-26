@@ -1,6 +1,6 @@
 {
   // Site statique : Cloudflare sert simplement le contenu du dossier public/
-  "name": "sayki-site-staging",
+  "name": "sayki-site",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./public",
