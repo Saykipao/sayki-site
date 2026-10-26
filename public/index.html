@@ -2025,7 +2025,7 @@ $$('.acc-h').forEach(b=>b.addEventListener('click',()=>{
 /* ---------- statistiques (PostHog, serveurs européens) ----------
    sans accord : visites et événements anonymes, rien n'est stocké dans le navigateur ;
    avec accord : visiteur reconnu d'une visite à l'autre, carte des clics et enregistrements de session. */
-const PH_KEY='';
+const PH_KEY='phc_kMXgZRGFE86MCGkyeY5pncC39QXzkis2kxg9nQdzzt5V';
 function sk(n,p,beacon){ try{ if(window.posthog&&PH_KEY.indexOf('phc_')===0) posthog.capture(n,p||{},beacon?{transport:'sendBeacon'}:undefined); }catch(e){} }
 (function(){
   if(PH_KEY.indexOf('phc_')!==0) return;
