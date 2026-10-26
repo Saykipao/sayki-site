@@ -41,7 +41,7 @@
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 html{background:var(--nuit)}
-body{background:var(--nuit);color:var(--ecran);font-family:var(--f-body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--nuit);color:var(--ecran);font-family:var(--f-body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.09;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 html.is-locked,html.is-locked body{overflow:hidden}
 a{color:inherit;text-decoration:none}
@@ -360,6 +360,17 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .no-pin #methode .pin-in{padding-block:0}
 html:not(.h-on) #methode .pin-in{height:auto;position:relative;overflow:visible;padding-bottom:var(--sec)}
 html:not(.h-on) .track{gap:8px}
+.mt-nav,.mt-barw{display:none}
+@media (max-width:899px){
+  html:not(.h-on) .mt-nav{display:flex;margin-top:28px}
+  html:not(.h-on) .mt-barw{display:block}
+  html:not(.h-on) .mt-barw .pr-bar{margin-top:32px}
+  html:not(.h-on) #methode .track{display:flex;gap:16px;max-width:none;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--pad);padding:0 var(--pad);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  html:not(.h-on) #methode .track::-webkit-scrollbar{display:none}
+  html:not(.h-on) #methode .frame{flex:0 0 84%;scroll-snap-align:start;grid-template-columns:minmax(0,1fr);padding-top:26px}
+  html:not(.h-on) #methode .frame .n{grid-row:auto;font-size:96px}
+  html:not(.h-on) #methode .frame .val{grid-column:1}
+}
 
 /* ---------- Calque clair ---------- */
 .light{--ecran:#150A26;--cendre:#5D5372;--trait:rgba(21,10,38,.12);--violet-clair:#7A1FE0;position:relative;z-index:3;background:#F6F3FA;color:var(--ecran)}
@@ -808,7 +819,7 @@ html:not(.h-on) .track{gap:8px}
 
   <section class="pin" id="methode" aria-labelledby="methode-t">
     <div class="pin-in">
-      <div class="steps-hd wrap"><p class="mono kicker">Méthode</p><h2 class="display t-l split" id="methode-t" data-glow>La stratégie <em>d’abord.</em> La vidéo ensuite.</h2><p class="steps-intro">Oui, tout le monde dit ça. Sauf que chez nous, la vidéo arrive vraiment en dernier. Avant elle : une stratégie, un script, un univers, un storyboard. Et votre feu vert à chaque étape.</p></div>
+      <div class="steps-hd wrap"><p class="mono kicker">Méthode</p><h2 class="display t-l split" id="methode-t" data-glow>La stratégie <em>d’abord.</em> La vidéo ensuite.</h2><p class="steps-intro">Oui, tout le monde dit ça. Sauf que chez nous, la vidéo arrive vraiment en dernier. Avant elle : une stratégie, un script, un univers, un storyboard. Et votre feu vert à chaque étape.</p><div class="pr-nav mt-nav"><p class="pr-count mono"><b>06</b> étapes</p><button class="pr-btn" id="mtPrev" type="button" aria-label="Étape précédente"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="pr-btn" id="mtNext" type="button" aria-label="Étape suivante"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
       <ol class="track wrap" id="track" style="list-style:none;margin:0">
         <li class="frame"><span class="n" aria-hidden="true">1</span><h3 class="display t-m">Comprendre</h3><p>Avant de parler de film, on parle de vous. Et surtout de vos clients : ce qu’ils doivent ressentir, retenir, et faire en sortant.</p><p class="val mono">Vous validez la stratégie.</p></li>
         <li class="frame"><span class="n" aria-hidden="true">2</span><h3 class="display t-m">Écrire</h3><p>Le concept, le script, la voix off. Chaque mot a une raison d’être, sinon il saute. Avec des scénaristes de cinéma d’animation quand le film le demande.</p><p class="val mono">Vous validez le script. Votre service médical ou juridique aussi.</p></li>
@@ -817,6 +828,7 @@ html:not(.h-on) .track{gap:8px}
         <li class="frame"><span class="n" aria-hidden="true">5</span><h3 class="display t-m">Réaliser</h3><p>Ensuite seulement, on lance les machines : animation, montage, musique. Pas de mauvaise surprise, tout ce qui compte a déjà été validé.</p></li>
         <li class="frame"><span class="n" aria-hidden="true">6</span><h3 class="display t-m">Décliner</h3><p>16:9 pour l’écran, 9:16 et 1:1 pour les pouces. En néerlandais aussi, s’il le faut.</p></li>
       </ol>
+      <div class="wrap mt-barw" aria-hidden="true"><div class="pr-bar"><i id="mtBar"></i></div></div>
     </div>
   </section>
 
@@ -1135,6 +1147,15 @@ function setupPins(){
   else{meth.style.height=''; track.style.transform=''; methIn.style.transform='';}
 }
 setupPins(); addEventListener('resize',setupPins);
+/* mobile : la méthode se parcourt comme les témoignages (glisser, flèches, barre) */
+(function(){ const prev=$('#mtPrev'), next=$('#mtNext'), bar=$('#mtBar'); if(!prev||!bar) return; const cards=$$('.frame',track);
+  const gap=()=>parseFloat(getComputedStyle(track).columnGap)||16;
+  function upd(){ if(H_ON) return; const max=track.scrollWidth-track.clientWidth; const r=max>0?track.scrollLeft/max:0; const w=Math.min(100,track.clientWidth/Math.max(1,track.scrollWidth)*100);
+    bar.style.width=w+'%'; bar.style.transform=`translateX(${(r*(100/w-1))*100}%)`; prev.disabled=track.scrollLeft<4; next.disabled=track.scrollLeft>max-4; }
+  function step(d){ track.scrollBy({left:d*(cards[0].getBoundingClientRect().width+gap()),behavior:RM?'auto':'smooth'}); }
+  prev.addEventListener('click',()=>step(-1)); next.addEventListener('click',()=>step(1));
+  track.addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); upd();
+})();
 function pinOffset(sec){const r=sec.getBoundingClientRect(), span=r.height-innerHeight; const off=clamp(-r.top,0,Math.max(span,0)); return {off,p:span>0?off/span:0};}
 function pinUpdate(){
   if(!PIN) return;
@@ -2063,6 +2084,7 @@ function sk(n,p,beacon){ try{ if(window.posthog&&PH_KEY.indexOf('phc_')===0) pos
     else if(a.matches('.filters button')) sk('filtre_films',{filtre:a.textContent.trim()});
     else if(a.id==='moreBtn') sk('films_voir_plus');
     else if(a.id==='prNext'||a.id==='prPrev') sk('temoignages_defilement',{sens:a.id==='prNext'?'suivant':'précédent'});
+    else if(a.id==='mtNext'||a.id==='mtPrev') sk('methode_defilement',{sens:a.id==='mtNext'?'suivant':'précédent'});
     else if(a.classList.contains('down')) sk('hero_voir_les_films');
   },true);
   const tvEl=document.getElementById('tv'); if(tvEl) tvEl.addEventListener('click',()=>sk('tele_zap'));
