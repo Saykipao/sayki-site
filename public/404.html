@@ -392,11 +392,13 @@ html:not(.h-on) .track{gap:8px}
   html:not(.h-on) #methode .frame:nth-child(1){--i:0}html:not(.h-on) #methode .frame:nth-child(2){--i:1}html:not(.h-on) #methode .frame:nth-child(3){--i:2}html:not(.h-on) #methode .frame:nth-child(4){--i:3}html:not(.h-on) #methode .frame:nth-child(5){--i:4}html:not(.h-on) #methode .frame:nth-child(6){--i:5}
   html:not(.h-on) #methode .track{counter-reset:st}
   html:not(.h-on) #methode .frame{counter-increment:st}
-  html:not(.h-on) #methode .frame .n{position:absolute;left:22px;top:27px;margin:0;font-size:0;line-height:1;color:transparent}
-  html:not(.h-on) #methode .frame .n::before{content:counter(st,decimal-leading-zero);font:italic 400 38px/1 var(--f-display);letter-spacing:-.01em;color:var(--violet)}
+  html:not(.h-on) #methode .frame{overflow:hidden}
+  html:not(.h-on) #methode .frame>*:not(.n){position:relative;z-index:1}
+  html:not(.h-on) #methode .frame .n{position:absolute;right:-12px;top:-38px;margin:0;font-size:0;line-height:1;color:transparent;pointer-events:none}
+  html:not(.h-on) #methode .frame .n::before{content:counter(st,decimal-leading-zero);font:italic 400 240px/1 var(--f-display);letter-spacing:-.04em;color:transparent;background:linear-gradient(200deg,rgba(158,55,255,.42),rgba(222,80,210,.06) 70%);-webkit-background-clip:text;background-clip:text}
   html:not(.h-on) #methode .frame .n::after{content:none}
   html:not(.h-on) #methode .frame .wk{display:none}
-  html:not(.h-on) #methode .frame h3{align-self:flex-start;padding-left:56px;max-width:none}
+  html:not(.h-on) #methode .frame h3{align-self:flex-start;max-width:none}
   html:not(.h-on) #methode .frame h3{margin:0 0 14px;font-size:36px;line-height:1.05;color:#fff;max-width:none}
   html:not(.h-on) #methode .frame p{max-width:none;color:rgba(243,238,249,.84);font-size:17px;line-height:1.55}
   html:not(.h-on) #methode .frame .val{margin-top:auto;padding-top:16px;border-top:1px solid rgba(243,238,249,.12);font-size:11px;line-height:1.7;letter-spacing:.07em;color:#D9C2FF}
