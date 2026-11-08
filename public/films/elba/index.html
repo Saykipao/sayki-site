@@ -446,9 +446,9 @@ html:not(.h-on) .track{gap:8px}
 .ag-foot .who{margin:0;color:var(--cendre);font-size:15px}
 .ag-foot .who b{color:var(--ecran);font-weight:500}
 #mani2{max-width:22ch}
-.ag-txt{flex:1 1 100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,56px);margin-bottom:clamp(12px,2vw,28px)}
+.ag-txt{flex:1 1 100%;display:grid;grid-template-columns:repeat(2,minmax(0,40ch));gap:clamp(20px,4vw,80px);margin-bottom:clamp(12px,2vw,28px)}
+.ag-txt div p+p{margin-top:12px}
 .ag-txt p{margin:0;font-size:clamp(15px,1.1vw,17px);line-height:1.6;color:rgba(243,238,249,.84);max-width:38ch}
-.ag-txt .ag-last{color:#fff;font-weight:500}
 @media (max-width:899px){.ag-txt{grid-template-columns:minmax(0,1fr);gap:12px}.ag-txt p{font-size:14.5px;line-height:1.5}#agences .ag-foot{margin-top:24px}}
 @media (max-width:899px) and (max-height:760px){#mani2{font-size:min(var(--t-l),4.4vh)}.ag-txt p{font-size:13.5px;line-height:1.45}.ag-txt{gap:8px}#agences .ag-foot{margin-top:16px;gap:10px 30px}#agences .kicker{margin-bottom:12px}}
 @media (max-width:860px){.st-grid{grid-template-columns:minmax(0,1fr)}.st-facts div{grid-template-columns:120px minmax(0,1fr)}}
@@ -959,12 +959,11 @@ html:not(.h-on) .track{gap:8px}
   <section class="manifesto pin" id="agences" aria-label="Agences">
     <div class="pin-in wrap">
       <p class="mono kicker">Agences</p>
-      <p class="display mani" id="mani2">Vous avez l’idée, <em>je m’occupe de lui donner vie.</em> On parle la même langue, car on fait le même métier.</p>
+      <p class="display mani" id="mani2">La manière de produire change, <em>pas les bonnes idées.</em></p>
       <div class="ag-foot">
         <div class="ag-txt">
-          <p>Vous savez, cette idée rangée au fond du tiroir parce qu’il fallait tourner en Islande, avec un ours, pour le budget d’une bannière ? Ressortez-la.</p>
-          <p>Trêve de plaisanterie : la publicité se construit déjà autrement. Prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, et même un film de notoriété né des photos d’un rapport annuel.</p>
-          <p class="ag-last">La manière de produire change, pas les bonnes idées.</p>
+          <div><p>Vous avez l’idée, je m’occupe de lui donner vie. On parle la même langue, car on fait le même métier.</p><p>Vous savez, cette idée rangée au fond du tiroir parce qu’il fallait tourner en Islande, avec un ours, pour le budget d’une bannière ? Ressortez-la.</p></div>
+          <div><p>Trêve de plaisanterie : la publicité se construit déjà autrement. Prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, et même un film de notoriété né des photos d’un rapport annuel.</p></div>
         </div>
         <p class="who">Ils travaillent déjà avec nous : <b>Hilarious</b> · <b>Nikita Concept</b> · <b>Tree Agency</b> · <b>BeeSight</b></p>
         <a class="link" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Parlons de votre prochain pitch →</a>
