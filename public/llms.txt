@@ -1,27 +1,26 @@
 # Sayki Studio
 
-> Studio de films d’animation sans tournage basé à Namur, en Belgique. Sayki crée des films du script à la version finale, en commençant par la stratégie, pour les entreprises et les agences : films d’animation explicatifs, films de notoriété, publicités narratives, films pour événement, avatars de marque et univers d’animation. Les films sont fabriqués avec des outils d’intelligence artificielle générative ; la stratégie, l’écriture et la direction artistique restent humaines, et le client valide chaque étape avant la vidéo.
+> Studio de films d’animation sans tournage basé à Namur, en Belgique. Sayki crée des films du script à la version finale, en commençant par l’histoire, pour les agences et les marques et les agences : films d’animation explicatifs, films de notoriété, publicités narratives, films pour événement, avatars de marque et univers d’animation. Les films sont fabriqués avec des outils d’intelligence artificielle générative ; la stratégie, l’écriture et la direction artistique restent humaines, et le client valide chaque étape avant la vidéo.
 
-Fondateur : Ludovic Pahaut, designer multidisciplinaire, directeur artistique et réalisateur IA. Vingt ans à construire des univers de marque pour Peugeot, L’Oréal, Proximus, Cofidis, Tomorrowland et Disney.
+Fondateur : Ludovic Pahaut, directeur artistique et réalisateur. Vingt ans en agences de communication, à construire des univers de marque pour Peugeot, L’Oréal, Proximus, Cofidis, Tomorrowland et Disney.
 Signature : « Devenez impossible à oublier. » Conviction : « Vos clients n’aiment pas qu’on leur vende. Ils aiment qu’on leur raconte. »
 Langues : français (versions en néerlandais sur demande). Formats livrés : 16:9, 9:16 et 1:1.
 
-## Ce que nous fabriquons
-- Films : explicatifs, notoriété, publicités narratives, films pour événement et séminaire.
-- Univers de marque : direction artistique, univers visuel, visuels de campagne, déclinaisons.
-- Personnages : avatars de marque, mascottes, personnages récurrents.
-- IP et séries : IP d’animation, bible visuelle, personnages et teaser, avec des scénaristes de cinéma d’animation.
+## Services
+- Publicité narrative : spots de 15 à 90 secondes pour la TV, le digital et les réseaux sociaux, en direct avec les marques ou aux côtés des agences.
+- Films de marque : explicatifs, notoriété, films d’entreprise de 60 à 90 secondes, livrés en 16:9, 9:16 et 1:1, en français, en néerlandais ou dans la langue de votre choix.
+- Personnages et univers : mascottes, mini-séries animées pour Instagram, univers de marque, avec fiche personnage et bible d’univers.
 
-## Méthode (le client valide à chaque étape)
-1. Comprendre : la stratégie, le message, le ton, le format.
-2. Écrire : concept, script, voix off.
-3. Imaginer : direction artistique, univers, personnages.
-4. Storyboarder : le film plan par plan en images fixes, avec la voix off.
-5. Réaliser : animation, montage, musique, sans caméra ni plateau.
-6. Décliner : formats et langues.
+## Méthode : l’histoire d’abord, la réalisation ensuite
+1. Briefing : enjeux, cible, format, idée créative. Livrable : analyse, briefing validé, planning et devis.
+2. Concept et DA : 2 à 3 pistes d’univers, de format et de direction artistique, avec des scénaristes et des créatifs selon le média. Livrable : pistes créatives et narratives, moodboard, image clé.
+3. Storyboard : storyboard statique, script de la voix off et des dialogues. Livrable : storyboard, script et animatique.
+4. Casting : acteurs virtuels et voix, lieux, produits et objets. Livrable : une fiche référence par personnage, lieu et objet, 2 à 3 voix au choix.
+5. Production : méthodes hybrides ou full IA (animation, montage, musique, voix). Livrable : une première version complète.
+6. Déclinaison : formats 16:9, 9:16 et 1:1, sous-titres, versions de langue, document de cession des droits avec la liste des outils utilisés.
 
-## Agences et boîtes de production
-Sayki fabrique des films avec et pour les agences, en marque blanche ou en partenariat. Partenaires : Hilarious, Nikita Concept, Tree Agency, BeeSight.
+## Agences
+Sayki donne vie aux idées des agences : prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, films de notoriété, en marque blanche ou en partenariat. Partenaires : Hilarious, Nikita Concept, Tree Agency, BeeSight.
 
 ## Films clients
 - [Mint Dentistes · Le dentiste noyé sous la paperasse](https://sayki.studio/films/mint-dentistes/) : Film d’animation explicatif, 90 s, pour Mint Dentistes · Vocli Dental. Ce film ne cherche pas à plaire à tout le monde. Il cherche à convaincre une seule personne, dans une seule réunion, au moment où elle décide.
