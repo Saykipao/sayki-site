@@ -1,6 +1,6 @@
 # Sayki Studio
 
-> Studio de films d’animation sans tournage basé à Namur, en Belgique. Sayki crée des films du script à la version finale, en commençant par l’histoire, pour les agences et les marques et les agences : films d’animation explicatifs, films de notoriété, publicités narratives, films pour événement, avatars de marque et univers d’animation. Les films sont fabriqués avec des outils d’intelligence artificielle générative ; la stratégie, l’écriture et la direction artistique restent humaines, et le client valide chaque étape avant la vidéo.
+> Studio de films d’animation sans tournage basé à Namur, en Belgique. Sayki crée des films du script à la version finale, en commençant par l’histoire, pour les agences et les marques : films d’animation explicatifs, films de notoriété, publicités narratives, films pour événement, avatars de marque et univers d’animation. Les films sont fabriqués avec des outils d’intelligence artificielle générative ; la stratégie, l’écriture et la direction artistique restent humaines, et le client valide chaque étape avant la vidéo.
 
 Fondateur : Ludovic Pahaut, directeur artistique et réalisateur. Vingt ans en agences de communication, à construire des univers de marque pour Peugeot, L’Oréal, Proximus, Cofidis, Tomorrowland et Disney.
 Signature : « Devenez impossible à oublier. » Conviction : « Vos clients n’aiment pas qu’on leur vende. Ils aiment qu’on leur raconte. »
