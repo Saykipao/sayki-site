@@ -413,12 +413,12 @@ html:not(.h-on) .track{gap:8px}
   html:not(.h-on) #methode .frame:nth-child(1){--i:0}html:not(.h-on) #methode .frame:nth-child(2){--i:1}html:not(.h-on) #methode .frame:nth-child(3){--i:2}html:not(.h-on) #methode .frame:nth-child(4){--i:3}html:not(.h-on) #methode .frame:nth-child(5){--i:4}html:not(.h-on) #methode .frame:nth-child(6){--i:5}
   html:not(.h-on) #methode .track{counter-reset:st}
   html:not(.h-on) #methode .frame{counter-increment:st}
-  html:not(.h-on) #methode .frame .n{order:-2;align-self:stretch;display:flex;flex-direction:row-reverse;align-items:flex-end;gap:16px;margin:0 0 22px;font-size:0;line-height:1;color:transparent}
-  html:not(.h-on) #methode .frame .n::before{content:counter(st,decimal-leading-zero);font:italic 400 92px/.8 var(--f-display);letter-spacing:-.02em;color:var(--violet);margin-bottom:-6px}
+  html:not(.h-on) #methode .frame .n{position:absolute;left:22px;top:27px;margin:0;font-size:0;line-height:1;color:transparent}
+  html:not(.h-on) #methode .frame .n::before{content:counter(st,decimal-leading-zero);font:italic 400 38px/1 var(--f-display);letter-spacing:-.01em;color:var(--violet)}
   html:not(.h-on) #methode .frame .n::after{content:none}
   html:not(.h-on) #methode .frame .wk{display:none}
-  html:not(.h-on) #methode .frame h3{align-self:flex-start}
-  html:not(.h-on) #methode .frame h3{margin:0 0 14px;font-size:38px;line-height:1;color:#fff;max-width:80%}
+  html:not(.h-on) #methode .frame h3{align-self:flex-start;padding-left:56px;max-width:none}
+  html:not(.h-on) #methode .frame h3{margin:0 0 14px;font-size:36px;line-height:1.05;color:#fff;max-width:none}
   html:not(.h-on) #methode .frame p{max-width:none;color:rgba(243,238,249,.84);font-size:17px;line-height:1.55}
   html:not(.h-on) #methode .frame .val{margin-top:auto;padding-top:16px;border-top:1px solid rgba(243,238,249,.12);font-size:11px;line-height:1.7;letter-spacing:.07em;color:#D9C2FF}
   html:not(.h-on) #methode .frame p:not(.val):not(.wk){margin-bottom:18px}
@@ -706,6 +706,16 @@ html:not(.h-on) .track{gap:8px}
   .cta-m .btn{justify-content:center;font-size:16px;padding:19px 16px}
   .cta-m .btn:first-child{background:transparent;color:#fff;border:1px solid rgba(243,238,249,.35)}
 }
+/* mobile : clients et partenaires en mur, chaque nom s’allume à son tour */
+@media (max-width:899px){
+  .refs .marquee{white-space:normal;padding:22px var(--pad) 26px}
+  .refs .marquee-t{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 20px;transform:none!important}
+  .refs .marquee-t span{padding:0;font-size:clamp(24px,7vw,30px);opacity:.22;animation:wallGlow 7s ease-in-out infinite;animation-delay:calc(var(--k,0) * -0.41s)}
+  .refs .marquee-t span:nth-child(n+18){display:none}
+  .refs .marquee-t span i{display:none}
+  @keyframes wallGlow{0%,100%{opacity:.2}45%,55%{opacity:1}}
+}
+@media (max-width:899px) and (prefers-reduced-motion:reduce){.refs .marquee-t span{animation:none;opacity:.8}}
 </style>
 </head>
 <body>
@@ -1278,8 +1288,10 @@ if(!grid.children.length) ORDER.forEach((id,idx)=>{
 /* sur mobile, les films verticaux prennent leur version horizontale */
 if(MOB) $$('.film',grid).forEach(el=>{const id=el.dataset.film, f=FILMS[id]; if(f.v&&!f.ht){ const c=$('.m-color',el), d=$('.m-duo',el), v=$('video',el); c.src='assets/'+th(id)+'.jpg'; d.src='assets/'+th(id)+'-duo.jpg'; v.dataset.src='assets/'+th(id)+'.mp4'; }});
 const mq=$('#marquee');
+/* mobile : mur de clients, chaque nom s’allume à son tour */
 const once=CLIENTS.map(c=>`<span>${c}<i aria-hidden="true">·</i></span>`).join('');
 if(!mq.children.length) mq.innerHTML=once+once;
+$$('span',mq).forEach((el,i)=>el.style.setProperty('--k',(i*7)%CLIENTS.length));
 
 /* texte qui roule */
 function splitRoll(text){
@@ -2493,7 +2505,7 @@ function frame(t){
     const half=mq.scrollWidth/2;
     mqX-=(0.6+Math.min(Math.abs(velS)*0.4,12))*mqDir;
     if(mqX<-half) mqX+=half; if(mqX>0) mqX-=half;
-    mq.style.transform=`translate3d(${mqX.toFixed(2)}px,0,0)`;
+    if(innerWidth>=900) mq.style.transform=`translate3d(${mqX.toFixed(2)}px,0,0)`; else if(mq.style.transform) mq.style.transform='';
   }
   const hr=heroEl.getBoundingClientRect();
   const hs=clamp(-hr.top/Math.max(1,hr.height),0,1);
