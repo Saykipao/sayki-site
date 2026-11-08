@@ -381,15 +381,20 @@ html.is-loading,html.is-loading body{overflow:hidden}
 html:not(.h-on) #methode .pin-in{height:auto;position:relative;overflow:visible;padding-bottom:var(--sec)}
 html:not(.h-on) .track{gap:8px}
 .mt-nav,.mt-barw{display:none}
+/* mobile : la méthode passe dans le mauve, en cartes qui s’empilent au défilement */
 @media (max-width:899px){
-  html:not(.h-on) .mt-nav{display:flex;margin-top:28px}
-  html:not(.h-on) .mt-barw{display:block}
-  html:not(.h-on) .mt-barw .pr-bar{margin-top:32px}
-  html:not(.h-on) #methode .track{display:flex;gap:16px;max-width:none;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--pad);padding:0 var(--pad);scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  html:not(.h-on) #methode .track::-webkit-scrollbar{display:none}
-  html:not(.h-on) #methode .frame{flex:0 0 84%;scroll-snap-align:start;grid-template-columns:minmax(0,1fr);padding-top:26px}
-  html:not(.h-on) #methode .frame .n{grid-row:auto;font-size:96px}
-  html:not(.h-on) #methode .frame .val,html:not(.h-on) #methode .frame .wk{grid-column:1}
+  html:not(.h-on) #methode{--ecran:#F3EEF9;--cendre:rgba(243,238,249,.74);--trait:rgba(243,238,249,.14);--violet-clair:#C08BFF;color:var(--ecran);margin:0 10px;border-radius:30px;background:radial-gradient(120% 45% at 90% 0%,rgba(158,55,255,.42),transparent 65%),radial-gradient(110% 40% at 0% 100%,rgba(222,80,210,.26),transparent 65%),#150A26}
+  html:not(.h-on) #methode .steps-hd{padding-top:clamp(72px,18vw,110px);margin-bottom:34px}
+  html:not(.h-on) #methode .track{display:block;padding:0 14px 6vh}
+  html:not(.h-on) #methode .frame{position:sticky;top:calc(86px + var(--i) * 12px);display:flex;flex-direction:column;gap:0;min-height:min(62svh,520px);margin:0 0 22px;padding:24px 22px 26px;border:1px solid rgba(243,238,249,.13);border-top:1px solid rgba(243,238,249,.22);border-radius:24px;background:linear-gradient(165deg,#2C1456 0%,#1C0D36 70%);box-shadow:0 -14px 40px rgba(8,3,18,.45);transform-origin:50% 0;will-change:transform}
+  html:not(.h-on) #methode .frame:nth-child(1){--i:0}html:not(.h-on) #methode .frame:nth-child(2){--i:1}html:not(.h-on) #methode .frame:nth-child(3){--i:2}html:not(.h-on) #methode .frame:nth-child(4){--i:3}html:not(.h-on) #methode .frame:nth-child(5){--i:4}html:not(.h-on) #methode .frame:nth-child(6){--i:5}
+  html:not(.h-on) #methode .frame .n{order:-2;align-self:flex-end;margin:-6px -4px -40px 0;font-size:112px;line-height:.8;color:rgba(192,139,255,.5)}
+  html:not(.h-on) #methode .frame .wk{order:-1;align-self:flex-start;margin:0 0 10px;font-size:11px;color:var(--violet-clair)}
+  html:not(.h-on) #methode .frame h3{align-self:flex-start}
+  html:not(.h-on) #methode .frame h3{margin:0 0 14px;font-size:38px;line-height:1;color:#fff;max-width:80%}
+  html:not(.h-on) #methode .frame p{max-width:none;color:var(--cendre);font-size:15.5px;line-height:1.55}
+  html:not(.h-on) #methode .frame .val{margin-top:auto;padding-top:18px;border-top:1px solid rgba(243,238,249,.12);color:#E7D6FF}
+  html:not(.h-on) #methode .frame p:not(.val):not(.wk){margin-bottom:18px}
 }
 
 /* ---------- Calque clair ---------- */
@@ -1278,6 +1283,14 @@ function setupPins(){
 }
 setupPins(); addEventListener('resize',setupPins);
 
+/* mobile : la carte recouverte recule légèrement quand la suivante arrive */
+(function(){ const cards=$$('#methode .frame'); if(!cards.length) return; let raf=0;
+  function upd(){ raf=0; if(H_ON||innerWidth>=900){cards.forEach(c=>{c.style.transform='';c.style.filter='';}); return;}
+    for(let i=0;i<cards.length;i++){ const c=cards[i], n=cards[i+1]; if(!n){c.style.transform='';c.style.filter='';continue;}
+      const a=c.getBoundingClientRect(), b=n.getBoundingClientRect(); const k=clamp(1-(b.top-a.top)/Math.max(1,a.height),0,1);
+      c.style.transform=k?`scale(${(1-0.06*k).toFixed(4)})`:''; c.style.filter=k?`brightness(${(1-0.35*k).toFixed(3)})`:''; } }
+  addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(upd); },{passive:true}); addEventListener('resize',upd); upd();
+})();
 /* mobile : la méthode se parcourt comme les témoignages (glisser, flèches, barre) */
 (function(){ const prev=$('#mtPrev'), next=$('#mtNext'), bar=$('#mtBar'); if(!prev||!bar) return; const cards=$$('.frame',track);
   const gap=()=>parseFloat(getComputedStyle(track).columnGap)||16;
@@ -2180,7 +2193,9 @@ const light=$('#light'), studioSec=$('#studio'), studioMedia=$('#studioMedia');
 function layerClip(el,r){const e=1-clamp(1-r.top/innerHeight,0,1); el.style.clipPath=e>0.001?`inset(0 ${(e*3).toFixed(2)}vw 0 ${(e*3).toFixed(2)}vw round ${(e*56).toFixed(1)}px ${(e*56).toFixed(1)}px 0 0)`:'none';}
 function layerUpdate(){
   const r=light.getBoundingClientRect();
-  root.classList.toggle('hd-light',r.top<=56&&r.bottom>56);
+  let hl=r.top<=56&&r.bottom>56;
+  if(hl&&!H_ON&&innerWidth<900){const m=meth.getBoundingClientRect(); if(m.top<=56&&m.bottom>56) hl=false;}
+  root.classList.toggle('hd-light',hl);
   const s=studioSec.getBoundingClientRect();
   if(!GL) studioMedia.style.opacity=clamp(Math.min((innerHeight-s.top)/(innerHeight*0.55),s.bottom/(innerHeight*0.55)),0,1).toFixed(3);
   if(!RM){layerClip(light,r);
