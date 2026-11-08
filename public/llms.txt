@@ -20,8 +20,8 @@ Langues : français (versions en néerlandais sur demande). Formats livrés : 16
 5. Production : méthodes hybrides ou full IA (animation, montage, musique, voix). Livrable : une première version complète.
 6. Déclinaison : formats 16:9, 9:16 et 1:1, sous-titres, versions de langue, document de cession des droits avec la liste des outils utilisés.
 
-## Agences et boîtes de production
-Sayki fabrique des films avec et pour les agences, en marque blanche ou en partenariat. Partenaires : Hilarious, Nikita Concept, Tree Agency, BeeSight.
+## Agences
+Sayki donne vie aux idées des agences : prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, films de notoriété, en marque blanche ou en partenariat. Partenaires : Hilarious, Nikita Concept, Tree Agency, BeeSight.
 
 ## Films clients
 - [Mint Dentistes · Le dentiste noyé sous la paperasse](https://sayki-site.ludovic-afd.workers.dev/films/mint-dentistes/) : Film d’animation explicatif, 90 s, pour Mint Dentistes · Vocli Dental. Ce film ne cherche pas à plaire à tout le monde. Il cherche à convaincre une seule personne, dans une seule réunion, au moment où elle décide.
