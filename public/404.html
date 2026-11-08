@@ -433,17 +433,23 @@ html:not(.h-on) .track{gap:8px}
 .st-facts div{display:grid;grid-template-columns:clamp(130px,13vw,230px) minmax(0,1fr);align-items:baseline;gap:20px;padding:clamp(14px,1.4vw,22px) 0;border-bottom:1px solid rgba(255,255,255,.22)}
 .st-facts dt{font-size:clamp(56px,6vw,104px);line-height:.9;color:#fff;letter-spacing:-.02em}
 .st-facts dd{margin:0;color:rgba(255,255,255,.86);font-size:clamp(16px,1.2vw,19px);line-height:1.35;max-width:18ch}
-.ag-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 40px;margin-top:clamp(36px,4vw,64px);opacity:0;transform:translateY(16px);transition:opacity .6s,transform .8s var(--ease-out)}
-.ag-foot.on,.no-pin .ag-foot{opacity:1;transform:none}
-.ag-foot .who{margin:0;color:var(--cendre);font-size:15px}
-.ag-foot .ag-express{margin:0;flex:1 1 100%;color:#fff;font-size:clamp(15px,1.15vw,18px)}
-.ag-foot .who b{color:var(--ecran);font-weight:500}
-#mani2{max-width:22ch}
-.ag-txt{flex:1 1 100%;display:grid;grid-template-columns:repeat(2,minmax(0,40ch));gap:clamp(20px,4vw,80px);margin-bottom:clamp(12px,2vw,28px)}
-.ag-txt div p+p{margin-top:12px}
-.ag-txt p{margin:0;font-size:clamp(15px,1.1vw,17px);line-height:1.6;color:rgba(243,238,249,.84);max-width:38ch}
-@media (max-width:899px){.ag-txt{grid-template-columns:minmax(0,1fr);gap:12px}.ag-txt p{font-size:14.5px;line-height:1.5}#agences .ag-foot{margin-top:24px}}
-@media (max-width:899px) and (max-height:760px){#mani2{font-size:min(var(--t-l),4.4vh)}.ag-txt p{font-size:13.5px;line-height:1.45}.ag-txt{gap:8px}#agences .ag-foot{margin-top:16px;gap:10px 30px}#agences .kicker{margin-bottom:12px}}
+.ag-hd{margin-bottom:clamp(36px,5vw,80px)}
+.ag-hd h2{margin:0;line-height:.95}
+.ag-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,120px);align-items:start}
+#mani2{margin:0;max-width:15ch}
+.ag-txt p{margin:0;padding:20px 0;border-top:1px solid rgba(243,238,249,.14);font-size:clamp(15px,1.15vw,18px);line-height:1.6;color:rgba(243,238,249,.84);max-width:46ch}
+.ag-txt p:first-child{padding-top:0;border-top:0}
+.ag-band{margin-top:clamp(48px,6vw,104px);padding-top:clamp(28px,3vw,44px);border-top:1px solid rgba(243,238,249,.16);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) auto;gap:clamp(24px,4vw,64px);align-items:center}
+.ag-who>p{margin:0 0 14px;font-size:11px;color:var(--cendre)}
+.ag-who ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.ag-who li{padding:9px 15px;border:1px solid rgba(243,238,249,.22);border-radius:999px;font-size:14px;line-height:1;color:#fff;background:rgba(243,238,249,.04)}
+.ag-xp{display:flex;align-items:center;gap:20px;padding:18px 22px;border-radius:20px;background:rgba(243,238,249,.06);border:1px solid rgba(243,238,249,.12)}
+.ag-xp .xp-n{margin:0;flex:none;display:flex;flex-direction:column;align-items:flex-start;font-size:clamp(52px,4.6vw,76px);line-height:.82;color:#fff}
+.ag-xp .xp-n small{margin-top:10px;font-size:11px;color:var(--violet-clair)}
+.ag-xp p:last-child{margin:0;font-size:15px;line-height:1.5;color:rgba(243,238,249,.9)}
+.ag-btn{font-size:16px;padding:19px 28px;white-space:nowrap;justify-self:end}
+@media (max-width:1180px){.ag-band{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.ag-btn{grid-column:1/-1;justify-self:start}}
+@media (max-width:899px){.ag-grid{grid-template-columns:minmax(0,1fr);gap:30px}#mani2{font-size:clamp(32px,8.6vw,46px);line-height:1.05;max-width:none}.ag-txt p{font-size:15.5px;padding:16px 0}.ag-band{grid-template-columns:minmax(0,1fr);gap:22px;margin-top:40px}.ag-btn{justify-self:stretch;justify-content:center;white-space:normal;text-align:center}.ag-xp{padding:16px 18px;gap:16px}}
 @media (max-width:860px){.st-grid{grid-template-columns:minmax(0,1fr)}.st-facts div{grid-template-columns:120px minmax(0,1fr)}}
 
 /* ---------- CTA ---------- */
@@ -944,18 +950,21 @@ html:not(.h-on) .track{gap:8px}
     <div class="marquee"><div class="marquee-t" id="marquee"><span>Guerlain<i aria-hidden="true">·</i></span><span>Proximus<i aria-hidden="true">·</i></span><span>Bioderma<i aria-hidden="true">·</i></span><span>Arkopharma<i aria-hidden="true">·</i></span><span>Aurobindo<i aria-hidden="true">·</i></span><span>Elba<i aria-hidden="true">·</i></span><span>BW+<i aria-hidden="true">·</i></span><span>Hilarious<i aria-hidden="true">·</i></span><span>Nikita Concept<i aria-hidden="true">·</i></span><span>Mona Studio<i aria-hidden="true">·</i></span><span>Flying Fish<i aria-hidden="true">·</i></span><span>TreeOsk<i aria-hidden="true">·</i></span><span>La Forge<i aria-hidden="true">·</i></span><span>Sorcery Systems<i aria-hidden="true">·</i></span><span>Rayon Belge<i aria-hidden="true">·</i></span><span>Tante Riche<i aria-hidden="true">·</i></span><span>Pat le Sommelier<i aria-hidden="true">·</i></span><span>Guerlain<i aria-hidden="true">·</i></span><span>Proximus<i aria-hidden="true">·</i></span><span>Bioderma<i aria-hidden="true">·</i></span><span>Arkopharma<i aria-hidden="true">·</i></span><span>Aurobindo<i aria-hidden="true">·</i></span><span>Elba<i aria-hidden="true">·</i></span><span>BW+<i aria-hidden="true">·</i></span><span>Hilarious<i aria-hidden="true">·</i></span><span>Nikita Concept<i aria-hidden="true">·</i></span><span>Mona Studio<i aria-hidden="true">·</i></span><span>Flying Fish<i aria-hidden="true">·</i></span><span>TreeOsk<i aria-hidden="true">·</i></span><span>La Forge<i aria-hidden="true">·</i></span><span>Sorcery Systems<i aria-hidden="true">·</i></span><span>Rayon Belge<i aria-hidden="true">·</i></span><span>Tante Riche<i aria-hidden="true">·</i></span><span>Pat le Sommelier<i aria-hidden="true">·</i></span></div></div>
   </div>
 
-  <section class="manifesto pin" id="agences" aria-label="Agences">
-    <div class="pin-in wrap">
-      <p class="mono kicker">Agences</p>
-      <p class="display mani" id="mani2">La manière de produire change, <em>pas les bonnes idées.</em></p>
-      <div class="ag-foot">
+  <section class="sec ag-sec" id="agences" aria-labelledby="ag-t">
+    <div class="wrap">
+      <div class="ag-hd"><p class="mono kicker">Agences et boîtes de prod</p><h2 class="display t-xl split" id="ag-t" data-glow>Pour les <em>agences</em></h2></div>
+      <div class="ag-grid">
+        <p class="display mani" id="mani2">La manière de produire change, <em>pas les bonnes idées.</em></p>
         <div class="ag-txt">
-          <div><p>Vous avez l’idée, je m’occupe de lui donner vie. On parle la même langue, car on fait le même métier.</p><p>Vous savez, cette idée rangée au fond du tiroir parce qu’il fallait tourner en Islande, avec un ours, pour le budget d’une bannière ? Ressortez-la.</p></div>
-          <div><p>Trêve de plaisanterie : la publicité se construit déjà autrement. Prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, et même un film de notoriété né des photos d’un rapport annuel.</p></div>
+          <p>Vous avez l’idée, je m’occupe de lui donner vie. On parle la même langue, car on fait le même métier.</p>
+          <p>Vous savez, cette idée rangée au fond du tiroir parce qu’il fallait tourner en Islande, avec un ours, pour le budget d’une bannière ? Ressortez-la.</p>
+          <p>Trêve de plaisanterie : la publicité se construit déjà autrement. Prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, et même un film de notoriété né des photos d’un rapport annuel.</p>
         </div>
-        <p class="who">Ils travaillent déjà avec moi : <b>Hilarious</b> · <b>Nikita Concept</b> · <b>Tree Agency</b> · <b>BeeSight</b></p>
-        <p class="ag-express">Délai serré pour un pitch ? Une production express en 14 jours est possible, selon le projet.</p>
-        <a class="link" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Parlons de votre prochain pitch →</a>
+      </div>
+      <div class="ag-band">
+        <div class="ag-who"><p class="mono">Ils travaillent déjà avec moi</p><ul><li>Hilarious</li><li>Nikita Concept</li><li>Tree Agency</li><li>BeeSight</li></ul></div>
+        <div class="ag-xp"><p class="xp-n display">14<small class="mono">jours</small></p><p>Délai serré pour un pitch ? Une production express en 14 jours est possible, selon le projet.</p></div>
+        <a class="btn ag-btn" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Parlons de votre prochain pitch <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -1224,7 +1233,7 @@ const mani0=$('#mani0'), ledeSec=$('#lede'), ledeIn=$('.pin-in',ledeSec);
   [mani0,...$$('.mv-under p')].forEach(el=>{const frag=document.createDocumentFragment(); [...el.childNodes].forEach(n=>proc(n,frag)); el.textContent=''; el.appendChild(frag);});
 })();
 const words0=[...$$('.mw',mani0),...$$('.mv-under .mw')];
-const mani2=$('#mani2'), agSec=$('#agences'), agIn=$('.pin-in',agSec), agFoot=$('.ag-foot',agSec);
+const mani2=$('#mani2'), agSec=$('#agences');
 (function(){
   const proc=(node,parent)=>{
     if(node.nodeType===3){node.textContent.split(/([ \n\t]+)/).forEach(p=>{if(!p)return; if(/^[ \n\t]+$/.test(p)){parent.appendChild(document.createTextNode(' '));return;} const w=document.createElement('span'); w.className='mw'; w.textContent=p; parent.appendChild(w);});}
@@ -1294,11 +1303,9 @@ function pinUpdate(){
   if(SMOOTH) maniIn.style.transform=`translate3d(0,${m.off.toFixed(1)}px,0)`;
   const lit=m.p*(words.length+3)-0.5;
   words.forEach((w,i)=>{w.style.opacity=(0.14+0.86*clamp(lit-i,0,1)).toFixed(3);});
-  const a2=pinOffset(agSec);
-  if(SMOOTH) agIn.style.transform=`translate3d(0,${a2.off.toFixed(1)}px,0)`;
-  const lit2=a2.p*(words2.length+5)-0.5;
+  const r2=mani2.getBoundingClientRect(), pr2=clamp((innerHeight*0.88-r2.top)/(innerHeight*0.5),0,1);
+  const lit2=pr2*(words2.length+1)-0.5;
   words2.forEach((w,i)=>{w.style.opacity=(0.14+0.86*clamp(lit2-i,0,1)).toFixed(3);});
-  agFoot.classList.toggle('on',lit2>words2.length);
   if(H_ON){
     const h=pinOffset(meth);
     if(SMOOTH) methIn.style.transform=`translate3d(0,${h.off.toFixed(1)}px,0)`;
