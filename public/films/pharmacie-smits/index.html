@@ -480,7 +480,7 @@ html:not(.h-on) .track{gap:8px}
 .ag-who ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .ag-who li{padding:9px 15px;border:1px solid rgba(243,238,249,.22);border-radius:999px;font-size:14px;line-height:1;color:#fff;background:rgba(243,238,249,.04)}
 .ag-btn{font-size:16px;padding:19px 28px;white-space:nowrap;justify-self:end}
-@media (max-width:899px){.ag-grid{grid-template-columns:minmax(0,1fr);gap:30px}#mani2{font-size:clamp(32px,8.6vw,46px);line-height:1.05;max-width:none}.ag-txt p{font-size:15.5px;padding:16px 0}.ag-band{grid-template-columns:minmax(0,1fr);gap:22px;margin-top:40px}.ag-btn{justify-self:stretch;justify-content:center;white-space:normal;text-align:center}}
+@media (max-width:899px){.ag-grid{grid-template-columns:minmax(0,1fr);gap:30px}#mani2{font-size:clamp(25px,7.3vw,44px);line-height:1.08;max-width:none;white-space:nowrap}.ag-txt p{font-size:15.5px;padding:16px 0}.ag-band{grid-template-columns:minmax(0,1fr);gap:22px;margin-top:40px}.ag-btn{justify-self:stretch;justify-content:center;white-space:normal;text-align:center}}
 @media (max-width:860px){.st-grid{grid-template-columns:minmax(0,1fr)}.st-facts div{grid-template-columns:120px minmax(0,1fr)}}
 
 /* ---------- CTA ---------- */
@@ -668,6 +668,8 @@ html:not(.h-on) .track{gap:8px}
 }
 /* mobile : fin de page allégée (textes repliés, chiffres compacts, bouton d’appel en premier) */
 .m-more-btn{display:none}
+.m-br{display:none}
+@media (max-width:899px){.m-br{display:inline}}
 .m-fold,.m-fold-in,.st-row{display:contents}
 .st-main .m-fold .studio-p{margin-top:12px}
 @media (max-width:899px){
@@ -1041,7 +1043,7 @@ html:not(.h-on) .track{gap:8px}
     <div class="wrap">
       <div class="ag-hd"><p class="mono kicker">Agences et boîtes de prod</p><h2 class="display t-xl split" id="ag-t" data-glow>Pour les <em>agences</em></h2></div>
       <div class="ag-grid">
-        <p class="display mani" id="mani2">La manière de produire change, <em>pas les bonnes idées.</em></p>
+        <p class="display mani" id="mani2">La manière de produire change,<br class="m-br"> <em>pas les bonnes idées.</em></p>
         <div class="ag-txt">
           <p>Vous avez l’idée, je m’occupe de lui donner vie. On parle la même langue, car on fait le même métier.</p>
           <div class="m-fold" id="foldAgences"><div class="m-fold-in">
