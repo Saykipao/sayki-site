@@ -293,6 +293,8 @@ html.is-loading,html.is-loading body{overflow:hidden}
 @media (max-width:899px){.manifesto{height:190vh}}
 @media (max-width:640px){.hero-tc{display:none}.h1{font-size:clamp(25px,7.6vw,36px);line-height:1.08}.hero-bot{flex-direction:column;align-items:flex-start;gap:18px}.hero-sub .mono{max-width:none}.hero{padding-bottom:210px}}
 .pin-in{height:100svh;position:sticky;top:0;overflow:hidden}
+@supports (height:100dvh){.pin-in{height:100dvh}}
+@media (max-width:899px){.manifesto .pin-in{padding-top:64px;box-sizing:border-box}}
 .is-smooth .pin-in{position:relative}
 .manifesto .pin-in{display:grid;align-content:center}
 .mani{font-size:var(--t-l);max-width:16ch;position:relative;z-index:1}
