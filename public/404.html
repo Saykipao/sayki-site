@@ -388,12 +388,16 @@ html:not(.h-on) .track{gap:8px}
   html:not(.h-on) #methode .track{display:block;padding:0 14px 6vh}
   html:not(.h-on) #methode .frame{position:sticky;top:calc(86px + var(--i) * 12px);display:flex;flex-direction:column;gap:0;min-height:min(62svh,520px);margin:0 0 22px;padding:24px 22px 26px;border:1px solid rgba(243,238,249,.13);border-top:1px solid rgba(243,238,249,.22);border-radius:24px;background:linear-gradient(165deg,#2C1456 0%,#1C0D36 70%);box-shadow:0 -14px 40px rgba(8,3,18,.45);transform-origin:50% 0;will-change:transform}
   html:not(.h-on) #methode .frame:nth-child(1){--i:0}html:not(.h-on) #methode .frame:nth-child(2){--i:1}html:not(.h-on) #methode .frame:nth-child(3){--i:2}html:not(.h-on) #methode .frame:nth-child(4){--i:3}html:not(.h-on) #methode .frame:nth-child(5){--i:4}html:not(.h-on) #methode .frame:nth-child(6){--i:5}
-  html:not(.h-on) #methode .frame .n{order:-2;align-self:flex-end;margin:-6px -4px -40px 0;font-size:112px;line-height:.8;color:rgba(192,139,255,.5)}
-  html:not(.h-on) #methode .frame .wk{order:-1;align-self:flex-start;margin:0 0 10px;font-size:11px;color:var(--violet-clair)}
+  html:not(.h-on) #methode .track{counter-reset:st}
+  html:not(.h-on) #methode .frame{counter-increment:st}
+  html:not(.h-on) #methode .frame .n{order:-2;align-self:stretch;display:flex;align-items:flex-end;gap:16px;margin:0 0 22px;font-size:0;line-height:1;color:transparent}
+  html:not(.h-on) #methode .frame .n::before{content:counter(st,decimal-leading-zero);font:500 84px/.78 var(--f-cond);letter-spacing:-.01em;color:transparent;-webkit-text-stroke:1.3px #C08BFF;background:linear-gradient(180deg,rgba(192,139,255,.55),rgba(222,80,210,0) 85%);-webkit-background-clip:text;background-clip:text}
+  html:not(.h-on) #methode .frame .n::after{content:"/ 06";flex:1;text-align:right;padding-bottom:8px;font:500 11px/1 var(--f-mono);letter-spacing:.1em;color:rgba(243,238,249,.5);background:linear-gradient(90deg,rgba(192,139,255,.6),rgba(192,139,255,.08)) left bottom/100% 1px no-repeat}
+  html:not(.h-on) #methode .frame .wk{display:none}
   html:not(.h-on) #methode .frame h3{align-self:flex-start}
   html:not(.h-on) #methode .frame h3{margin:0 0 14px;font-size:38px;line-height:1;color:#fff;max-width:80%}
-  html:not(.h-on) #methode .frame p{max-width:none;color:var(--cendre);font-size:15.5px;line-height:1.55}
-  html:not(.h-on) #methode .frame .val{margin-top:auto;padding-top:18px;border-top:1px solid rgba(243,238,249,.12);color:#E7D6FF}
+  html:not(.h-on) #methode .frame p{max-width:none;color:rgba(243,238,249,.84);font-size:17px;line-height:1.55}
+  html:not(.h-on) #methode .frame .val{margin-top:auto;padding-top:16px;border-top:1px solid rgba(243,238,249,.12);font-size:11px;line-height:1.7;letter-spacing:.07em;color:#D9C2FF}
   html:not(.h-on) #methode .frame p:not(.val):not(.wk){margin-bottom:18px}
 }
 
