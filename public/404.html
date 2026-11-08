@@ -408,6 +408,8 @@ html:not(.h-on) .track{gap:8px}
 .studio-sec{position:relative;z-index:3;min-height:100svh;display:grid;align-content:end;padding-top:clamp(160px,16vw,280px);padding-bottom:clamp(56px,5vw,90px);background:transparent}
 @media (max-width:860px){.studio-sec{aspect-ratio:auto;min-height:100svh}.studio-veil{background:rgba(21,10,38,.66)}}
 .is-gl .studio-sec{background:transparent}
+/* la vidéo du studio ne déborde plus sur le bas de la section claire (Preuves) */
+.studio-sec{clip-path:inset(0 0 -40% 0)}
 .is-gl .sv,.is-gl .studio-tint{opacity:0}
 .is-gl .studio-veil{opacity:0}
 .studio-in p,.studio-in .facts span{text-shadow:0 1px 14px rgba(21,10,38,.55)}
