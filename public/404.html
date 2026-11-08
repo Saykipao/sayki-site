@@ -694,8 +694,8 @@ html:not(.h-on) .track{gap:8px}
 @media (max-width:899px){
   .refs .marquee{display:none}
   .mwall{display:grid;gap:6px;overflow:hidden;padding:20px 0 24px;border-block:1px solid var(--trait)}
-  .mwall-r{display:flex;gap:22px;white-space:nowrap;width:max-content;will-change:transform}
-  .mwall-r span{font-family:var(--f-display);font-size:clamp(30px,9vw,40px);line-height:1.1;letter-spacing:-.02em;color:var(--ecran);opacity:.2;animation:wallGlow 7s ease-in-out infinite;animation-delay:calc(var(--k,0) * -0.41s)}
+  .mwall-r{display:flex;gap:22px;white-space:nowrap;width:max-content;will-change:transform;backface-visibility:hidden;contain:layout paint}
+  .mwall-r span{font-family:var(--f-display);font-size:clamp(30px,9vw,40px);line-height:1.1;letter-spacing:-.02em;color:var(--ecran);opacity:.2;animation:wallGlow 9s ease-in-out infinite;will-change:opacity;animation-delay:calc(var(--k,0) * -0.41s)}
   .mwall-r span:nth-child(even){font-style:italic}
   @keyframes wallGlow{0%,100%{opacity:.18}45%,55%{opacity:1}}
 }
@@ -1244,10 +1244,17 @@ if(!mq.children.length) mq.innerHTML=once+once;
   const ROWS=4, rows=[];
   for(let r=0;r<ROWS;r++){ const names=CLIENTS.filter((c,i)=>i%ROWS===r); const row=document.createElement('div'); row.className='mwall-r';
     const list=[...names,...names,...names]; row.innerHTML=list.map((c,j)=>`<span style="--k:${(r*5+j*7)%CLIENTS.length}">${c}</span>`).join(''); W.appendChild(row); rows.push(row); }
-  refs.appendChild(W); let raf=0;
-  function upd(){ raf=0; if(innerWidth>=900) return; const b=refs.getBoundingClientRect(); const p=clamp((innerHeight-b.top)/(innerHeight+b.height),0,1);
-    rows.forEach((row,i)=>{ const span=Math.max(0,row.scrollWidth-innerWidth); const dir=i%2?1:-1; const base=-span*0.5; row.style.transform=`translate3d(${(base+dir*(p-0.5)*span*0.8).toFixed(1)}px,0,0)`; }); }
-  addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(upd); },{passive:true}); addEventListener('resize',upd); upd();
+  refs.appendChild(W);
+  let spans=[], vis=false, cur=null, raf=0;
+  const measure=()=>{ spans=rows.map(r=>Math.max(0,r.scrollWidth-innerWidth)); };
+  const target=()=>{ const b=refs.getBoundingClientRect(); return clamp((innerHeight-b.top)/(innerHeight+b.height),0,1); };
+  function frame(){ raf=0; if(innerWidth>=900) return; const t=target(); if(cur===null) cur=t; cur+=(t-cur)*0.07;
+    rows.forEach((row,i)=>{ const sp=spans[i]||0, dir=i%2?1:-1; row.style.transform=`translate3d(${(-sp*0.5+dir*(cur-0.5)*sp*0.32).toFixed(2)}px,0,0)`; });
+    if(vis||Math.abs(t-cur)>0.0005) raf=requestAnimationFrame(frame); }
+  const go=()=>{ if(!raf) raf=requestAnimationFrame(frame); };
+  new IntersectionObserver(es=>{ vis=es[0].isIntersecting; if(vis) go(); },{rootMargin:'100px 0px'}).observe(refs);
+  measure(); addEventListener('resize',()=>{measure();go();}); if(document.fonts) document.fonts.ready.then(()=>{measure();go();});
+  go();
 })();
 
 /* texte qui roule */
