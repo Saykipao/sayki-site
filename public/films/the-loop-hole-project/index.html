@@ -708,16 +708,17 @@ html:not(.h-on) .track{gap:8px}
   .cta-m .btn{justify-content:center;font-size:16px;padding:19px 16px}
   .cta-m .btn:first-child{background:transparent;color:#fff;border:1px solid rgba(243,238,249,.35)}
 }
-/* mobile : clients et partenaires en mur, chaque nom s’allume à son tour */
+/* mobile : clients et partenaires en mur de lignes qui glissent en sens inverse au défilement */
+.mwall{display:none}
 @media (max-width:899px){
-  .refs .marquee{white-space:normal;padding:22px var(--pad) 26px}
-  .refs .marquee-t{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 20px;transform:none!important}
-  .refs .marquee-t span{padding:0;font-size:clamp(24px,7vw,30px);opacity:.22;animation:wallGlow 7s ease-in-out infinite;animation-delay:calc(var(--k,0) * -0.41s)}
-  .refs .marquee-t span:nth-child(n+18){display:none}
-  .refs .marquee-t span i{display:none}
-  @keyframes wallGlow{0%,100%{opacity:.2}45%,55%{opacity:1}}
+  .refs .marquee{display:none}
+  .mwall{display:grid;gap:6px;overflow:hidden;padding:20px 0 24px;border-block:1px solid var(--trait)}
+  .mwall-r{display:flex;gap:22px;white-space:nowrap;width:max-content;will-change:transform}
+  .mwall-r span{font-family:var(--f-display);font-size:clamp(30px,9vw,40px);line-height:1.1;letter-spacing:-.02em;color:var(--ecran);opacity:.2;animation:wallGlow 7s ease-in-out infinite;animation-delay:calc(var(--k,0) * -0.41s)}
+  .mwall-r span:nth-child(even){font-style:italic}
+  @keyframes wallGlow{0%,100%{opacity:.18}45%,55%{opacity:1}}
 }
-@media (max-width:899px) and (prefers-reduced-motion:reduce){.refs .marquee-t span{animation:none;opacity:.8}}
+@media (max-width:899px) and (prefers-reduced-motion:reduce){.mwall-r span{animation:none;opacity:.8}}
 </style>
 </head>
 <body>
@@ -1257,7 +1258,15 @@ const mq=$('#marquee');
 /* mobile : mur de clients, chaque nom s’allume à son tour */
 const once=CLIENTS.map(c=>`<span>${c}<i aria-hidden="true">·</i></span>`).join('');
 if(!mq.children.length) mq.innerHTML=once+once;
-$$('span',mq).forEach((el,i)=>el.style.setProperty('--k',(i*7)%CLIENTS.length));
+(function(){ const refs=$('.refs'); if(!refs) return; const W=document.createElement('div'); W.className='mwall'; W.setAttribute('aria-hidden','true');
+  const ROWS=4, rows=[];
+  for(let r=0;r<ROWS;r++){ const names=CLIENTS.filter((c,i)=>i%ROWS===r); const row=document.createElement('div'); row.className='mwall-r';
+    const list=[...names,...names,...names]; row.innerHTML=list.map((c,j)=>`<span style="--k:${(r*5+j*7)%CLIENTS.length}">${c}</span>`).join(''); W.appendChild(row); rows.push(row); }
+  refs.appendChild(W); let raf=0;
+  function upd(){ raf=0; if(innerWidth>=900) return; const b=refs.getBoundingClientRect(); const p=clamp((innerHeight-b.top)/(innerHeight+b.height),0,1);
+    rows.forEach((row,i)=>{ const span=Math.max(0,row.scrollWidth-innerWidth); const dir=i%2?1:-1; const base=-span*0.5; row.style.transform=`translate3d(${(base+dir*(p-0.5)*span*0.8).toFixed(1)}px,0,0)`; }); }
+  addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(upd); },{passive:true}); addEventListener('resize',upd); upd();
+})();
 
 /* texte qui roule */
 function splitRoll(text){
