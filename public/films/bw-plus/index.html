@@ -332,7 +332,8 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .svc-hd{padding-bottom:clamp(40px,5vw,80px)}
 .svc{padding-top:clamp(36px,5vw,90px);padding-bottom:clamp(20px,3vw,40px)}
 .svc-row{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px clamp(32px,6vw,120px);padding-block:clamp(44px,5.5vw,96px);border-top:1px solid var(--trait)}
-.svc-row:last-child{border-bottom:1px solid var(--trait)}
+.svc-row:last-of-type{border-bottom:1px solid var(--trait)}
+.svc-incl{margin:clamp(24px,3vw,40px) 0 0;font-size:12px;letter-spacing:.08em;line-height:1.9;color:var(--cendre);max-width:96ch}
 .svc-name .roll-w span{text-shadow:0 1.7em var(--violet)}
 .svc-row:hover .svc-name .roll-w span{transform:translateY(-1.7em)}
 .svc-tag{color:var(--cendre);margin-top:18px}
@@ -384,14 +385,16 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .frame{position:relative;border-top:1px solid var(--trait);padding:clamp(28px,3vw,44px) 0 0;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px clamp(20px,3vw,48px);align-content:start}
 .h-on .frame{width:min(44vw,620px);padding-right:clamp(20px,3vw,56px)}
 @media (max-width:899px){.h-on .frame{width:78vw;padding-right:24px}.h-on .steps-hd{margin-bottom:28px}}
-.frame .n{font-family:var(--f-display);font-style:italic;font-size:clamp(90px,11vw,200px);line-height:.8;color:var(--violet);grid-row:1/4}
+.frame .n{font-family:var(--f-display);font-style:italic;font-size:clamp(90px,11vw,200px);line-height:.8;color:var(--violet);grid-row:1/5}
+.frame .wk{grid-column:2;margin:0 0 -2px;align-self:end;font-size:11px;letter-spacing:.1em;color:var(--violet-clair)}
+.frame .wk+h3{align-self:start}
 .frame h3{align-self:end}
 .frame p{margin:0;color:var(--cendre);max-width:36ch;align-self:start}
 .frame .val{grid-column:2;display:flex;gap:10px;align-items:baseline;margin-top:10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--violet-clair);max-width:40ch;line-height:1.5}
 .frame .val::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#9E37FF,#DE50D2);box-shadow:0 0 10px rgba(222,80,210,.6);transform:translateY(-1px)}
 .steps-intro{max-width:52ch;margin:22px 0 0;color:var(--cendre);font-size:clamp(16px,1.25vw,19px)}
 .h-on .steps-intro{margin-top:16px}
-@media (max-width:520px){.frame{grid-template-columns:minmax(0,1fr)}.frame .n{grid-row:auto}.frame .val{grid-column:1}}
+@media (max-width:520px){.frame{grid-template-columns:minmax(0,1fr)}.frame .n{grid-row:auto}.frame .val,.frame .wk{grid-column:1}}
 .no-pin #methode .pin-in{padding-block:0}
 html:not(.h-on) #methode .pin-in{height:auto;position:relative;overflow:visible;padding-bottom:var(--sec)}
 html:not(.h-on) .track{gap:8px}
@@ -404,7 +407,7 @@ html:not(.h-on) .track{gap:8px}
   html:not(.h-on) #methode .track::-webkit-scrollbar{display:none}
   html:not(.h-on) #methode .frame{flex:0 0 84%;scroll-snap-align:start;grid-template-columns:minmax(0,1fr);padding-top:26px}
   html:not(.h-on) #methode .frame .n{grid-row:auto;font-size:96px}
-  html:not(.h-on) #methode .frame .val{grid-column:1}
+  html:not(.h-on) #methode .frame .val,html:not(.h-on) #methode .frame .wk{grid-column:1}
 }
 
 /* ---------- Calque clair ---------- */
@@ -451,6 +454,7 @@ html:not(.h-on) .track{gap:8px}
 .ag-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 40px;margin-top:clamp(36px,4vw,64px);opacity:0;transform:translateY(16px);transition:opacity .6s,transform .8s var(--ease-out)}
 .ag-foot.on,.no-pin .ag-foot{opacity:1;transform:none}
 .ag-foot .who{margin:0;color:var(--cendre);font-size:15px}
+.ag-foot .ag-express{margin:0;flex:1 1 100%;color:#fff;font-size:clamp(15px,1.15vw,18px)}
 .ag-foot .who b{color:var(--ecran);font-weight:500}
 #mani2{max-width:22ch}
 .ag-txt{flex:1 1 100%;display:grid;grid-template-columns:repeat(2,minmax(0,40ch));gap:clamp(20px,4vw,80px);margin-bottom:clamp(12px,2vw,28px)}
@@ -882,7 +886,7 @@ html:not(.h-on) .track{gap:8px}
   <div class="svc wrap" aria-label="Services : publicité narrative, films de marque, personnages et univers">
     <article class="svc-row" data-preview="delforge">
       <div><p class="svc-n mono">01</p><h3 class="display t-xl svc-name"><span class="sr">Publicité narrative</span><span class="roll-src" aria-hidden="true">Publicité narrative</span></h3><p class="display t-s svc-tag">Raconter une histoire plutôt qu’aligner des arguments.</p></div>
-      <div class="svc-r"><p class="svc-body">Des spots de 15 à 90 secondes pour la TV, le digital et les réseaux. Je pars de votre concept ou je l’écris avec vous, puis je réalise le film jusqu’à la livraison.</p><p class="svc-tags mono">TV <i>/</i> Digital <i>/</i> Réseaux sociaux</p><p class="svc-foot mono">En direct avec les marques ou aux côtés des agences.</p></div>
+      <div class="svc-r"><p class="svc-body">Des spots de 15 à 90 secondes pour la TV, le digital et les réseaux. Je pars de votre concept ou je l’écris avec vous, puis je réalise le film jusqu’à la livraison.</p><p class="svc-tags mono">TV <i>/</i> Digital <i>/</i> Réseaux sociaux</p><p class="svc-foot mono">Versions courtes et accroches alternatives sur demande.</p></div>
     </article>
     <article class="svc-row" data-preview="vocli">
       <div><p class="svc-n mono">02</p><h3 class="display t-xl svc-name"><span class="sr">Films de marque</span><span class="roll-src" aria-hidden="true">Films de marque</span></h3><p class="display t-s svc-tag">Faire comprendre ce que vous faites, et donner envie de vous choisir.</p></div>
@@ -892,6 +896,7 @@ html:not(.h-on) .track{gap:8px}
       <div><p class="svc-n mono">03</p><h3 class="display t-xl svc-name"><span class="sr">Personnages et univers</span><span class="roll-src" aria-hidden="true">Personnages et univers</span></h3><p class="display t-s svc-tag">Un personnage et un monde qui restent les mêmes d’une campagne à l’autre.</p></div>
       <div class="svc-r"><p class="svc-body">Une mascotte, une mini-série animée qui fait vivre votre personnage d’épisode en épisode sur Instagram, un univers propre à votre marque.</p><p class="svc-tags mono">Mascottes <i>/</i> Mini-séries <i>/</i> Univers de marque</p><p class="svc-foot mono">Livré avec sa fiche personnage et sa bible d’univers.</p></div>
     </article>
+    <p class="svc-incl mono">Chaque projet comprend : script, storyboard et animatique, casting des personnages et des voix, animation, montage, musique, masters 16:9, 9:16 et 1:1, sous-titres et cession des droits.</p>
   </div>
 
 
@@ -899,12 +904,12 @@ html:not(.h-on) .track{gap:8px}
     <div class="pin-in">
       <div class="steps-hd wrap"><p class="mono kicker">Méthode</p><h2 class="display t-l split" id="methode-t" data-glow>L’histoire <em>d’abord.</em> La réalisation ensuite.</h2><p class="steps-intro">Ma manière de collaborer vient directement de mes 20 années à travailler pour et dans des agences de communication.</p><div class="pr-nav mt-nav"><p class="pr-count mono"><b>06</b> étapes</p><button class="pr-btn" id="mtPrev" type="button" aria-label="Étape précédente"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="pr-btn" id="mtNext" type="button" aria-label="Étape suivante"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
       <ol class="track wrap" id="track" style="list-style:none;margin:0">
-        <li class="frame"><span class="n" aria-hidden="true">1</span><h3 class="display t-m">Briefing</h3><p>J’établis un briefing précis pour comprendre les enjeux, la cible, le format, et l’idée créative, l’histoire ou la problématique à raconter.</p><p class="val mono">Livrable : analyse, briefing validé, planning et devis.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">2</span><h3 class="display t-m">Concept &amp; DA</h3><p>Je travaille avec vos équipes créatives ou marketing. Je propose deux ou trois pistes d’univers, de format et de direction artistique, et je m’entoure de scénaristes et de créatifs selon le média à produire.</p><p class="val mono">Livrable : 2 à 3 pistes créatives et narratives, moodboard, image clé.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">3</span><h3 class="display t-m">Storyboard</h3><p>Sur base du concept validé, je réalise le storyboard statique, le script de la voix off et des dialogues.</p><p class="val mono">Livrable : storyboard, script et animatique.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">4</span><h3 class="display t-m">Casting</h3><p>Je propose les acteurs virtuels et leurs voix, je crée les lieux à partir de lieux réels ou fictifs, et les images des produits ou objets qui apparaissent dans le film.</p><p class="val mono">Livrable : une fiche référence pour chaque personnage, lieu et objet, et 2 à 3 voix au choix.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">5</span><h3 class="display t-m">Production</h3><p>Je produis votre film avec des méthodes hybrides ou full IA, selon le budget et les plans à produire : animation, montage, musique, voix.</p><p class="val mono">Livrable : une première version complète de la vidéo.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">6</span><h3 class="display t-m">Déclinaison</h3><p>Je décline, monte et coupe votre film selon les formats à produire, pour qu’il s’insère parfaitement dans votre plan média digital.</p><p class="val mono">Livrable : masters 16:9, 9:16 et 1:1, sous-titres, version de langue, et un document de cession des droits avec la liste des outils utilisés.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">1</span><p class="wk mono">Semaine 1</p><h3 class="display t-m">Briefing</h3><p>J’établis un briefing précis pour comprendre les enjeux, la cible, le format, et l’idée créative, l’histoire ou la problématique à raconter.</p><p class="val mono">Livrable : analyse, briefing validé, planning et devis.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">2</span><p class="wk mono">Semaine 1</p><h3 class="display t-m">Concept &amp; DA</h3><p>Je travaille avec vos équipes créatives ou marketing. Je propose deux ou trois pistes d’univers, de format et de direction artistique, et je m’entoure de scénaristes et de créatifs selon le média à produire.</p><p class="val mono">Livrable : 2 à 3 pistes créatives et narratives, moodboard, image clé.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">3</span><p class="wk mono">Semaine 2</p><h3 class="display t-m">Storyboard</h3><p>Sur base du concept validé, je réalise le storyboard statique, le script de la voix off et des dialogues.</p><p class="val mono">Livrable : storyboard, script et animatique.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">4</span><p class="wk mono">Semaine 2</p><h3 class="display t-m">Casting</h3><p>Je propose les acteurs virtuels et leurs voix, je crée les lieux à partir de lieux réels ou fictifs, et les images des produits ou objets qui apparaissent dans le film.</p><p class="val mono">Livrable : une fiche référence pour chaque personnage, lieu et objet, et 2 à 3 voix au choix.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">5</span><p class="wk mono">Semaines 3 et 4</p><h3 class="display t-m">Production</h3><p>Je produis votre film avec des méthodes hybrides ou full IA, selon le budget et les plans à produire : animation, montage, musique, voix.</p><p class="val mono">Livrable : une première version complète de la vidéo.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">6</span><p class="wk mono">Semaine 4</p><h3 class="display t-m">Déclinaison</h3><p>Je décline, monte et coupe votre film selon les formats à produire, pour qu’il s’insère parfaitement dans votre plan média digital.</p><p class="val mono">Livrable : masters 16:9, 9:16 et 1:1, sous-titres, version de langue, et un document de cession des droits avec la liste des outils utilisés.</p></li>
       </ol>
       <div class="wrap mt-barw" aria-hidden="true"><div class="pr-bar"><i id="mtBar"></i></div></div>
     </div>
@@ -966,6 +971,7 @@ html:not(.h-on) .track{gap:8px}
           <div><p>Trêve de plaisanterie : la publicité se construit déjà autrement. Prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, et même un film de notoriété né des photos d’un rapport annuel.</p></div>
         </div>
         <p class="who">Ils travaillent déjà avec moi : <b>Hilarious</b> · <b>Nikita Concept</b> · <b>Tree Agency</b> · <b>BeeSight</b></p>
+        <p class="ag-express">Délai serré pour un pitch ? Une production express en 14 jours est possible, selon le projet.</p>
         <a class="link" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Parlons de votre prochain pitch →</a>
       </div>
     </div>

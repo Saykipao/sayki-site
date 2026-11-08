@@ -12,12 +12,12 @@ Langues : français (versions en néerlandais sur demande). Formats livrés : 16
 - Personnages et univers : mascottes, mini-séries animées pour Instagram, univers de marque, avec fiche personnage et bible d’univers.
 
 ## Méthode : l’histoire d’abord, la réalisation ensuite
-1. Briefing : enjeux, cible, format, idée créative. Livrable : analyse, briefing validé, planning et devis.
-2. Concept et DA : 2 à 3 pistes d’univers, de format et de direction artistique, avec des scénaristes et des créatifs selon le média. Livrable : pistes créatives et narratives, moodboard, image clé.
-3. Storyboard : storyboard statique, script de la voix off et des dialogues. Livrable : storyboard, script et animatique.
-4. Casting : acteurs virtuels et voix, lieux, produits et objets. Livrable : une fiche référence par personnage, lieu et objet, 2 à 3 voix au choix.
-5. Production : méthodes hybrides ou full IA (animation, montage, musique, voix). Livrable : une première version complète.
-6. Déclinaison : formats 16:9, 9:16 et 1:1, sous-titres, versions de langue, document de cession des droits avec la liste des outils utilisés.
+1. Briefing (semaine 1) : enjeux, cible, format, idée créative. Livrable : analyse, briefing validé, planning et devis.
+2. Concept et DA (semaine 1) : 2 à 3 pistes d’univers, de format et de direction artistique, avec des scénaristes et des créatifs selon le média. Livrable : pistes créatives et narratives, moodboard, image clé.
+3. Storyboard (semaine 2) : storyboard statique, script de la voix off et des dialogues. Livrable : storyboard, script et animatique.
+4. Casting (semaine 2) : acteurs virtuels et voix, lieux, produits et objets. Livrable : une fiche référence par personnage, lieu et objet, 2 à 3 voix au choix.
+5. Production (semaines 3 et 4) : méthodes hybrides ou full IA (animation, montage, musique, voix). Livrable : une première version complète.
+6. Déclinaison (semaine 4) : formats 16:9, 9:16 et 1:1, sous-titres, versions de langue, document de cession des droits avec la liste des outils utilisés.
 
 ## Agences
 Sayki donne vie aux idées des agences : prévisualisation, production, personnages animés intégrés dans des scènes réelles, publicité d’animation narrative, films de notoriété, en marque blanche ou en partenariat. Partenaires : Hilarious, Nikita Concept, Tree Agency, BeeSight.
