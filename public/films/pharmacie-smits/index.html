@@ -722,15 +722,30 @@ html:not(.h-on) .track{gap:8px}
   @keyframes wallGlow{0%,100%{opacity:.18}45%,55%{opacity:1}}
 }
 @media (max-width:899px) and (prefers-reduced-motion:reduce){.mwall-r span{animation:none;opacity:.8}}
-/* mobile : bouton WhatsApp, en semaine de 10 h à 17 h (heure de Bruxelles) */
-.wa-btn{display:none}
-@media (max-width:899px){
-  .wa-btn{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;box-shadow:0 10px 30px rgba(8,3,18,.45);opacity:0;transform:translateY(16px) scale(.9);pointer-events:none;transition:opacity .45s,transform .6s var(--ease-out)}
-  .wa-btn svg{width:32px;height:32px}
-  .wa-btn[hidden]{display:none}
-  .wa-btn.on{opacity:1;transform:none;pointer-events:auto}
-  html.is-locked .wa-btn{opacity:0;pointer-events:none}
+/* bouton WhatsApp, en semaine de 10 h à 17 h (heure de Bruxelles) */
+.wa-btn{position:fixed;right:clamp(16px,2vw,32px);bottom:calc(clamp(16px,2vw,32px) + env(safe-area-inset-bottom,0px));z-index:60;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;box-shadow:0 10px 30px rgba(8,3,18,.45);opacity:0;transform:translateY(16px) scale(.9);pointer-events:none;transition:opacity .45s,transform .6s var(--ease-out)}
+.wa-btn svg{width:32px;height:32px}
+.wa-btn[hidden]{display:none}
+.wa-btn.on{opacity:1;transform:none;pointer-events:auto}
+html.is-locked .wa-btn{opacity:0;pointer-events:none}
+.wa-l{position:absolute;right:calc(100% + 12px);top:50%;padding:10px 14px;border-radius:999px;background:#fff;color:#150A26;font:500 14px/1 var(--f-body);white-space:nowrap;box-shadow:0 8px 24px rgba(8,3,18,.3);opacity:0;transform:translate(8px,-50%);pointer-events:none;transition:opacity .3s,transform .4s var(--ease-out)}
+@media (hover:hover){.wa-btn:hover .wa-l{opacity:1;transform:translate(0,-50%)}}
+@media (max-width:899px){.wa-l{display:none}}
+/* desktop : téléphone et e-mail mis en avant à la place de la réservation */
+.hd-ph,.hd-ml,.cta-big{display:none}
+@media (min-width:900px){
+  .hd .hd-book{display:none}
+  .hd-ph{display:inline-block;margin-left:8px;font-size:14px;font-weight:500;white-space:nowrap;opacity:.85;transition:opacity .3s}
+  .hd-ph:hover{opacity:1}
+  .hd .hd-ml{display:inline-flex;margin-left:4px}
+  .cta-row .cta-book,.cta-row .contact{display:none}
+  .cta-big{display:grid;gap:6px;justify-items:start}
+  .cta-big a{white-space:nowrap}
+  .cta-big a{font-size:clamp(30px,2.6vw,46px);line-height:1.1;letter-spacing:-.01em;color:#fff;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em;text-decoration-color:rgba(192,139,255,.6);transition:color .3s,text-decoration-color .3s}
+  .cta-big a:hover{color:var(--violet-clair);text-decoration-color:var(--violet-clair)}
+  .cta-big a+a{font-style:italic}
 }
+@media (min-width:900px) and (max-width:1180px){.hd-ph{display:none}}
 </style>
 </head>
 <body>
@@ -770,6 +785,7 @@ html:not(.h-on) .track{gap:8px}
   </nav>
   <button class="hd-menu mono" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
   <a class="btn mag hd-book" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener"><span class="btn-long">Réserver un appel</span><span class="btn-short">Un appel ?</span></a>
+  <a class="hd-ph" href="tel:+32475226124">+32 475 22 61 24</a><a class="btn mag hd-ml" href="mailto:ludovic@sayki.studio">ludovic@sayki.studio</a>
   <a class="btn hd-tel" href="tel:+32475226124" aria-label="Appeler Ludovic au +32 475 22 61 24"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg><span>Appeler</span></a>
 </header>
 
@@ -1066,7 +1082,7 @@ html:not(.h-on) .track{gap:8px}
       </div>
       <div class="ag-band">
         <div class="ag-who"><p class="mono">Ils travaillent déjà avec moi</p><ul><li>Hilarious</li><li>Nikita Concept</li><li>Tree Agency</li><li>BeeSight</li></ul></div>
-        <a class="btn ag-btn" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Parlons de votre prochain pitch <span aria-hidden="true">→</span></a>
+        <a class="btn ag-btn" href="mailto:ludovic@sayki.studio?subject=Prochain%20pitch">Parlons de votre prochain pitch <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -1091,6 +1107,7 @@ html:not(.h-on) .track{gap:8px}
         </div>
         <div class="cta-row">
           <a class="btn mag cta-book" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Réserver mes 30 minutes →</a>
+          <div class="cta-big"><a class="display" href="mailto:ludovic@sayki.studio">ludovic@sayki.studio</a><a class="display" href="tel:+32475226124">+32 475 22 61 24</a></div>
           <div class="cta-m"><a class="btn" href="mailto:ludovic@sayki.studio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 5.5 12 12l8.5-6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span>Contacter</span></a><a class="btn cta-m-tel" href="tel:+32475226124"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg><span>Appeler</span></a></div>
           <div class="contact mono"><span>ludovic@sayki.studio</span><span>+32 475 22 61 24</span></div>
         </div>
@@ -1106,7 +1123,7 @@ html:not(.h-on) .track{gap:8px}
   </footer>
 </main>
 
-<a class="wa-btn" id="waBtn" href="https://wa.me/32475226124?text=Bonjour%20Ludovic%2C%20je%20viens%20de%20votre%20site%20sayki.studio." target="_blank" rel="noopener" aria-label="Écrire à Ludovic sur WhatsApp" hidden><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3.2C9 3.2 3.3 8.9 3.3 15.9c0 2.2.6 4.4 1.7 6.3L3.2 28.8l6.8-1.8c1.8 1 3.9 1.5 6 1.5 7 0 12.7-5.7 12.7-12.7S23 3.2 16 3.2zm0 23.2c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.6-1.7-5.6C5.3 10 10.1 5.3 16 5.3s10.6 4.8 10.6 10.6S21.9 26.4 16 26.4zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg></a>
+<a class="wa-btn" id="waBtn" href="https://wa.me/32475226124?text=Bonjour%20Ludovic%2C%20je%20viens%20de%20votre%20site%20sayki.studio." target="_blank" rel="noopener" aria-label="Écrire à Ludovic sur WhatsApp" hidden><span class="wa-l">Écrire sur WhatsApp</span><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3.2C9 3.2 3.3 8.9 3.3 15.9c0 2.2.6 4.4 1.7 6.3L3.2 28.8l6.8-1.8c1.8 1 3.9 1.5 6 1.5 7 0 12.7-5.7 12.7-12.7S23 3.2 16 3.2zm0 23.2c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.6-1.7-5.6C5.3 10 10.1 5.3 16 5.3s10.6 4.8 10.6 10.6S21.9 26.4 16 26.4zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg></a>
 <div class="ck" id="ck" role="dialog" aria-live="polite" aria-label="Cookies" hidden>
   <p class="ck-t"><b class="mono">Un cookie ?</b> Seulement pour compter les visites, de façon anonyme. Pas de pub, pas de revente. Et le site marche très bien sans.</p>
   <div class="ck-b"><button type="button" class="ck-no" data-ck="0">Non merci</button><button type="button" class="ck-yes" data-ck="1">D’accord</button></div>
@@ -1136,7 +1153,7 @@ html:not(.h-on) .track{gap:8px}
         <h3 class="display t-m fp-defi-t">Le défi</h3>
         <p id="fpDefi">Donner un visage à une pharmacie de quartier. Smithy, l’ours en blouse, accompagne les familles de Wavre au fil des saisons.</p>
         <div class="fp-story" id="fpStory"></div>
-        <a class="btn" href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Un projet comparable ? Réserver un appel</a>
+        <a class="btn" href="mailto:ludovic@sayki.studio?subject=Un%20projet%20comparable">Un projet comparable ? Écrivez-moi</a>
       </div>
     </div>
   </div>
