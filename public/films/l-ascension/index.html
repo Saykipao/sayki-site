@@ -526,6 +526,13 @@ html:not(.h-on) .track{gap:8px}
 @keyframes nudge{40%{box-shadow:0 0 0 14px rgba(158,55,255,.25)}100%{box-shadow:0 0 0 0 rgba(158,55,255,0)}}
 .zap-msg{grid-column:1/-1;grid-row:3;justify-self:center;text-align:center;margin:clamp(30px,3.2vw,60px) 0 0;max-width:26ch;min-height:2.2em;font-family:var(--f-display);font-weight:400;font-size:clamp(30px,3.6vw,60px);line-height:1.06;letter-spacing:-.01em;color:#fff;text-wrap:balance;position:relative;z-index:2;text-shadow:0 0 calc(var(--heat,0)*40px) rgba(222,80,210,calc(var(--heat,0)*.7)),0 0 calc(var(--heat,0)*90px) rgba(158,55,255,calc(var(--heat,0)*.6))}
 .zap-msg.flash{animation:msgFlash .75s var(--ease-out)}
+/* appel au clic sur la télé : pastille « Zapper » posée sur l’écran, jusqu’au premier zap */
+.tv-cta{position:absolute;left:50%;bottom:11%;z-index:4;display:inline-flex;align-items:center;gap:10px;padding:13px 20px 13px 16px;border-radius:999px;background:rgba(246,243,250,.94);color:#150A26;font:600 15px/1 var(--f-body);letter-spacing:.01em;box-shadow:0 10px 30px rgba(8,3,18,.45);transform:translateX(-50%);pointer-events:none;transition:opacity .5s,transform .6s var(--ease-out);animation:tvCta 2.4s ease-in-out infinite}
+.tv-cta svg{width:18px;height:18px;color:var(--violet)}
+.tv-cta b{font-weight:inherit}
+.tv-wrap.zapped .tv-cta{opacity:0;transform:translate(-50%,10px);animation:none}
+@keyframes tvCta{0%,100%{box-shadow:0 10px 30px rgba(8,3,18,.45),0 0 0 0 rgba(192,139,255,.55)}60%{box-shadow:0 10px 30px rgba(8,3,18,.45),0 0 0 14px rgba(192,139,255,0)}}
+.zap,.zap-msg{cursor:pointer}
 @keyframes msgFlash{0%{opacity:0;transform:scale(1.14);filter:blur(10px) brightness(3);color:#fff}18%{opacity:1;filter:blur(0) brightness(2.2);color:#fff;text-shadow:0 0 30px #fff,0 0 70px #DE50D2,0 0 140px #9E37FF}45%{color:#E9D5FF}100%{transform:none;filter:none}}
 .cta-foot{grid-column:1;grid-row:2;align-self:start;position:relative;z-index:2;margin-top:clamp(26px,2.6vw,44px);max-width:min(470px,calc(89% - 24px))}
 .cta-foot .visit{margin-top:0}
@@ -605,6 +612,7 @@ html:not(.h-on) .track{gap:8px}
 .fp-tools span{padding:4px 10px;border:1px solid var(--trait);border-radius:999px;font-size:11px}
 .fp-text h3{margin-bottom:14px}
 .fp-text p{margin:0 0 22px;font-size:clamp(17px,1.4vw,20px);max-width:46ch}
+.fp-text .fp-note{margin:-4px 0 26px;max-width:64ch;font-size:10.5px;line-height:1.7;letter-spacing:.04em;text-transform:none;color:var(--cendre);opacity:.75}
 .fp-text .note{font-size:12px;color:var(--cendre)}
 @media (max-width:760px){.fp-body{grid-template-columns:minmax(0,1fr)}}
 .fp-story{display:none}
@@ -848,13 +856,13 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <video muted loop playsinline preload="none" data-src="assets/vocli.mp4"></video>
     </div>
     <div class="cap"><p class="mono cap-k">Mint Dentistes · Film d’animation explicatif</p><span class="tc mono">90 s</span><h3 class="display">Le dentiste noyé sous la paperasse</h3></div></a></article>
-<article class="film p2" data-film="bwplus"><a href="/films/bw-plus/" data-open="bwplus" aria-label="BW+, Cinquante ans de télé en une minute">
+<article class="film p2" data-film="supercan"><a href="/films/supercan/" data-open="supercan" aria-label="Supercan, La canette qui rêvait d’être plus grande">
     <div class="media" data-cursor="Voir|le film">
-      <img class="m-color" src="assets/bwplus.jpg" alt="BW+, identité de marque" loading="lazy" decoding="async">
-      <img class="m-duo" src="assets/bwplus-duo.jpg" alt="" loading="lazy" decoding="async">
-      <video muted loop playsinline preload="none" data-src="assets/bwplus.mp4"></video>
+      <img class="m-color" src="assets/supercan.jpg" alt="Supercan, publicité narrative · démo" loading="lazy" decoding="async">
+      <img class="m-duo" src="assets/supercan-duo.jpg" alt="" loading="lazy" decoding="async">
+      <video muted loop playsinline preload="none" data-src="assets/supercan.mp4"></video>
     </div>
-    <div class="cap"><p class="mono cap-k">BW+ · Identité de marque</p><span class="tc mono">60 s</span><h3 class="display">Cinquante ans de télé en une minute</h3></div></a></article>
+    <div class="cap"><p class="mono cap-k">Supercan · Publicité narrative · démo</p><span class="tc mono">38 s</span><h3 class="display">La canette qui rêvait d’être plus grande</h3></div></a></article>
 <article class="film p3" data-film="elba"><a href="/films/elba/" data-open="elba" aria-label="Elba, Ce qui brille contient un monde">
     <div class="media" data-cursor="Voir|le film">
       <img class="m-color" src="assets/elba.jpg" alt="Elba, film de notoriété" loading="lazy" decoding="async">
@@ -1110,6 +1118,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
         <button class="tv" id="tv" type="button" data-cursor="Zapper" aria-label="Passer au film suivant">
                     <video id="tvVid" src="assets/intro.mp4" poster="assets/intro.jpg" autoplay muted loop playsinline preload="metadata" crossorigin="anonymous"></video>
         </button>
+        <span class="tv-cta" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg><b>Zapper</b></span>
       </div>
       <div class="cta-foot">
         <div>
@@ -1123,7 +1132,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
           <div class="contact mono"><span>ludovic@sayki.studio</span><span>+32 475 22 61 24</span></div>
         </div>
       </div>
-      <p class="zap-msg" id="zapMsg" aria-live="polite">Cliquez sur l’écran. Juste pour voir.</p>
+      <p class="zap-msg" id="zapMsg" aria-live="polite">Cliquez sur la télé pour zapper.</p>
     </div>
   </section>
 
@@ -1166,6 +1175,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
         <h3 class="display t-m fp-defi-t">Le défi</h3>
         <p id="fpDefi">L’Atomium dans un monde d’après. Un test pour voir jusqu’où l’image peut porter l’émotion, sans tournage et sans figurants.</p>
         <div class="fp-story" id="fpStory"></div>
+        <p class="fp-note mono" id="fpNote" hidden></p>
         <a class="btn" href="mailto:ludovic@sayki.studio?subject=Un%20projet%20comparable">Un projet comparable ? Écrivez-moi</a>
       </div>
     </div>
@@ -1229,6 +1239,9 @@ const FILMS={
     defi:'Faire connaître en Belgique un des plus grands fabricants de génériques au monde. Laboratoires et lignes de production reconstitués sans tournage, à partir du rapport annuel.'},
   vocli:{year:'2026',date:'Septembre 2026',t:'Mint Dentistes',hook:'Le dentiste noyé sous la paperasse',type:'Film d’animation explicatif',sect:'Santé',client:'Mint Dentistes · Vocli Dental',agence:'En direct',tc:'90 s',fmt:'16:9 · 1920×1080',fps:'60 i/s',lang:'Français',brief:'30 jours',tools:['Midjourney','GPT Image','ElevenLabs','Epidemic Sound','Seedance','Adobe Premiere','Adobe After Effects'],tags:['marque'],v:false,
     defi:'Ce film ne cherche pas à plaire à tout le monde. Il cherche à convaincre une seule personne, dans une seule réunion, au moment où elle décide.'},
+  supercan:{year:'2026',t:'Supercan',hook:'La canette qui rêvait d’être plus grande',type:'Publicité narrative · démo',sect:'Boisson',client:'Aucun · film de démonstration',agence:'—',tc:'38 s',fmt:'16:9 · 3840×2160',fps:'24 i/s',tags:['pub'],v:false,demo:true,
+    defi:'Dans le frigo d’un night shop, une canette rêve d’être plus grande que sa légende. Une publicité narrative imaginée et réalisée sans tournage, pour montrer ce qu’un récit peut faire d’un produit du quotidien.',
+    note:'Film de démonstration réalisé à titre personnel, sans commande ni validation de la marque. Coca-Cola est une marque déposée de The Coca-Cola Company, qui n’est ni cliente ni partenaire de Sayki Studio. « Supercan » est un produit imaginaire.'},
   bwplus:{year:'2026',t:'BW+',hook:'Cinquante ans de télé en une minute',type:'Identité de marque',sect:'Média',client:'TV COM devient BW+',agence:'Nikita Concept',tc:'60 s',fmt:'16:9 · 3840×2160',fps:'30 i/s',tags:['marque'],v:false,
     defi:'TV COM change de nom et devient BW+. Cinquante ans de télévision régionale condensés dans un reveal de logo.'},
   elba:{year:'2026',t:'Elba',hook:'Ce qui brille contient un monde',type:'Film de notoriété',sect:'Luxe',client:'Elba Belgique',agence:'Tree Agency',tc:'60 s',fmt:'16:9 · 1920×1080',fps:'24 i/s',tags:['marque'],v:false,
@@ -1268,13 +1281,13 @@ const FILMS={
   reveal:{year:'2026',t:'Sayki reveal',hook:'Notre logo, à l’encre',type:'R&D',sect:'Motion design',client:'Sayki Studio',tc:'13 s',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'Un test d’animation pour le reveal de notre logo. Oui, on se fait aussi des films à nous-mêmes.'}
 };
-const ORDER=['vocli','bwplus','elba','delforge','laforge','fid', 'arkoesp','smits','arkopharma','baudouin','rall','sorcery', 'loophole','sayki','sayki2','disney','ikari','ascension','iam','reveal'];
+const ORDER=['vocli','supercan','elba','delforge','laforge','fid', 'arkoesp','smits','arkopharma','baudouin','rall','sorcery', 'loophole','sayki','sayki2','disney','ikari','ascension','iam','reveal'];
 const PAGE=7;
 /* films complets sur Bunny Stream (lecteur maison) */
-const BUNNY={sorcery:'2175faba-81f3-42e3-bd90-bb06fdeedf87',reveal:'d1a5cd7d-084b-495f-990a-02579e3331e5',disney:'d919dd2e-72e5-442d-97ae-a22193ac32ec',arkoesp:'d269fd23-a063-442b-b91a-8db04e9b5917',ascension:'ebf6c5fc-2afb-4d24-80fa-a3ca22b374d8',delforge:'ec49f7c6-3fb7-4d34-bee4-1fedd0047bfb',sayki:'f92ac12d-9dd5-4013-a06c-d7c53e54298d',sayki2:'ec1474a6-2e23-4feb-a4f5-7bde1477282f',ikari:'dbc5637b-13ae-4292-a130-6e8e8081f4c8',iam:'66162f40-6222-4e4a-b07c-f6be09b8f4e3',baudouin:'f7470fba-d26b-4198-84ae-75980fce39e3',laforge:'1e305081-951a-4175-8fe2-0e6ef90df8df',rall:'226a094a-6416-4505-a4a1-248d3ea1ac82',fid:'37e87960-049a-4df0-9ad4-e79759337e30',elba:'e36ffa3f-dbd9-4067-842f-6e3b3a161359',arkopharma:'82f063a6-0ec2-46ed-844b-498faf2ad51c',vocli:'6b06c60f-0321-4702-9ba7-c2982a9e3181',bwplus:'f05d871b-2a08-4b34-b772-ed1eed9d90ad',smits:'559c809b-78c2-4a31-ab45-28ac6ec1e816',loophole:'e04e0292-f37e-4def-9baa-48c687562732'};
+const BUNNY={supercan:'9f40759b-2b2f-491e-acb7-b52d4a1ee48a',sorcery:'2175faba-81f3-42e3-bd90-bb06fdeedf87',reveal:'d1a5cd7d-084b-495f-990a-02579e3331e5',disney:'d919dd2e-72e5-442d-97ae-a22193ac32ec',arkoesp:'d269fd23-a063-442b-b91a-8db04e9b5917',ascension:'ebf6c5fc-2afb-4d24-80fa-a3ca22b374d8',delforge:'ec49f7c6-3fb7-4d34-bee4-1fedd0047bfb',sayki:'f92ac12d-9dd5-4013-a06c-d7c53e54298d',sayki2:'ec1474a6-2e23-4feb-a4f5-7bde1477282f',ikari:'dbc5637b-13ae-4292-a130-6e8e8081f4c8',iam:'66162f40-6222-4e4a-b07c-f6be09b8f4e3',baudouin:'f7470fba-d26b-4198-84ae-75980fce39e3',laforge:'1e305081-951a-4175-8fe2-0e6ef90df8df',rall:'226a094a-6416-4505-a4a1-248d3ea1ac82',fid:'37e87960-049a-4df0-9ad4-e79759337e30',elba:'e36ffa3f-dbd9-4067-842f-6e3b3a161359',arkopharma:'82f063a6-0ec2-46ed-844b-498faf2ad51c',vocli:'6b06c60f-0321-4702-9ba7-c2982a9e3181',bwplus:'f05d871b-2a08-4b34-b772-ed1eed9d90ad',smits:'559c809b-78c2-4a31-ab45-28ac6ec1e816',loophole:'e04e0292-f37e-4def-9baa-48c687562732'};
 for(const k in BUNNY) if(FILMS[k]) FILMS[k].bunny='788157/'+BUNNY[k];
 /* vignettes : les films verticaux ont une version horizontale sur mobile */
-const SLUG={aurobindo:'aurobindo',vocli:'mint-dentistes',bwplus:'bw-plus',elba:'elba',delforge:'guy-delforge',laforge:'la-forge',fid:'fid-manager',arkoesp:'arkopharma-espagne',smits:'pharmacie-smits',arkopharma:'arkopharma-le-pharmacien',baudouin:'invitation-privee',rall:'rall',sorcery:'sorcery-systems',loophole:'the-loop-hole-project',sayki:'sayki-serie',sayki2:'sayki-clip',disney:'disney-a-la-maison',ikari:'ikari',ascension:'l-ascension',iam:'iam',reveal:'sayki-reveal'};
+const SLUG={supercan:'supercan',aurobindo:'aurobindo',vocli:'mint-dentistes',bwplus:'bw-plus',elba:'elba',delforge:'guy-delforge',laforge:'la-forge',fid:'fid-manager',arkoesp:'arkopharma-espagne',smits:'pharmacie-smits',arkopharma:'arkopharma-le-pharmacien',baudouin:'invitation-privee',rall:'rall',sorcery:'sorcery-systems',loophole:'the-loop-hole-project',sayki:'sayki-serie',sayki2:'sayki-clip',disney:'disney-a-la-maison',ikari:'ikari',ascension:'l-ascension',iam:'iam',reveal:'sayki-reveal'};
 const BYSLUG=Object.fromEntries(Object.entries(SLUG).map(([k,v])=>[v,k]));
 const MOB=matchMedia('(max-width:899px)').matches;
 const th=id=>id+(FILMS[id].v&&!FILMS[id].ht&&MOB?'-h':'');
@@ -2054,6 +2067,7 @@ function fillFp(id){
   const f=FILMS[id];
   $('#fpCrumb').textContent=f.t; $('#fpKicker').textContent=[f.t,f.type,f.date].filter(Boolean).join(' · '); $('#fpTitle').textContent=f.hook;
   $('#fpDefi').textContent=f.defi;
+  { const n=$('#fpNote'); n.textContent=f.note||''; n.hidden=!f.note; }
   const rows=[['Client',f.client],['Agence',f.agence&&f.agence!=='—'?f.agence:''],['Durée',f.tc],['Format',[f.fmt,f.fps].filter(Boolean).join(' · ')],['Langue',f.lang],['Année',f.year||'—'],['Du brief au film',f.brief]].filter(([k,v])=>v);
   $('#fpMeta').innerHTML=rows.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')
     +((f.tools&&f.tools.length)?`<div class="m-tools"><dt>Outils</dt><dd class="fp-tools">${f.tools.map(x=>`<span>${x}</span>`).join('')}</dd></div>`:'');
@@ -2445,8 +2459,11 @@ function say(m){zapMsg.textContent=m; zapMsg.classList.remove('flash'); void zap
 function nextLine(){if(zaps<=LINES.length) return LINES[zaps-1]; if(!lineQ.length) lineQ=LINES.slice(0,-1).sort(()=>Math.random()-0.5); return lineQ.pop();}
 function nudge(){if(!ctaBtn)return; ctaBtn.classList.remove('nudge'); void ctaBtn.offsetWidth; ctaBtn.classList.add('nudge');}
 if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){io.disconnect(); if(GL&&GL.zapPreload) GL.zapPreload(CH.map(c=>c.src)); else if(MZ) MZ.preload(CH.map(c=>c.src));}},{rootMargin:'1200px 0px'}); io.observe(tvWrap);}
+/* le mot « zappé » et la phrase sous la télé zappent aussi */
+$('#zap').addEventListener('click',()=>tv.click()); zapMsg.addEventListener('click',()=>tv.click());
+if(matchMedia('(hover:none)').matches) zapMsg.textContent='Touchez la télé pour zapper.';
 tv.addEventListener('click',e=>{
-  zaps++; ch=(ch+1)%CH.length; seen.add(ch);
+  zaps++; tvWrap.classList.add('zapped'); ch=(ch+1)%CH.length; seen.add(ch);
   TVM.heat=Math.min(1.5,TVM.heat+0.17);
   const r=tvWrap.getBoundingClientRect();
   const cx=e.detail?clamp((e.clientX-r.left)/r.width,0,1):0.5, cy=e.detail?clamp(1-(e.clientY-r.top)/r.height,0,1):0.5;
