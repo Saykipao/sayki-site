@@ -526,6 +526,13 @@ html:not(.h-on) .track{gap:8px}
 @keyframes nudge{40%{box-shadow:0 0 0 14px rgba(158,55,255,.25)}100%{box-shadow:0 0 0 0 rgba(158,55,255,0)}}
 .zap-msg{grid-column:1/-1;grid-row:3;justify-self:center;text-align:center;margin:clamp(30px,3.2vw,60px) 0 0;max-width:26ch;min-height:2.2em;font-family:var(--f-display);font-weight:400;font-size:clamp(30px,3.6vw,60px);line-height:1.06;letter-spacing:-.01em;color:#fff;text-wrap:balance;position:relative;z-index:2;text-shadow:0 0 calc(var(--heat,0)*40px) rgba(222,80,210,calc(var(--heat,0)*.7)),0 0 calc(var(--heat,0)*90px) rgba(158,55,255,calc(var(--heat,0)*.6))}
 .zap-msg.flash{animation:msgFlash .75s var(--ease-out)}
+/* appel au clic sur la télé : pastille « Zapper » posée sur l’écran, jusqu’au premier zap */
+.tv-cta{position:absolute;left:50%;bottom:11%;z-index:4;display:inline-flex;align-items:center;gap:10px;padding:13px 20px 13px 16px;border-radius:999px;background:rgba(246,243,250,.94);color:#150A26;font:600 15px/1 var(--f-body);letter-spacing:.01em;box-shadow:0 10px 30px rgba(8,3,18,.45);transform:translateX(-50%);pointer-events:none;transition:opacity .5s,transform .6s var(--ease-out);animation:tvCta 2.4s ease-in-out infinite}
+.tv-cta svg{width:18px;height:18px;color:var(--violet)}
+.tv-cta b{font-weight:inherit}
+.tv-wrap.zapped .tv-cta{opacity:0;transform:translate(-50%,10px);animation:none}
+@keyframes tvCta{0%,100%{box-shadow:0 10px 30px rgba(8,3,18,.45),0 0 0 0 rgba(192,139,255,.55)}60%{box-shadow:0 10px 30px rgba(8,3,18,.45),0 0 0 14px rgba(192,139,255,0)}}
+.zap,.zap-msg{cursor:pointer}
 @keyframes msgFlash{0%{opacity:0;transform:scale(1.14);filter:blur(10px) brightness(3);color:#fff}18%{opacity:1;filter:blur(0) brightness(2.2);color:#fff;text-shadow:0 0 30px #fff,0 0 70px #DE50D2,0 0 140px #9E37FF}45%{color:#E9D5FF}100%{transform:none;filter:none}}
 .cta-foot{grid-column:1;grid-row:2;align-self:start;position:relative;z-index:2;margin-top:clamp(26px,2.6vw,44px);max-width:min(470px,calc(89% - 24px))}
 .cta-foot .visit{margin-top:0}
@@ -1111,6 +1118,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
         <button class="tv" id="tv" type="button" data-cursor="Zapper" aria-label="Passer au film suivant">
                     <video id="tvVid" src="assets/intro.mp4" poster="assets/intro.jpg" autoplay muted loop playsinline preload="metadata" crossorigin="anonymous"></video>
         </button>
+        <span class="tv-cta" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg><b>Zapper</b></span>
       </div>
       <div class="cta-foot">
         <div>
@@ -1124,7 +1132,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
           <div class="contact mono"><span>ludovic@sayki.studio</span><span>+32 475 22 61 24</span></div>
         </div>
       </div>
-      <p class="zap-msg" id="zapMsg" aria-live="polite">Cliquez sur l’écran. Juste pour voir.</p>
+      <p class="zap-msg" id="zapMsg" aria-live="polite">Cliquez sur la télé pour zapper.</p>
     </div>
   </section>
 
@@ -2451,8 +2459,11 @@ function say(m){zapMsg.textContent=m; zapMsg.classList.remove('flash'); void zap
 function nextLine(){if(zaps<=LINES.length) return LINES[zaps-1]; if(!lineQ.length) lineQ=LINES.slice(0,-1).sort(()=>Math.random()-0.5); return lineQ.pop();}
 function nudge(){if(!ctaBtn)return; ctaBtn.classList.remove('nudge'); void ctaBtn.offsetWidth; ctaBtn.classList.add('nudge');}
 if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){io.disconnect(); if(GL&&GL.zapPreload) GL.zapPreload(CH.map(c=>c.src)); else if(MZ) MZ.preload(CH.map(c=>c.src));}},{rootMargin:'1200px 0px'}); io.observe(tvWrap);}
+/* le mot « zappé » et la phrase sous la télé zappent aussi */
+$('#zap').addEventListener('click',()=>tv.click()); zapMsg.addEventListener('click',()=>tv.click());
+if(matchMedia('(hover:none)').matches) zapMsg.textContent='Touchez la télé pour zapper.';
 tv.addEventListener('click',e=>{
-  zaps++; ch=(ch+1)%CH.length; seen.add(ch);
+  zaps++; tvWrap.classList.add('zapped'); ch=(ch+1)%CH.length; seen.add(ch);
   TVM.heat=Math.min(1.5,TVM.heat+0.17);
   const r=tvWrap.getBoundingClientRect();
   const cx=e.detail?clamp((e.clientX-r.left)/r.width,0,1):0.5, cy=e.detail?clamp(1-(e.clientY-r.top)/r.height,0,1):0.5;
