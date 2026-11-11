@@ -101,7 +101,7 @@ img,video{display:block;max-width:100%}
 
 /* ---------- sections : un repère, un trait, un titre ---------- */
 .sec{padding-top:var(--sec)}
-.lab{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin:0 0 clamp(26px,3vw,44px);border-bottom:1px solid var(--line);color:var(--mute)}
+.lab{font-weight:400;display:flex;align-items:center;gap:10px;padding-bottom:14px;margin:0 0 clamp(26px,3vw,44px);border-bottom:1px solid var(--line);color:var(--mute)}
 .lab::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--violet);flex:none}
 .sh{display:flex;justify-content:space-between;align-items:flex-end;gap:24px 48px;flex-wrap:wrap;margin-bottom:clamp(40px,4.6vw,72px)}
 .sh .h2{max-width:15ch}
@@ -671,8 +671,8 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 
 <!-- Exemples -->
 <section class="sec wrap" id="exemples" aria-labelledby="t-ex">
-  <p class="lab mono">Exemples de réalisation</p>
-  <div class="sh"><h2 class="h h2 split" id="t-ex">Vidéos <em>explicatives.</em></h2></div>
+  <p class="lab mono">Vidéos explicatives</p>
+  <div class="sh"><h2 class="h h2 split" id="t-ex">Exemples de <em>réalisation.</em></h2></div>
   <div class="ex">
     <figure class="case rv">
       <div class="player" data-film="nikita" data-bunny="" data-mp4="/assets/fe-nikita.mp4" data-page="https://sayki.studio/" data-cursor="Lecture">
@@ -695,7 +695,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <!-- Le principe -->
 <section class="sec wrap" id="principe" aria-labelledby="t-pr">
   <p class="lab mono">Le principe</p>
-  <h2 class="h big split" id="t-pr">Vos clients n’aiment pas les vidéos. Ils aiment les <em>histoires.</em></h2>
+  <h2 class="h big split" id="t-pr">Vos clients ne retiennent pas les vidéos. Ils retiennent les <em>histoires.</em></h2>
   <div class="stag">
     <div class="stag-a">
       <div class="blk rv"><p class="mono n">01 · L’effort</p><h3 class="h h3">Une explication demande un effort. Une histoire, non.</h3><p>Alors je pars de votre sujet et j’en tire un héros : un personnage en 3D qui a le problème que vous réglez. On le suit une minute et demie, au plus. Quand il s’en sort, on a compris, sans effort.</p></div>
@@ -902,8 +902,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <section class="recv" id="contenu" aria-labelledby="t-rc">
   <div class="recv-in">
     <div class="wrap">
-      <p class="lab mono">Ce que vous recevez</p>
-      <div class="sh"><h2 class="h h2 split" id="t-rc">Dans chaque vidéo, <em>tout est compris.</em></h2><p class="sh-d">Huit choses, de la première phrase au dossier des droits.</p></div>
+      <h2 class="lab mono" id="t-rc">Ce que vous recevez</h2>
     </div>
     <ol class="track wrap" id="track">
       <li class="frame" style="--i:0"><span class="n" aria-hidden="true">1</span><h3>Une phrase</h3><p>Votre offre tient en une phrase. On la trouve ensemble, à l’atelier.</p><p class="val">Elle est à vous, même si on s’arrête là.</p></li>
@@ -946,9 +945,9 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 
 <!-- Fin -->
 <section class="end wrap" id="suite" aria-labelledby="t-end">
-  <h2 class="h split" id="t-end">Une histoire <em>en tête ?</em></h2>
+  <h2 class="h split" id="t-end">Quelque chose à <em>expliquer ?</em></h2>
   <div class="end-g">
-    <p>Racontez-la-moi. Vous n’en avez pas ? Deux phrases sur ce que vous faites suffisent. Je vous en renvoie trois : l’idée de votre vidéo.</p>
+    <p>Racontez-moi ce que vous faites, en deux phrases. Je vous renvoie l’idée de votre vidéo, en trois.</p>
     <div class="end-r">
       <div class="hero-btns"><button class="btn line" type="button" data-idea="13">Recevoir une idée gratuite</button><a class="btn mag" href="#prix" data-book>Réserver ma vidéo <span class="ar">→</span></a></div>
       <p class="end-l"><span>Trente minutes pour en parler : <a href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">réserver un créneau</a></span><a href="tel:+32475226124">+32 475 22 61 24</a></p>
