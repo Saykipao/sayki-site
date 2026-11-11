@@ -1330,11 +1330,20 @@ function wire(form){ $$('input:not([name="fax"]),textarea',form).forEach(el=>{ e
 function validate(form){ const bad=$$('input:not([name="fax"]),textarea',form).filter(el=>!check(el));
   if(bad.length){ bad[0].focus(); say(bad.length===1?'1 champ à corriger.':`${bad.length} champs à corriger.`); return false; } return true; }
 const lastSent={};
+const W3F_KEY='bdca0709-f6c5-4f6f-8813-04326ec6d24f';
 async function send(kind,data,btn,errEl,label){
   const key=JSON.stringify(data); if(lastSent[kind]&&lastSent[kind].k===key&&Date.now()-lastSent[kind].t<6e5) return {ok:true,dup:true};
   btn.disabled=true; btn.textContent='Envoi en cours…'; errEl.hidden=true;
   const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),15000);
-  try{ const r=await fetch('/api/'+kind,{method:'POST',headers:{'Content-Type':'application/json'},body:key,signal:ctl.signal});
+  try{
+    if(kind==='idee'){ /* l'idée gratuite part par Web3Forms, qui la transfère par e-mail */
+      if(data.fax){ clearTimeout(to); return {ok:true}; }
+      const body={access_key:W3F_KEY,subject:'Idée gratuite : '+data.nom,from_name:'Site Sayki · vidéo explicative',replyto:data.email,
+        'Prénom et nom':data.nom,'E-mail':data.email,'Site':data.web,'Ce qu’il fait':data.quoi,'À qui il doit l’expliquer':data.qui,'Bouton cliqué':data.entree,'Page':location.href,botcheck:''};
+      const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body),signal:ctl.signal});
+      clearTimeout(to); let j={}; try{ j=await r.json(); }catch(e){}
+      if(r.ok&&j.success){ lastSent[kind]={k:key,t:Date.now()}; return {ok:true}; } return {ok:false,err:r.status===429?'trop':'serveur'}; }
+    const r=await fetch('/api/'+kind,{method:'POST',headers:{'Content-Type':'application/json'},body:key,signal:ctl.signal});
     clearTimeout(to); let j={}; try{ j=await r.json(); }catch(e){}
     if(r.ok&&j.ok){ lastSent[kind]={k:key,t:Date.now()}; return j; } return {ok:false,err:j.error||'serveur'}; }
   catch(e){ clearTimeout(to); return {ok:false,err:'reseau'}; }
