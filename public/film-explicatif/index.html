@@ -227,6 +227,7 @@ img,video{display:block;max-width:100%}
 .ill .t.v{fill:#7A1FE0}
 .ill .sk{fill:none;stroke:rgba(21,10,38,.55);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .ill .arc{fill:none;stroke:#9E37FF;stroke-width:1.6;stroke-linecap:round}
+.ill .cv{fill:none;stroke:rgba(21,10,38,.5);stroke-width:1.2;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .ill .loop{fill:none;stroke:rgba(21,10,38,.22);stroke-width:1.1;stroke-dasharray:3 5}
 .ill .flowd{fill:none;stroke:#9E37FF;stroke-width:1.2;stroke-dasharray:3 4;vector-effect:non-scaling-stroke}
 .ill .scanclip{transform-box:fill-box;transform-origin:0 50%}
@@ -237,12 +238,12 @@ img,video{display:block;max-width:100%}
 @media (prefers-reduced-motion:no-preference){
   .ill *{transform-box:fill-box}
   .ill [transform]{transform-box:view-box}
-  .mc.in .lens{animation:mLens 9s cubic-bezier(.65,0,.35,1) infinite}
-  .mc.in .nd{animation:mTw 3s ease-in-out infinite}
-  .mc.in .nd:nth-of-type(3n){animation-delay:1s}.mc.in .nd:nth-of-type(3n+1){animation-delay:2s}
-  .mc.in .arc{stroke-dasharray:1;animation:mArc 8s var(--ease-out) infinite}
-  .mc.in .sn,.mc.in .sl{opacity:0;animation:mSn 8s var(--ease-out) infinite;animation-delay:var(--d,0s)}
-  .mc.in .end{transform-origin:center;animation:mEnd 8s ease infinite}
+  .mc.in .cv{stroke-dasharray:1;stroke-dashoffset:1;animation:cDraw 8s var(--ease-out) infinite;animation-delay:var(--d,0s)}
+  .mc.in .hub{transform-origin:center;animation:cHub 8s var(--ease-out) infinite}
+  .mc.in .arrow{stroke-dasharray:1;stroke-dashoffset:1;animation:cArrow 8s var(--ease-out) infinite}
+  .mc.in .arrowh,.mc.in .ang{opacity:0;animation:cHead 8s var(--ease-out) infinite}
+  .mc.in .arc{stroke-dasharray:1;animation:mArc 9s linear infinite}
+  .mc.in .pt,.mc.in .ph{opacity:0;animation:cPt 9s var(--ease-out) infinite;animation-delay:var(--d,0s)}
   .mc.in .sk{stroke-dasharray:1;animation:mDraw 8.4s var(--ease-out) infinite;animation-delay:var(--d,0s);stroke-dashoffset:1}
   .mc.in .cur{animation:mCur 8.4s var(--ease) infinite}
   .mc.in .scanclip{animation:mScanClip 6s cubic-bezier(.45,0,.55,1) infinite}
@@ -258,9 +259,13 @@ img,video{display:block;max-width:100%}
   .mc.in .prog{animation:mProg 3s linear infinite}
   .mc.in .loop{animation:mFlow 2.4s linear infinite}
 }
-@keyframes mLens{0%,8%{transform:translateX(0)}46%,58%{transform:translateX(150px)}96%,100%{transform:translateX(0)}}
+@keyframes cDraw{0%{stroke-dashoffset:1;opacity:1}26%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}96%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes cHub{0%,32%{transform:scale(.4);opacity:.25}40%{transform:scale(1.25);opacity:1}46%,88%{transform:scale(1);opacity:1}98%,100%{transform:scale(.4);opacity:.25}}
+@keyframes cArrow{0%,42%{stroke-dashoffset:1;opacity:1}58%{stroke-dashoffset:0}88%{stroke-dashoffset:0;opacity:1}98%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes cHead{0%,56%{opacity:0}62%,88%{opacity:1}98%,100%{opacity:0}}
+@keyframes cPt{0%{opacity:0;transform:translateY(4px)}6%,82%{opacity:1;transform:none}92%,100%{opacity:0}}
 @keyframes mTw{0%,100%{opacity:1}50%{opacity:.45}}
-@keyframes mArc{0%{stroke-dashoffset:1;opacity:1}46%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}96%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes mArc{0%{stroke-dashoffset:1;opacity:1}44%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}96%,100%{stroke-dashoffset:0;opacity:0}}
 @keyframes mSn{0%{opacity:0;transform:scale(.4)}8%,74%{opacity:1;transform:none}86%,100%{opacity:0}}
 @keyframes mTrav{0%{offset-distance:0%;opacity:0}4%{opacity:1}46%{offset-distance:100%;opacity:1}50%,100%{offset-distance:100%;opacity:0}}
 @keyframes mEnd{0%,40%{transform:scale(.5);opacity:.3}50%{transform:scale(1.25);opacity:1}58%,86%{transform:scale(1);opacity:1}96%,100%{transform:scale(.5);opacity:.3}}
@@ -682,24 +687,26 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <p class="mc-h mono"><span><i></i>Étape 1</span><span>Le point de départ</span></p>
       <div class="mc-t"><h3>Le call stratégique</h3><p>Une heure pour comprendre ce qui est compliqué à expliquer dans votre métier, et trouver le bon angle pour le raconter. Vous n’avez rien à préparer : parlez-moi de votre offre, de vos clients, de ce qui coince. <b>Aucun engagement à ce stade.</b></p></div>
       <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M369 26h10M374 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M369 274h10M374 269v10"/>
-<text class="t" x="40" y="62">60 min</text><text class="t" x="360" y="62" text-anchor="end">ce qui coince</text>
-<path class="s2" d="M40 150C60 150 70 120 90 128C112 137 96 172 76 160C58 149 92 118 118 132C142 145 128 180 150 168C176 154 150 120 178 122C204 124 196 176 222 166C246 156 226 122 252 126C276 130 270 170 292 160C312 151 300 132 320 140C338 147 344 150 360 150"/>
-<g class="lens"><circle cx="122" cy="150" r="58" fill="url(#gHalo)"/><circle class="s2" cx="122" cy="150" r="44" fill="#fff"/>
-<path class="ac" d="M88 150H152"/><path class="ac" d="M146 144L153 150 146 156"/><g transform="translate(88 150)"><g class="gd "><circle r="10.2" fill="url(#gGlowS)"/><circle r="3.4" fill="url(#gDot)"/></g></g>
-<path class="s2 handle" d="M153 181L182 210"/>
-<text class="t v" x="104" y="226" text-anchor="middle">le bon angle</text></g>
+<text class="t" x="374" y="52" text-anchor="end">60 min</text>
+<path class="cv" pathLength="1" style="--d:0.00s" d="M150 92C200 92 200 150 234 150"/><path class="cv" pathLength="1" style="--d:0.35s" d="M150 150C200 150 200 150 234 150"/><path class="cv" pathLength="1" style="--d:0.70s" d="M150 208C200 208 200 150 234 150"/><circle class="s2" cx="150" cy="92" r="4" fill="#fff"/><text class="t" x="138" y="95" text-anchor="end">votre offre</text><circle class="s2" cx="150" cy="150" r="4" fill="#fff"/><text class="t" x="138" y="153" text-anchor="end">vos clients</text><circle class="s2" cx="150" cy="208" r="4" fill="#fff"/><text class="t" x="138" y="211" text-anchor="end">ce qui coince</text>
+<g transform="translate(240 150)"><g class="hub"><circle r="16" fill="url(#gGlowS)"/><circle r="5.5" fill="url(#gDot)"/></g></g>
+<path class="ac arrow" pathLength="1" d="M254 150H350"/><path class="ac arrowh" d="M342 143L351 150 342 157"/>
+<text class="t v ang" x="350" y="134" text-anchor="end">le bon angle</text>
 </svg>
     </article>
     <article class="mc w s2">
       <p class="mc-h mono"><span><i></i>Étape 2</span><span>L’idée</span></p>
-      <div class="mc-t"><h3>Le concept</h3><p>Je vous propose une approche créative : un héros, une situation, une histoire qui porte votre message. Ensemble, on ajuste l’angle, le ton et la voix, jusqu’à ce que l’idée tienne en une phrase. <b>Rien n’est produit tant que le concept n’est pas validé.</b></p></div>
+      <div class="mc-t"><h3>Le concept</h3><p>Je vous propose une approche créative et un storytelling. Le plus souvent, une situation vécue : le problème de votre client, votre service qui arrive comme la solution, puis sa transformation. On termine sur votre expertise, ce que vous avez déjà fait pour d’autres. <b>Rien n’est produit tant que le concept n’est pas validé.</b></p></div>
       <svg class="ill" viewBox="0 0 560 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M529 26h10M534 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M529 274h10M534 269v10"/>
-<text class="t" x="44" y="54">toutes les pistes</text><text class="t v" x="516" y="270" text-anchor="end">une histoire</text>
-<path class="s faint" d="M120 110L170 80M120 110L150 160M170 80L236 60M214 236L196 149M214 236L300 196M320 70L388 96M320 70L370 136M352 226L300 196M352 226L410 244M410 244L440 176M440 176L506 196M506 196L480 92M150 160L196 149M388 96L370 136M236 60L320 70M300 196L370 136M84 212L150 160M84 212L120 110M196 149L170 80M370 136L440 176M480 92L388 96M480 92L440 176"/><circle class="s nd" cx="120" cy="110" r="3" fill="#fff"/><circle class="s nd" cx="170" cy="80" r="3" fill="#fff"/><circle class="s nd" cx="214" cy="236" r="3" fill="#fff"/><circle class="s nd" cx="320" cy="70" r="3" fill="#fff"/><circle class="s nd" cx="352" cy="226" r="3" fill="#fff"/><circle class="s nd" cx="410" cy="244" r="3" fill="#fff"/><circle class="s nd" cx="440" cy="176" r="3" fill="#fff"/><circle class="s nd" cx="506" cy="196" r="3" fill="#fff"/><circle class="s nd" cx="150" cy="160" r="3" fill="#fff"/><circle class="s nd" cx="388" cy="96" r="3" fill="#fff"/><circle class="s nd" cx="236" cy="60" r="3" fill="#fff"/><circle class="s nd" cx="300" cy="196" r="3" fill="#fff"/>
-<path class="arc" pathLength="1" d="M84 212C170 212 186 118 270 120C354 122 392 170 480 92"/>
-<circle class="s2 sn" cx="84" cy="212" r="5" fill="#fff" style="--d:0.0s"/><circle class="s2 sn" cx="196" cy="149" r="5" fill="#fff" style="--d:0.9s"/><circle class="s2 sn" cx="370" cy="136" r="5" fill="#fff" style="--d:1.8s"/><text class="t sl" x="84" y="234" text-anchor="middle" style="--d:0.0s">un héros</text><text class="t sl" x="196" y="175" text-anchor="middle" style="--d:1.3s">un problème</text><text class="t sl" x="480" y="74" text-anchor="middle" style="--d:2.6s">une issue</text>
-<circle r="3" fill="#DE50D2" opacity="0"><animateMotion dur="8s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.46;1" calcMode="linear" path="M84 212C170 212 186 118 270 120C354 122 392 170 480 92"/><animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;.04;.46;.5;1"/></circle>
-<g transform="translate(480 92)"><g class="gd end"><circle r="13.5" fill="url(#gGlowS)"/><circle r="4.5" fill="url(#gDot)"/></g></g>
+<path class="s faint" d="M170 56V236"/><path class="s faint" d="M280 56V236"/><path class="s faint" d="M390 56V236"/><path class="s" d="M60 236H500"/>
+<path class="s faint2" d="M60 150C90 150 96 206 122 206C152 206 172 190 202 174C262 142 330 82 392 80H500"/>
+<path class="arc" pathLength="1" d="M60 150C90 150 96 206 122 206C152 206 172 190 202 174C262 142 330 82 392 80H500"/>
+<g class="pt" style="--d:.3s"><circle class="s2" cx="122" cy="206" r="4.5" fill="#fff"/><text class="t" x="122" y="224" text-anchor="middle">la situation vécue</text></g>
+<g class="pt" style="--d:1.2s"><g transform="translate(202 174)"><circle r="13" fill="url(#gGlowS)"/><circle r="5" fill="url(#gDot)"/></g><text class="t v" x="210" y="196">votre service</text></g>
+<g class="pt" style="--d:2.1s"><circle class="s2" cx="320" cy="114" r="4.5" fill="#fff"/></g>
+<g class="pt" style="--d:3s"><g transform="translate(500 80)"><circle r="15" fill="url(#gGlowS)"/><circle r="5.5" fill="url(#gDot)"/></g><text class="t" x="496" y="64" text-anchor="end">déjà fait pour d’autres</text></g>
+<circle r="3" fill="#DE50D2" opacity="0"><animateMotion dur="9s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.44;1" calcMode="linear" path="M60 150C90 150 96 206 122 206C152 206 172 190 202 174C262 142 330 82 392 80H500"/><animate attributeName="opacity" dur="9s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;.03;.44;.48;1"/></circle>
+<text class="t ph" x="115" y="258" text-anchor="middle" style="--d:0.0s">problème</text><text class="t ph" x="225" y="258" text-anchor="middle" style="--d:0.9s">solution</text><text class="t ph" x="335" y="258" text-anchor="middle" style="--d:1.8s">transformation</text><text class="t ph" x="445" y="258" text-anchor="middle" style="--d:2.7s">expertise</text>
 </svg>
     </article>
     <article class="mc w s3">
