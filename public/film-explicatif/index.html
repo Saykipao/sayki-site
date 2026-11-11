@@ -198,118 +198,92 @@ img,video{display:block;max-width:100%}
 .prov{margin:24px 0 0;color:var(--soft);font-size:12.5px}
 @media (max-width:760px){.stag{grid-template-columns:minmax(0,1fr);gap:72px}.stag-b{margin-top:0}.stag-b .ph{margin-bottom:28px}}
 
-/* ---------- 5. la méthode : six petites scènes de film, un même héros ---------- */
+/* ---------- 5. la méthode : six cartes au trait, une métaphore par étape ---------- */
 .mg{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(12px,1.3vw,20px)}
-.mc{grid-column:span 5;display:flex;flex-direction:column;padding:10px;background:var(--paper);border:1px solid var(--line);border-radius:10px;transition:border-color .5s,box-shadow .6s var(--ease-out),transform .6s var(--ease-out)}
+.mc{grid-column:span 5;display:flex;flex-direction:column;gap:clamp(22px,2.2vw,32px);padding:clamp(24px,2.6vw,44px);background:var(--paper);border:1px solid var(--line);border-radius:6px;min-height:clamp(520px,42vw,640px);transition:border-color .5s}
 .mc.w{grid-column:span 7}
-.mc:hover{border-color:rgba(158,55,255,.25);box-shadow:0 30px 70px -44px rgba(61,20,110,.45);transform:translateY(-3px)}
-.mc .ill{order:1}
-.mc-h{order:2;display:flex;justify-content:space-between;gap:16px;margin:0;padding:22px clamp(14px,1.6vw,26px) 0;color:var(--mute)}
+.mc:hover{border-color:var(--line-2)}
+.mc-h{display:flex;justify-content:space-between;gap:16px;margin:0;color:var(--mute)}
 .mc-h span:first-child{display:inline-flex;align-items:center;gap:10px;color:var(--ink)}
-.mc-h i{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#9E37FF,#DE50D2);box-shadow:0 0 10px rgba(222,80,210,.5)}
-.mc-t{order:3;padding:16px clamp(14px,1.6vw,26px) clamp(18px,1.8vw,26px)}
-.mc-t h3{margin:0 0 12px;font-family:var(--f-head);font-weight:400;font-size:clamp(23px,1.9vw,30px);letter-spacing:-.04em;line-height:1.05}
-.mc-t p{margin:0;color:var(--mute);font-size:15.5px;line-height:1.6;max-width:50ch}
+.mc-h i{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#9E37FF,#DE50D2);box-shadow:0 0 10px rgba(222,80,210,.55)}
+.mc-t h3{margin:0 0 14px;font-family:var(--f-head);font-weight:400;font-size:clamp(24px,2vw,32px);letter-spacing:-.04em;line-height:1.05}
+.mc-t p{margin:0;color:var(--mute);font-size:15.5px;line-height:1.6;max-width:46ch}
 .mc-t b{font-weight:400;color:var(--ink)}
-.ill{display:block;width:100%;height:auto;border-radius:8px}
-.ill .pan{fill:url(#gPan)}
-.ill .slate{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;fill:#7A1FE0}
-.ill .slate.dim{fill:rgba(21,10,38,.45)}
-.ill .slate.light{fill:rgba(243,238,249,.7)}
-.ill .cap{font-family:var(--f-mono);font-size:10px;letter-spacing:.04em;fill:rgba(21,10,38,.5)}
-.ill .c1{opacity:0}
-.ill .lbl{font-family:var(--f-head);font-size:15px;letter-spacing:-.03em;fill:var(--ink)}
-.ill .sum{font-family:var(--f-head);font-size:21px;letter-spacing:-.04em;fill:var(--violet)}
-.ill .msg{font-family:var(--f-body);font-size:12.5px;fill:var(--ink)}
-.ill .msg.w{fill:#fff}
-.ill .pnum{font-family:var(--f-mono);font-size:8.5px;fill:rgba(21,10,38,.4)}
-.ill .knot{fill:none;stroke:rgba(21,10,38,.75);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
-.ill .clear path{fill:none;stroke:#9E37FF;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.ill .card-b{fill:none;stroke:#9E37FF;stroke-width:1.5;opacity:0}
-.ill .fr-bg{fill:#F7F3FC}
-.ill .fr-hl{fill:none;stroke:#DE50D2;stroke-width:2.5;opacity:0}
-.ill .arc{fill:none;stroke:rgba(21,10,38,.3);stroke-width:1.2;stroke-dasharray:3 5}
-.ill .orbit{fill:none;stroke:rgba(158,55,255,.35);stroke-width:1.2;stroke-dasharray:3 5}
-.ill .mesh{fill:none;stroke:#9E37FF;stroke-width:1;opacity:0}
-.ill .flash{opacity:0}
-.ill .along,.ill .spin{opacity:0}
-.ill .wipe{transform-box:fill-box;transform-origin:0 50%}
-.ill .wline{opacity:0}
-.ill .wv{fill:rgba(21,10,38,.22);transform-box:fill-box;transform-origin:50% 100%}
-.ill .wv.m{fill:rgba(158,55,255,.35)}
-.ill .b1,.ill .b2{opacity:0}
+.mc.n .mc-t{order:1}.mc.n .ill{order:2;margin-top:auto}
+.mc.w .ill{order:1;margin-block:auto}.mc.w .mc-t{order:2}
+.ill{display:block;width:100%;max-width:520px;height:auto;margin-inline:auto;overflow:visible}
+.mc.w .ill{max-width:640px}
+.ill .s{fill:none;stroke:rgba(21,10,38,.3);stroke-width:1.1;vector-effect:non-scaling-stroke}
+.ill .s[fill]{fill:#fff}
+.ill .s2{fill:none;stroke:rgba(21,10,38,.6);stroke-width:1.2;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.ill .s2[fill]{fill:#fff}
+.ill .faint{stroke:rgba(21,10,38,.12)}
+.ill .faint2{stroke:rgba(21,10,38,.16)}
+.ill .reg{stroke:rgba(21,10,38,.22)}
+.ill .ac{fill:none;stroke:#9E37FF;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.ill .ac.thin{stroke-width:1}
+.ill .t{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.05em;fill:rgba(21,10,38,.5)}
+.ill .t.sm{font-size:8px;fill:rgba(21,10,38,.38)}
+.ill .t.v{fill:#7A1FE0}
+.ill .sk{fill:none;stroke:rgba(21,10,38,.55);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.ill .arc{fill:none;stroke:#9E37FF;stroke-width:1.6;stroke-linecap:round}
+.ill .loop{fill:none;stroke:rgba(21,10,38,.22);stroke-width:1.1;stroke-dasharray:3 5}
+.ill .flowd{fill:none;stroke:#9E37FF;stroke-width:1.2;stroke-dasharray:3 4;vector-effect:non-scaling-stroke}
+.ill .scanclip{transform-box:fill-box;transform-origin:0 50%}
+.ill .scan{opacity:0}
+.ill .mf{opacity:0}
+.ill .q1,.ill .q2{opacity:0}
+.ill .prog{transform-box:fill-box;transform-origin:0 50%}
 @media (prefers-reduced-motion:no-preference){
   .ill *{transform-box:fill-box}
-  .mc.in .eyes{transform-origin:center;animation:sBlink 4.2s infinite}
-  .mc.in .hero.talk{transform-origin:50% 100%;animation:sTalk 1.8s ease-in-out infinite}
-  .mc.in .hero.jump{transform-origin:50% 100%;animation:sJump 2s var(--ease-out) infinite}
-  .mc.in .breathe{transform-origin:center;animation:sBreathe 5s ease-in-out infinite}
-  .mc.in .rec{animation:sRec 1.6s steps(2,jump-none) infinite}
-  .mc.in .knot{stroke-dasharray:1;animation:sKnot 8s var(--ease-out) infinite}
-  .mc.in .clear path:first-child{stroke-dasharray:1;animation:sClear 8s var(--ease-out) infinite}
-  .mc.in .clear path:last-child{animation:sClearHead 8s var(--ease-out) infinite}
-  .mc.in .c1{animation:sCap1 8s ease infinite}
-  .mc.in .c2{animation:sCap2 8s ease infinite}
-  .mc.in .card{transform-origin:50% 100%;animation:var(--k) 8s var(--ease) infinite}
-  .mc.in .k1{--k:sK1}.mc.in .k2{--k:sK2}.mc.in .k3{--k:sK3}
-  .mc.in .card-b{animation:sHi 8s ease infinite}
-  .mc.in .sum{animation:sSum 8s ease infinite}
-  .mc.in .light{animation:sLight 2.4s ease-in-out infinite}
-  .mc.in .cloud{animation:sFloat 3.4s ease-in-out infinite}
-  .mc.in .rain{animation:sRain .8s linear infinite}
-  .mc.in .holes{animation:sHoles .5s linear infinite}
-  .mc.in .fr-hl{animation:sFrame 6s ease infinite;animation-delay:var(--d,0s)}
-  .mc.in .fr{--dd:var(--d)}
-  .mc.in .idea{transform-origin:center;animation:sIdea 2.4s ease-in-out infinite}
-  .mc.in .sun{transform-origin:center;animation:sSun 12s linear infinite}
-  .mc.in .flash{animation:sFlash 6s ease-out infinite}
-  .mc.in .along{offset-path:path('M172 112C206 72 240 76 262 104');offset-rotate:0deg;animation:sAlong 6s ease-in-out infinite}
-  .mc.in .mesh{animation:sMesh 6s ease infinite}
-  .mc.in .mug{animation:sMug 6s ease infinite}
-  .mc.in .spin{offset-path:path('M230 196A70 16 0 1 0 370 196A70 16 0 1 0 230 196');offset-rotate:0deg;animation:sSpin 3.6s linear infinite}
-  .mc.in .wipe{animation:sWipe 6s var(--ease) infinite}
-  .mc.in .wline{animation:sWline 6s var(--ease) infinite}
-  .mc.in .wv{animation:sBar 1.3s ease-in-out infinite alternate;animation-delay:calc(var(--d,0s) * -1)}
-  .mc.in .prog{transform-origin:0 50%;animation:sProg 9s linear infinite;animation-delay:var(--d,0s)}
-  .mc.in .b{animation:var(--b) 9s var(--ease-out) infinite}
-  .mc.in .b1{--b:sB1}.mc.in .b2{--b:sB2}.mc.in .b3{--b:sB3}
+  .ill [transform]{transform-box:view-box}
+  .mc.in .lens{animation:mLens 9s cubic-bezier(.65,0,.35,1) infinite}
+  .mc.in .nd{animation:mTw 3s ease-in-out infinite}
+  .mc.in .nd:nth-of-type(3n){animation-delay:1s}.mc.in .nd:nth-of-type(3n+1){animation-delay:2s}
+  .mc.in .arc{stroke-dasharray:1;animation:mArc 8s var(--ease-out) infinite}
+  .mc.in .sn,.mc.in .sl{opacity:0;animation:mSn 8s var(--ease-out) infinite;animation-delay:var(--d,0s)}
+  .mc.in .end{transform-origin:center;animation:mEnd 8s ease infinite}
+  .mc.in .sk{stroke-dasharray:1;animation:mDraw 8.4s var(--ease-out) infinite;animation-delay:var(--d,0s);stroke-dashoffset:1}
+  .mc.in .cur{animation:mCur 8.4s var(--ease) infinite}
+  .mc.in .scanclip{animation:mScanClip 6s cubic-bezier(.45,0,.55,1) infinite}
+  .mc.in .scan{animation:mScan 6s cubic-bezier(.45,0,.55,1) infinite}
+  .mc.in .l1{animation:mL1 8s var(--ease) infinite}
+  .mc.in .l3{animation:mL3 8s var(--ease) infinite}
+  .mc.in .ly text,.mc.in .ly path.faint2{animation:mLab 8s var(--ease) infinite}
+  .mc.in .mf{animation:mMf 8s var(--ease) infinite}
+  .mc.in .flowd{animation:mFlow 1.6s linear infinite}
+  .mc.in .q1{animation:mQ1 9s var(--ease-out) infinite}
+  .mc.in .q2{animation:mQ2 9s var(--ease-out) infinite}
+  .mc.in .ok{transform-origin:center;animation:mOk 9s var(--ease-out) infinite}
+  .mc.in .prog{animation:mProg 3s linear infinite}
+  .mc.in .loop{animation:mFlow 2.4s linear infinite}
 }
-@keyframes sBlink{0%,46%,50%,100%{transform:scaleY(1)}48%{transform:scaleY(.1)}}
-@keyframes sTalk{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-1.5deg)}}
-@keyframes sJump{0%,55%,100%{transform:translateY(0)}20%{transform:translateY(-10px) scale(1.04,.96)}35%{transform:translateY(0) scale(1.03,.97)}}
-@keyframes sBreathe{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.06);opacity:1}}
-@keyframes sRec{50%{opacity:.25}}
-@keyframes sKnot{0%{stroke-dashoffset:1;opacity:1}24%{stroke-dashoffset:0;opacity:1}44%{opacity:1;transform:none}52%,100%{opacity:0;stroke-dashoffset:0;transform:scale(.9)}}
-@keyframes sClear{0%,50%{stroke-dashoffset:1;opacity:1}64%{stroke-dashoffset:0}90%{stroke-dashoffset:0;opacity:1}98%,100%{stroke-dashoffset:0;opacity:0}}
-@keyframes sClearHead{0%,62%{opacity:0}66%,90%{opacity:1}98%,100%{opacity:0}}
-@keyframes sCap1{0%,46%{opacity:1}52%,100%{opacity:0}}
-@keyframes sCap2{0%,52%{opacity:0}58%,92%{opacity:1}98%,100%{opacity:0}}
-@keyframes sK1{0%,6%{transform:translate(132px,8px) rotate(-11deg)}34%,84%{transform:none}96%,100%{transform:translate(132px,8px) rotate(-11deg)}}
-@keyframes sK2{0%,6%{transform:translateY(-6px)}34%,84%{transform:none}96%,100%{transform:translateY(-6px)}}
-@keyframes sK3{0%,6%{transform:translate(-132px,8px) rotate(11deg)}34%,84%{transform:none}96%,100%{transform:translate(-132px,8px) rotate(11deg)}}
-@keyframes sHi{0%,40%{opacity:0}48%,82%{opacity:1}92%,100%{opacity:0}}
-@keyframes sSum{0%,44%{opacity:0;transform:translateY(6px)}52%,82%{opacity:1;transform:none}92%,100%{opacity:0}}
-@keyframes sLight{50%{opacity:.6}}
-@keyframes sFloat{50%{transform:translateY(-4px)}}
-@keyframes sRain{from{transform:translateY(-3px);opacity:.3}to{transform:translateY(4px);opacity:1}}
-@keyframes sHoles{to{transform:translateX(-22px)}}
-@keyframes sFrame{0%{opacity:0}6%,30%{opacity:1}36%,100%{opacity:0}}
-@keyframes sIdea{50%{transform:scale(1.15)}}
-@keyframes sSun{to{transform:rotate(360deg)}}
-@keyframes sFlash{0%,14%{opacity:0}16%{opacity:.95}34%,100%{opacity:0}}
-@keyframes sAlong{0%,22%{offset-distance:0%;opacity:0}28%{opacity:1}48%{offset-distance:100%;opacity:1}52%,100%{offset-distance:100%;opacity:0}}
-@keyframes sMesh{0%,44%{opacity:0}50%,60%{opacity:1}74%,100%{opacity:0}}
-@keyframes sMug{0%,56%{opacity:0;transform:translateY(6px)}70%,94%{opacity:1;transform:none}100%{opacity:0}}
-@keyframes sSpin{from{offset-distance:0%;opacity:.9}to{offset-distance:100%;opacity:.9}}
-@keyframes sWipe{0%,8%{transform:scaleX(0)}62%,88%{transform:scaleX(1)}100%{transform:scaleX(1)}}
-@keyframes sWline{0%,8%{transform:translateX(0);opacity:1}62%{transform:translateX(320px);opacity:1}66%,100%{transform:translateX(320px);opacity:0}}
-@keyframes sBar{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
-@keyframes sProg{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes sB1{0%,4%{opacity:0;transform:translateY(8px)}10%,30%{opacity:1;transform:none}36%,100%{opacity:0}}
-@keyframes sB2{0%,30%{opacity:0;transform:translateY(8px)}36%,58%{opacity:1;transform:none}64%,100%{opacity:0}}
-@keyframes sB3{0%,60%{opacity:0;transform:translateY(8px) scale(.96)}66%,94%{opacity:1;transform:none}100%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.ill .knot{opacity:0}.ill .mug{opacity:1}}
-@media (max-width:900px){.mc,.mc.w{grid-column:1/-1}}
+@keyframes mLens{0%,8%{transform:translateX(0)}46%,58%{transform:translateX(150px)}96%,100%{transform:translateX(0)}}
+@keyframes mTw{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes mArc{0%{stroke-dashoffset:1;opacity:1}46%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}96%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes mSn{0%{opacity:0;transform:scale(.4)}8%,74%{opacity:1;transform:none}86%,100%{opacity:0}}
+@keyframes mTrav{0%{offset-distance:0%;opacity:0}4%{opacity:1}46%{offset-distance:100%;opacity:1}50%,100%{offset-distance:100%;opacity:0}}
+@keyframes mEnd{0%,40%{transform:scale(.5);opacity:.3}50%{transform:scale(1.25);opacity:1}58%,86%{transform:scale(1);opacity:1}96%,100%{transform:scale(.5);opacity:.3}}
+@keyframes mDraw{0%{stroke-dashoffset:1;opacity:1}22%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}96%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes mCur{0%,12%{transform:translate(0,0)}16%,28%{transform:translate(136px,0)}32%,44%{transform:translate(272px,0)}48%,60%{transform:translate(0,108px)}64%,76%{transform:translate(136px,108px)}80%,94%{transform:translate(272px,108px)}100%{transform:translate(0,0)}}
+@keyframes mScanClip{0%,6%{transform:scaleX(0)}56%,86%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:0}}
+@keyframes mScan{0%,6%{transform:translateX(0);opacity:1}56%{transform:translateX(180px);opacity:1}62%,100%{transform:translateX(180px);opacity:0}}
+@keyframes mL1{0%,30%{transform:translateY(-6px)}48%,82%{transform:translateY(70px)}96%,100%{transform:translateY(-6px)}}
+@keyframes mL3{0%,30%{transform:translateY(6px)}48%,82%{transform:translateY(-70px)}96%,100%{transform:translateY(6px)}}
+@keyframes mLab{0%,30%{opacity:1}42%,84%{opacity:0}96%,100%{opacity:1}}
+@keyframes mMf{0%,44%{opacity:0;transform:translateY(6px)}54%,82%{opacity:1;transform:none}92%,100%{opacity:0}}
+@keyframes mFlow{to{stroke-dashoffset:-14}}
+@keyframes mOrb{0%{offset-distance:0%;opacity:1}100%{offset-distance:100%;opacity:1}}
+@keyframes mQ1{0%{opacity:0;transform:translateY(6px)}5%,28%{opacity:1;transform:none}33%,100%{opacity:0}}
+@keyframes mQ2{0%,33%{opacity:0;transform:translateY(6px)}38%,61%{opacity:1;transform:none}66%,100%{opacity:0}}
+@keyframes mOk{0%,66%{opacity:0;transform:scale(.3)}71%{opacity:1;transform:scale(1.2)}75%,95%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes mProg{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (max-width:900px){
+  .mc,.mc.w{grid-column:1/-1;min-height:0}
+  .mc.w .ill{order:2}.mc.w .mc-t{order:1}
+  .mc{overflow:hidden}
+  .mc .ill{width:112%;max-width:none;margin:4px -6% -6px}
+}
 
 /* ---------- 6. le prix, dans le mauve ---------- */
 .price-sec{position:relative;margin-top:var(--sec);padding:var(--sec) 0 clamp(80px,8vw,130px);background:var(--nuit);color:#F3EEF9;overflow:hidden;isolation:isolate}
@@ -696,13 +670,10 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <!-- La méthode -->
 <section class="sec wrap" id="methode" aria-labelledby="t-me">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
-  <linearGradient id="gHero" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B25BFF"/><stop offset="1" stop-color="#DE50D2"/></linearGradient>
-  <linearGradient id="gPan" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3ECFC"/><stop offset="1" stop-color="#FBF8FE"/></linearGradient>
-  <linearGradient id="gSun" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB86B"/><stop offset="1" stop-color="#DE50D2"/></linearGradient>
-  <linearGradient id="gMug" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7A1FE0"/><stop offset=".45" stop-color="#B25BFF"/><stop offset="1" stop-color="#6A18C8"/></linearGradient>
-  <linearGradient id="gScreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A1650"/><stop offset="1" stop-color="#150A26"/></linearGradient>
-  <radialGradient id="gGlow"><stop offset="0" stop-color="#9E37FF" stop-opacity=".32"/><stop offset="1" stop-color="#9E37FF" stop-opacity="0"/></radialGradient>
-  <filter id="fSoft" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#3D146E" flood-opacity=".14"/></filter>
+  <linearGradient id="gDot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9E37FF"/><stop offset="1" stop-color="#DE50D2"/></linearGradient>
+  <radialGradient id="gGlowS"><stop offset="0" stop-color="#DE50D2" stop-opacity=".35"/><stop offset="1" stop-color="#9E37FF" stop-opacity="0"/></radialGradient>
+  <radialGradient id="gHalo"><stop offset="0" stop-color="#9E37FF" stop-opacity=".16"/><stop offset="1" stop-color="#9E37FF" stop-opacity="0"/></radialGradient>
+  <linearGradient id="gScan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9E37FF" stop-opacity="0"/><stop offset="1" stop-color="#9E37FF" stop-opacity=".22"/></linearGradient>
 </defs></svg>
   <p class="lab mono">Méthode</p>
   <div class="sh"><h2 class="h h2 split" id="t-me">Six étapes, du premier appel <em>à votre vidéo.</em></h2><p class="sh-d">L’histoire d’abord, la réalisation ensuite. Un seul interlocuteur, du premier appel à la livraison.</p></div>
@@ -710,85 +681,71 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
     <article class="mc n s1">
       <p class="mc-h mono"><span><i></i>Étape 1</span><span>Le point de départ</span></p>
       <div class="mc-t"><h3>Le call stratégique</h3><p>Une heure pour comprendre ce qui est compliqué à expliquer dans votre métier, et trouver le bon angle pour le raconter. Vous n’avez rien à préparer : parlez-moi de votre offre, de vos clients, de ce qui coince. <b>Aucun engagement à ce stade.</b></p></div>
-      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><rect class="pan" x="0" y="0" width="400" height="300" rx="14"/><text class="slate" x="18" y="28">SC.01</text>
-<g class="rec"><circle cx="350" cy="24" r="3.5" fill="#9E37FF"/><text class="slate" x="358" y="28">REC</text></g>
-<circle cx="112" cy="206" r="78" fill="url(#gGlow)" class="breathe"/>
-<g transform="translate(112 214) scale(1.55 1.55)"><g class="hero talk"><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#150A26"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g></g></g>
-<g filter="url(#fSoft)"><path d="M178 52H352A18 18 0 0 1 370 70V146A18 18 0 0 1 352 164H200L170 192 180 164H178A18 18 0 0 1 160 146V70A18 18 0 0 1 178 52Z" fill="#fff"/></g>
-<path class="knot" pathLength="1" d="M188 104C200 76 238 132 252 100S222 78 238 116S292 128 282 96S246 90 296 108S330 100 342 104"/>
-<g class="clear"><path pathLength="1" d="M188 108H336"/><path d="M326 98L338 108 326 118"/></g>
-<text class="cap c1" x="182" y="150">ce qui coince</text><text class="cap c2" x="182" y="150">le bon angle</text>
+      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M369 26h10M374 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M369 274h10M374 269v10"/>
+<text class="t" x="40" y="62">60 min</text><text class="t" x="360" y="62" text-anchor="end">ce qui coince</text>
+<path class="s2" d="M40 150C60 150 70 120 90 128C112 137 96 172 76 160C58 149 92 118 118 132C142 145 128 180 150 168C176 154 150 120 178 122C204 124 196 176 222 166C246 156 226 122 252 126C276 130 270 170 292 160C312 151 300 132 320 140C338 147 344 150 360 150"/>
+<g class="lens"><circle cx="122" cy="150" r="58" fill="url(#gHalo)"/><circle class="s2" cx="122" cy="150" r="44" fill="#fff"/>
+<path class="ac" d="M88 150H152"/><path class="ac" d="M146 144L153 150 146 156"/><g transform="translate(88 150)"><g class="gd "><circle r="10.2" fill="url(#gGlowS)"/><circle r="3.4" fill="url(#gDot)"/></g></g>
+<path class="s2 handle" d="M153 181L182 210"/>
+<text class="t v" x="104" y="226" text-anchor="middle">le bon angle</text></g>
 </svg>
     </article>
     <article class="mc w s2">
       <p class="mc-h mono"><span><i></i>Étape 2</span><span>L’idée</span></p>
       <div class="mc-t"><h3>Le concept</h3><p>Je vous propose une approche créative : un héros, une situation, une histoire qui porte votre message. Ensemble, on ajuste l’angle, le ton et la voix, jusqu’à ce que l’idée tienne en une phrase. <b>Rien n’est produit tant que le concept n’est pas validé.</b></p></div>
-      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true"><rect class="pan" x="0" y="0" width="560" height="300" rx="14"/><text class="slate" x="18" y="28">SC.02</text>
-<circle cx="280" cy="150" r="140" fill="url(#gGlow)" class="breathe"/>
-<g class="card k1"><g filter="url(#fSoft)"><rect x="78" y="62" width="124" height="158" rx="12" fill="#fff"/></g><rect class="card-b" x="78" y="62" width="124" height="158" rx="12"/><g transform="translate(140 138) scale(1.15 1.15)"><g class="hero "><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#150A26"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g></g></g><text class="lbl" x="140" y="202" text-anchor="middle">Un héros</text></g>
-<g class="card k2"><g filter="url(#fSoft)"><rect x="218" y="62" width="124" height="158" rx="12" fill="#fff"/></g><rect class="card-b" x="218" y="62" width="124" height="158" rx="12"/><g transform="translate(280 130) scale(1.3)" class="cloud"><path d="M-22 6a10 10 0 0 1 4-19a14 14 0 0 1 26-2a10 10 0 0 1 14 21Z" fill="#150A26"/><path class="rain" d="M-12 12l-3 8M0 12l-3 8M12 12l-3 8" stroke="#9E37FF" stroke-width="2" stroke-linecap="round"/></g><text class="lbl" x="280" y="202" text-anchor="middle">Un problème</text></g>
-<g class="card k3"><g filter="url(#fSoft)"><rect x="358" y="62" width="124" height="158" rx="12" fill="#fff"/></g><rect class="card-b" x="358" y="62" width="124" height="158" rx="12"/><g><rect x="400" y="98" width="40" height="66" rx="3" fill="#150A26"/><rect class="light" x="404" y="102" width="32" height="62" rx="2" fill="url(#gSun)"/><path d="M404 164L380 186H460L436 164Z" fill="#DE50D2" opacity=".18"/></g><text class="lbl" x="420" y="202" text-anchor="middle">Une issue</text></g>
-<text class="sum" x="280" y="262" text-anchor="middle">= votre histoire</text>
+      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M529 26h10M534 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M529 274h10M534 269v10"/>
+<text class="t" x="44" y="54">toutes les pistes</text><text class="t v" x="516" y="270" text-anchor="end">une histoire</text>
+<path class="s faint" d="M120 110L170 80M120 110L150 160M170 80L236 60M214 236L196 149M214 236L300 196M320 70L388 96M320 70L370 136M352 226L300 196M352 226L410 244M410 244L440 176M440 176L506 196M506 196L480 92M150 160L196 149M388 96L370 136M236 60L320 70M300 196L370 136M84 212L150 160M84 212L120 110M196 149L170 80M370 136L440 176M480 92L388 96M480 92L440 176"/><circle class="s nd" cx="120" cy="110" r="3" fill="#fff"/><circle class="s nd" cx="170" cy="80" r="3" fill="#fff"/><circle class="s nd" cx="214" cy="236" r="3" fill="#fff"/><circle class="s nd" cx="320" cy="70" r="3" fill="#fff"/><circle class="s nd" cx="352" cy="226" r="3" fill="#fff"/><circle class="s nd" cx="410" cy="244" r="3" fill="#fff"/><circle class="s nd" cx="440" cy="176" r="3" fill="#fff"/><circle class="s nd" cx="506" cy="196" r="3" fill="#fff"/><circle class="s nd" cx="150" cy="160" r="3" fill="#fff"/><circle class="s nd" cx="388" cy="96" r="3" fill="#fff"/><circle class="s nd" cx="236" cy="60" r="3" fill="#fff"/><circle class="s nd" cx="300" cy="196" r="3" fill="#fff"/>
+<path class="arc" pathLength="1" d="M84 212C170 212 186 118 270 120C354 122 392 170 480 92"/>
+<circle class="s2 sn" cx="84" cy="212" r="5" fill="#fff" style="--d:0.0s"/><circle class="s2 sn" cx="196" cy="149" r="5" fill="#fff" style="--d:0.9s"/><circle class="s2 sn" cx="370" cy="136" r="5" fill="#fff" style="--d:1.8s"/><text class="t sl" x="84" y="234" text-anchor="middle" style="--d:0.0s">un héros</text><text class="t sl" x="196" y="175" text-anchor="middle" style="--d:1.3s">un problème</text><text class="t sl" x="480" y="74" text-anchor="middle" style="--d:2.6s">une issue</text>
+<circle r="3" fill="#DE50D2" opacity="0"><animateMotion dur="8s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.46;1" calcMode="linear" path="M84 212C170 212 186 118 270 120C354 122 392 170 480 92"/><animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;.04;.46;.5;1"/></circle>
+<g transform="translate(480 92)"><g class="gd end"><circle r="13.5" fill="url(#gGlowS)"/><circle r="4.5" fill="url(#gDot)"/></g></g>
 </svg>
     </article>
     <article class="mc w s3">
       <p class="mc-h mono"><span><i></i>Étape 3</span><span>Le découpage</span></p>
       <div class="mc-t"><h3>Le storyboard</h3><p>Chaque plan de la vidéo est dessiné, avec son intention et sa voix off. Vous voyez la vidéo avant qu’elle n’existe, plan par plan. <b>C’est le moment de tout ajuster, avant la production.</b></p></div>
-      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true"><rect class="pan" x="0" y="0" width="560" height="300" rx="14"/><text class="slate" x="18" y="28">SC.03</text>
-<clipPath id="cpStrip"><rect x="0" y="66" width="560" height="160"/></clipPath>
-<rect x="0" y="70" width="560" height="152" fill="#150A26"/>
-<g clip-path="url(#cpStrip)"><g class="holes" fill="#3A2466"><rect x="-20" y="78" width="10" height="7" rx="2"/><rect x="-20" y="213" width="10" height="7" rx="2"/><rect x="2" y="78" width="10" height="7" rx="2"/><rect x="2" y="213" width="10" height="7" rx="2"/><rect x="24" y="78" width="10" height="7" rx="2"/><rect x="24" y="213" width="10" height="7" rx="2"/><rect x="46" y="78" width="10" height="7" rx="2"/><rect x="46" y="213" width="10" height="7" rx="2"/><rect x="68" y="78" width="10" height="7" rx="2"/><rect x="68" y="213" width="10" height="7" rx="2"/><rect x="90" y="78" width="10" height="7" rx="2"/><rect x="90" y="213" width="10" height="7" rx="2"/><rect x="112" y="78" width="10" height="7" rx="2"/><rect x="112" y="213" width="10" height="7" rx="2"/><rect x="134" y="78" width="10" height="7" rx="2"/><rect x="134" y="213" width="10" height="7" rx="2"/><rect x="156" y="78" width="10" height="7" rx="2"/><rect x="156" y="213" width="10" height="7" rx="2"/><rect x="178" y="78" width="10" height="7" rx="2"/><rect x="178" y="213" width="10" height="7" rx="2"/><rect x="200" y="78" width="10" height="7" rx="2"/><rect x="200" y="213" width="10" height="7" rx="2"/><rect x="222" y="78" width="10" height="7" rx="2"/><rect x="222" y="213" width="10" height="7" rx="2"/><rect x="244" y="78" width="10" height="7" rx="2"/><rect x="244" y="213" width="10" height="7" rx="2"/><rect x="266" y="78" width="10" height="7" rx="2"/><rect x="266" y="213" width="10" height="7" rx="2"/><rect x="288" y="78" width="10" height="7" rx="2"/><rect x="288" y="213" width="10" height="7" rx="2"/><rect x="310" y="78" width="10" height="7" rx="2"/><rect x="310" y="213" width="10" height="7" rx="2"/><rect x="332" y="78" width="10" height="7" rx="2"/><rect x="332" y="213" width="10" height="7" rx="2"/><rect x="354" y="78" width="10" height="7" rx="2"/><rect x="354" y="213" width="10" height="7" rx="2"/><rect x="376" y="78" width="10" height="7" rx="2"/><rect x="376" y="213" width="10" height="7" rx="2"/><rect x="398" y="78" width="10" height="7" rx="2"/><rect x="398" y="213" width="10" height="7" rx="2"/><rect x="420" y="78" width="10" height="7" rx="2"/><rect x="420" y="213" width="10" height="7" rx="2"/><rect x="442" y="78" width="10" height="7" rx="2"/><rect x="442" y="213" width="10" height="7" rx="2"/><rect x="464" y="78" width="10" height="7" rx="2"/><rect x="464" y="213" width="10" height="7" rx="2"/><rect x="486" y="78" width="10" height="7" rx="2"/><rect x="486" y="213" width="10" height="7" rx="2"/><rect x="508" y="78" width="10" height="7" rx="2"/><rect x="508" y="213" width="10" height="7" rx="2"/><rect x="530" y="78" width="10" height="7" rx="2"/><rect x="530" y="213" width="10" height="7" rx="2"/><rect x="552" y="78" width="10" height="7" rx="2"/><rect x="552" y="213" width="10" height="7" rx="2"/><rect x="574" y="78" width="10" height="7" rx="2"/><rect x="574" y="213" width="10" height="7" rx="2"/><rect x="596" y="78" width="10" height="7" rx="2"/><rect x="596" y="213" width="10" height="7" rx="2"/></g></g>
-<g class="fr" style="--d:0s"><rect class="fr-bg" x="28" y="94" width="156" height="110" rx="5"/><g transform="translate(70 176) scale(1 1)"><g class="hero "><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#150A26"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g><path d="M-4 -12.5Q0 -16 4 -12.5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></g></g><g transform="translate(112 124) scale(0.9)" class="cloud"><path d="M-22 6a10 10 0 0 1 4-19a14 14 0 0 1 26-2a10 10 0 0 1 14 21Z" fill="#150A26"/><path class="rain" d="M-12 12l-3 8M0 12l-3 8M12 12l-3 8" stroke="#9E37FF" stroke-width="2" stroke-linecap="round"/></g><text class="pnum" x="36" y="108">P.01</text><rect class="fr-hl" x="28" y="94" width="156" height="110" rx="5"/></g><text class="lbl l" x="28" y="256">Le problème.</text><g class="fr" style="--d:2s"><rect class="fr-bg" x="202" y="94" width="156" height="110" rx="5"/><g transform="translate(246 176) scale(1 1)"><g class="hero "><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#150A26"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g></g></g><g class="idea"><circle cx="292" cy="130" r="13" fill="url(#gHero)"/><circle cx="292" cy="130" r="22" fill="url(#gGlow)"/></g><text class="pnum" x="210" y="108">P.02</text><rect class="fr-hl" x="202" y="94" width="156" height="110" rx="5"/></g><text class="lbl l" x="202" y="256">La découverte.</text><g class="fr" style="--d:4s"><rect class="fr-bg" x="376" y="94" width="156" height="110" rx="5"/><g transform="translate(422 176) scale(1 1)"><g class="hero jump"><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#150A26"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g><path d="M-4.5 -15.5Q0 -11 4.5 -15.5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></g></g><g transform="translate(468 124)"><g class="sun"><circle r="10" fill="url(#gSun)"/><g stroke="#DE50D2" stroke-width="2" stroke-linecap="round" opacity=".7"><path d="M0 -15V-20" transform="rotate(0)"/><path d="M0 -15V-20" transform="rotate(45)"/><path d="M0 -15V-20" transform="rotate(90)"/><path d="M0 -15V-20" transform="rotate(135)"/><path d="M0 -15V-20" transform="rotate(180)"/><path d="M0 -15V-20" transform="rotate(225)"/><path d="M0 -15V-20" transform="rotate(270)"/><path d="M0 -15V-20" transform="rotate(315)"/></g></g></g><text class="pnum" x="384" y="108">P.03</text><rect class="fr-hl" x="376" y="94" width="156" height="110" rx="5"/></g><text class="lbl l" x="376" y="256">La solution.</text>
+      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M529 26h10M534 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M529 274h10M534 269v10"/>
+<text class="t" x="90" y="40">plan · intention · voix off</text>
+<rect class="s" x="90" y="56" width="118" height="66" rx="4" fill="#fff"/><text class="t sm" x="96" y="68">P.01</text><path class="sk" pathLength="1" style="--d:0.0s" d="M98 108H200M130 108V92M123 84a7 7 0 1 0 14 0a7 7 0 1 0-14 0M170 78a8 8 0 1 0 0.1 0"/><rect class="s" x="226" y="56" width="118" height="66" rx="4" fill="#fff"/><text class="t sm" x="232" y="68">P.02</text><path class="sk" pathLength="1" style="--d:0.7s" d="M234 108H336M246 108L272 78L296 108M286 90L308 74L330 108"/><rect class="s" x="362" y="56" width="118" height="66" rx="4" fill="#fff"/><text class="t sm" x="368" y="68">P.03</text><path class="sk" pathLength="1" style="--d:1.4s" d="M370 108H472M392 108V96H450V108M392 96L421 76L450 96"/><rect class="s" x="90" y="164" width="118" height="66" rx="4" fill="#fff"/><text class="t sm" x="96" y="176">P.04</text><path class="sk" pathLength="1" style="--d:2.1s" d="M98 216H200M118 186a8 8 0 1 0 16 0a8 8 0 1 0-16 0M164 186a8 8 0 1 0 16 0a8 8 0 1 0-16 0M118 216q8-18 16 0M164 216q8-18 16 0M136 202H162"/><rect class="s" x="226" y="164" width="118" height="66" rx="4" fill="#fff"/><text class="t sm" x="232" y="176">P.05</text><path class="sk" pathLength="1" style="--d:2.8s" d="M234 216H336M242 216C266 184 296 224 326 182M318 182h8v8"/><rect class="s" x="362" y="164" width="118" height="66" rx="4" fill="#fff"/><text class="t sm" x="368" y="176">P.06</text><path class="sk" pathLength="1" style="--d:3.5s" d="M370 216H472M407 192a14 14 0 1 0 28 0a14 14 0 1 0-28 0M414 195q7 6 14 0M400 216H442"/><path class="s faint2" d="M90 136H182M90 144H154"/><path class="s faint2" d="M226 136H318M226 144H290"/><path class="s faint2" d="M362 136H454M362 144H426"/><path class="s faint2" d="M90 244H182M90 252H154"/><path class="s faint2" d="M226 244H318M226 252H290"/><path class="s faint2" d="M362 244H454M362 252H426"/>
+<g class="cur"><path class="ac" d="M84 62V50H96M200 50H214V62M214 116V128H200M96 128H84V116"/></g>
 </svg>
     </article>
     <article class="mc n s4">
       <p class="mc-h mono"><span><i></i>Étape 4</span><span>Le terrain</span></p>
       <div class="mc-t"><h3>Le shooting et la préparation</h3><p>Je viens chez vous photographier vos lieux, vos produits, vos objets et, si vous le souhaitez, les personnes de votre équipe. Ces photos servent de base pour les modéliser en 3D. <b>Ce que vos clients connaissent, ils le reconnaîtront.</b></p></div>
-      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><rect class="pan" x="0" y="0" width="400" height="300" rx="14"/><text class="slate" x="18" y="28">SC.04</text>
-<g transform="rotate(-6 108 150)"><g filter="url(#fSoft)"><rect x="46" y="74" width="124" height="150" rx="4" fill="#fff"/></g>
-<rect x="56" y="84" width="104" height="104" fill="#D8D1E2"/><rect x="56" y="148" width="104" height="40" fill="#CBC3D7"/><g opacity=".85"><rect x="86" y="126" width="34" height="40" rx="5" fill="#9A90A8"/><ellipse cx="103" cy="126" rx="17" ry="4" fill="#B6AEC2"/><path d="M120 134c10 0 10 20 0 20" fill="none" stroke="#9A90A8" stroke-width="5"/><ellipse cx="103" cy="168" rx="26" ry="4" fill="#8C829A" opacity=".5"/></g>
-<rect class="flash" x="56" y="84" width="104" height="104" fill="#fff"/>
-<text class="slate dim" x="58" y="210">IMG_0412</text></g>
-<path class="arc" d="M172 112C206 72 240 76 262 104"/><circle class="along" r="3.5" fill="#9E37FF"/>
-<ellipse cx="300" cy="214" rx="54" ry="9" fill="rgba(21,10,38,.10)"/>
-<ellipse class="orbit" cx="300" cy="196" rx="70" ry="16"/>
-<g class="mug"><path d="M326 150c22 0 22 38 0 38" fill="none" stroke="#7A1FE0" stroke-width="9" stroke-linecap="round"/>
-<path d="M266 140V196Q266 210 280 210H320Q334 210 334 196V140Z" fill="url(#gMug)"/><ellipse cx="300" cy="140" rx="34" ry="9" fill="#C08BFF"/><ellipse cx="300" cy="141" rx="28" ry="6" fill="#4B1494"/>
-<path d="M276 150V196" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".28"/></g>
-<g class="mesh"><path d="M266 140V196Q266 210 280 210H320Q334 210 334 196V140M266 158H334M266 177H334M283 140V209M300 141V210M317 140V209"/><ellipse cx="300" cy="140" rx="34" ry="9"/></g>
-<circle class="spin" r="4.5" fill="#DE50D2"/>
-<text class="slate dim" x="262" y="246">objet modélisé</text>
+      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M369 26h10M374 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M369 274h10M374 269v10"/>
+<clipPath id="cpScan"><rect class="scanclip" x="110" y="56" width="180" height="190"/></clipPath>
+<path class="s2" d="M110 76V56H130M270 56H290V76M290 226V246H270M130 246H110V226"/>
+<path class="s2" d="M175 178H225L218 228H182Z M200 178C198 142 176 130 158 132C168 154 184 164 200 178Z M200 178C204 134 226 118 246 120C238 146 220 164 200 178Z M200 178V96 M200 124C188 108 190 90 200 82C210 90 212 108 200 124Z"/>
+<g clip-path="url(#cpScan)"><rect x="110" y="56" width="180" height="190" fill="#fff" opacity=".75"/><path class="ac thin" d="M175 178H225L218 228H182Z M200 178C198 142 176 130 158 132C168 154 184 164 200 178Z M200 178C204 134 226 118 246 120C238 146 220 164 200 178Z M200 178V96 M200 124C188 108 190 90 200 82C210 90 212 108 200 124Z"/><path class="ac thin" d="M175 178L218 228M200 178L182 228M200 178L200 228M225 178L182 228M158 132L200 178M176 136L200 178M246 120L200 178M226 122L200 178M200 82L200 124M190 98L210 108M158 132L184 150M246 120L222 150M175 178L225 178"/>
+<circle cx="175" cy="178" r="2.2" fill="#9E37FF"/><circle cx="225" cy="178" r="2.2" fill="#9E37FF"/><circle cx="218" cy="228" r="2.2" fill="#9E37FF"/><circle cx="182" cy="228" r="2.2" fill="#9E37FF"/><circle cx="158" cy="132" r="2.2" fill="#9E37FF"/><circle cx="246" cy="120" r="2.2" fill="#9E37FF"/><circle cx="200" cy="82" r="2.2" fill="#9E37FF"/><circle cx="200" cy="124" r="2.2" fill="#9E37FF"/><circle cx="184" cy="150" r="2.2" fill="#9E37FF"/><circle cx="222" cy="150" r="2.2" fill="#9E37FF"/></g>
+<g class="scan"><rect x="70" y="56" width="40" height="190" fill="url(#gScan)"/><path d="M110 50V252" stroke="#9E37FF" stroke-width="1.4"/></g>
+<text class="t" x="110" y="272">IMG_0412.jpg</text><text class="t v" x="290" y="272" text-anchor="end">plante.obj</text>
 </svg>
     </article>
     <article class="mc n s5">
       <p class="mc-h mono"><span><i></i>Étape 5</span><span>La fabrication</span></p>
       <div class="mc-t"><h3>La génération et la production</h3><p>Je génère chaque plan en vidéo par IA, sous ma direction artistique. Viennent ensuite le motion design, la voix, la musique, le son, et le montage final. <b>Chaque plan passe par mes mains, du premier au dernier.</b></p></div>
-      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><rect class="pan" x="0" y="0" width="400" height="300" rx="14"/><text class="slate" x="18" y="28">SC.05</text>
-<clipPath id="cpMon"><rect x="40" y="40" width="320" height="168" rx="10"/></clipPath>
-<clipPath id="cpWipe"><rect class="wipe" x="40" y="40" width="320" height="168"/></clipPath>
-<rect x="40" y="40" width="320" height="168" rx="10" fill="url(#gScreen)"/>
-<g clip-path="url(#cpMon)"><g fill="none" stroke="rgba(243,238,249,.65)" stroke-width="1.4" stroke-linecap="round"><path d="M50 170H350"/><circle cx="200" cy="112" r="15"/><path d="M185 168C185 144 190 133 200 133S215 144 215 168"/><circle cx="300" cy="80" r="11"/><path d="M90 170V128M80 140Q90 120 100 140"/></g><g clip-path="url(#cpWipe)"><rect x="40" y="40" width="320" height="168" fill="#2F1A58"/><g><rect x="40" y="170" width="320" height="38" fill="#2A1650"/><circle cx="300" cy="80" r="11" fill="url(#gSun)"/><path d="M90 170V128" stroke="#7A1FE0" stroke-width="4"/><circle cx="90" cy="128" r="12" fill="#9E37FF"/><path d="M185 168C185 144 190 133 200 133S215 144 215 168Z" fill="#F3EEF9"/><circle cx="200" cy="112" r="15" fill="url(#gHero)"/><ellipse cx="195" cy="111" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="205" cy="111" rx="1.9" ry="2.5" fill="#fff"/></g></g>
-<path class="wline" d="M40 40V208" stroke="#DE50D2" stroke-width="2"/></g>
-<text class="slate light" x="52" y="60">RENDU · PLAN 07/12</text>
-<text class="slate dim" x="40" y="252">VOIX</text><rect class="wv" x="120" y="236" width="4" height="22" rx="2" style="--d:0.00s"/><rect class="wv" x="128" y="236" width="4" height="22" rx="2" style="--d:0.13s"/><rect class="wv" x="136" y="236" width="4" height="22" rx="2" style="--d:0.26s"/><rect class="wv" x="144" y="236" width="4" height="22" rx="2" style="--d:0.39s"/><rect class="wv" x="152" y="236" width="4" height="22" rx="2" style="--d:0.52s"/><rect class="wv" x="160" y="236" width="4" height="22" rx="2" style="--d:0.65s"/><rect class="wv" x="168" y="236" width="4" height="22" rx="2" style="--d:0.78s"/><rect class="wv" x="176" y="236" width="4" height="22" rx="2" style="--d:0.91s"/><rect class="wv" x="184" y="236" width="4" height="22" rx="2" style="--d:1.04s"/><rect class="wv" x="192" y="236" width="4" height="22" rx="2" style="--d:1.17s"/><rect class="wv" x="200" y="236" width="4" height="22" rx="2" style="--d:0.00s"/><rect class="wv" x="208" y="236" width="4" height="22" rx="2" style="--d:0.13s"/><rect class="wv" x="216" y="236" width="4" height="22" rx="2" style="--d:0.26s"/><rect class="wv" x="224" y="236" width="4" height="22" rx="2" style="--d:0.39s"/><rect class="wv" x="232" y="236" width="4" height="22" rx="2" style="--d:0.52s"/><rect class="wv" x="240" y="236" width="4" height="22" rx="2" style="--d:0.65s"/><rect class="wv" x="248" y="236" width="4" height="22" rx="2" style="--d:0.78s"/><rect class="wv" x="256" y="236" width="4" height="22" rx="2" style="--d:0.91s"/><rect class="wv" x="264" y="236" width="4" height="22" rx="2" style="--d:1.04s"/><rect class="wv" x="272" y="236" width="4" height="22" rx="2" style="--d:1.17s"/><rect class="wv" x="280" y="236" width="4" height="22" rx="2" style="--d:0.00s"/><rect class="wv" x="288" y="236" width="4" height="22" rx="2" style="--d:0.13s"/><rect class="wv" x="296" y="236" width="4" height="22" rx="2" style="--d:0.26s"/><rect class="wv" x="304" y="236" width="4" height="22" rx="2" style="--d:0.39s"/><rect class="wv" x="312" y="236" width="4" height="22" rx="2" style="--d:0.52s"/><rect class="wv" x="320" y="236" width="4" height="22" rx="2" style="--d:0.65s"/><rect class="wv" x="328" y="236" width="4" height="22" rx="2" style="--d:0.78s"/><rect class="wv" x="336" y="236" width="4" height="22" rx="2" style="--d:0.91s"/><rect class="wv" x="344" y="236" width="4" height="22" rx="2" style="--d:1.04s"/><rect class="wv" x="352" y="236" width="4" height="22" rx="2" style="--d:1.17s"/>
-<text class="slate dim" x="40" y="280">MUSIQUE</text><rect class="wv m" x="120" y="268" width="4" height="12" rx="2" style="--d:0.00s"/><rect class="wv m" x="128" y="268" width="4" height="12" rx="2" style="--d:0.21s"/><rect class="wv m" x="136" y="268" width="4" height="12" rx="2" style="--d:0.42s"/><rect class="wv m" x="144" y="268" width="4" height="12" rx="2" style="--d:0.63s"/><rect class="wv m" x="152" y="268" width="4" height="12" rx="2" style="--d:0.84s"/><rect class="wv m" x="160" y="268" width="4" height="12" rx="2" style="--d:1.05s"/><rect class="wv m" x="168" y="268" width="4" height="12" rx="2" style="--d:1.26s"/><rect class="wv m" x="176" y="268" width="4" height="12" rx="2" style="--d:1.47s"/><rect class="wv m" x="184" y="268" width="4" height="12" rx="2" style="--d:0.18s"/><rect class="wv m" x="192" y="268" width="4" height="12" rx="2" style="--d:0.39s"/><rect class="wv m" x="200" y="268" width="4" height="12" rx="2" style="--d:0.60s"/><rect class="wv m" x="208" y="268" width="4" height="12" rx="2" style="--d:0.81s"/><rect class="wv m" x="216" y="268" width="4" height="12" rx="2" style="--d:1.02s"/><rect class="wv m" x="224" y="268" width="4" height="12" rx="2" style="--d:1.23s"/><rect class="wv m" x="232" y="268" width="4" height="12" rx="2" style="--d:1.44s"/><rect class="wv m" x="240" y="268" width="4" height="12" rx="2" style="--d:0.15s"/><rect class="wv m" x="248" y="268" width="4" height="12" rx="2" style="--d:0.36s"/><rect class="wv m" x="256" y="268" width="4" height="12" rx="2" style="--d:0.57s"/><rect class="wv m" x="264" y="268" width="4" height="12" rx="2" style="--d:0.78s"/><rect class="wv m" x="272" y="268" width="4" height="12" rx="2" style="--d:0.99s"/><rect class="wv m" x="280" y="268" width="4" height="12" rx="2" style="--d:1.20s"/><rect class="wv m" x="288" y="268" width="4" height="12" rx="2" style="--d:1.41s"/><rect class="wv m" x="296" y="268" width="4" height="12" rx="2" style="--d:0.12s"/><rect class="wv m" x="304" y="268" width="4" height="12" rx="2" style="--d:0.33s"/><rect class="wv m" x="312" y="268" width="4" height="12" rx="2" style="--d:0.54s"/><rect class="wv m" x="320" y="268" width="4" height="12" rx="2" style="--d:0.75s"/><rect class="wv m" x="328" y="268" width="4" height="12" rx="2" style="--d:0.96s"/><rect class="wv m" x="336" y="268" width="4" height="12" rx="2" style="--d:1.17s"/><rect class="wv m" x="344" y="268" width="4" height="12" rx="2" style="--d:1.38s"/><rect class="wv m" x="352" y="268" width="4" height="12" rx="2" style="--d:0.09s"/>
+      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M369 26h10M374 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M369 274h10M374 269v10"/>
+<g class="ly l3"><path class="s2" d="M200 188L284 220L200 252L116 220Z" fill="#fff"/><g transform="matrix(42 16 -42 16 200 220)"><path class="s2 wv" d="M-0.85 -0.22V0.22"/><path class="s2 wv" d="M-0.75 -0.14V0.14"/><path class="s2 wv" d="M-0.65 -0.35V0.35"/><path class="s2 wv" d="M-0.55 -0.11V0.11"/><path class="s2 wv" d="M-0.45 -0.31V0.31"/><path class="s2 wv" d="M-0.35 -0.23V0.23"/><path class="s2 wv" d="M-0.25 -0.10V0.10"/><path class="s2 wv" d="M-0.15 -0.29V0.29"/><path class="s2 wv" d="M-0.05 -0.10V0.10"/><path class="s2 wv" d="M0.05 -0.26V0.26"/><path class="s2 wv" d="M0.15 -0.11V0.11"/><path class="s2 wv" d="M0.25 -0.12V0.12"/><path class="s2 wv" d="M0.35 -0.26V0.26"/><path class="s2 wv" d="M0.45 -0.43V0.43"/><path class="s2 wv" d="M0.55 -0.13V0.13"/><path class="s2 wv" d="M0.65 -0.17V0.17"/><path class="s2 wv" d="M0.75 -0.34V0.34"/><path class="s2 wv" d="M0.85 -0.48V0.48"/></g><path class="s faint2" d="M284 220H304"/><text class="t" x="310" y="223">voix · son</text></g><g class="ly l2"><path class="s2" d="M200 118L284 150L200 182L116 150Z" fill="#fff"/><g transform="matrix(42 16 -42 16 200 150)"><path class="flowd" d="M-.85 .6C-.3 .7-.2-.3.2-.2S.6-.1.85-.65"/><circle cx=".85" cy="-.65" r=".07" fill="#DE50D2"/><circle cx="-.85" cy=".6" r=".06" fill="#9E37FF"/></g><path class="s faint2" d="M284 150H304"/><text class="t" x="310" y="153">motion design</text></g><g class="ly l1"><path class="s2" d="M200 48L284 80L200 112L116 80Z" fill="#fff"/><g transform="matrix(42 16 -42 16 200 80)"><rect class="s" x="-.78" y="-.78" width="1.56" height="1.56"/><path class="ac" d="M-.62 .6L-.3 0 0 .6M-.12 .6L.24-.18.62 .6"/><circle class="s2" cx="-.35" cy="-.45" r=".14"/></g><path class="s faint2" d="M284 80H304"/><text class="t" x="310" y="83">image IA</text></g>
+<text class="t v mf" x="200" y="206" text-anchor="middle">montage final</text>
 </svg>
     </article>
     <article class="mc w s6">
       <p class="mc-h mono"><span><i></i>Étape 6</span><span>Le rendu</span></p>
       <div class="mc-t"><h3>La livraison et les ajustements</h3><p>Vous recevez votre vidéo dans tous les formats dont vous avez besoin, pour votre site, vos réseaux et vos présentations. Je l’ajuste jusqu’à ce que vous en soyez pleinement satisfait.</p></div>
-      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true"><rect class="pan" x="0" y="0" width="560" height="300" rx="14"/><text class="slate" x="18" y="28">SC.06</text>
-<circle cx="250" cy="190" r="150" fill="url(#gGlow)"/>
-<g><rect x="60" y="120" width="210" height="124" rx="8" fill="url(#gScreen)"/><g transform="translate(234 148)"><g class="sun s2"><circle r="8" fill="url(#gSun)"/><g stroke="#DE50D2" stroke-width="2" stroke-linecap="round" opacity=".7"><path d="M0 -13V-18" transform="rotate(0)"/><path d="M0 -13V-18" transform="rotate(45)"/><path d="M0 -13V-18" transform="rotate(90)"/><path d="M0 -13V-18" transform="rotate(135)"/><path d="M0 -13V-18" transform="rotate(180)"/><path d="M0 -13V-18" transform="rotate(225)"/><path d="M0 -13V-18" transform="rotate(270)"/><path d="M0 -13V-18" transform="rotate(315)"/></g></g></g><g transform="translate(165 212) scale(1.05 1.05)"><g class="hero "><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#F3EEF9"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g><path d="M-4.5 -15.5Q0 -11 4.5 -15.5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></g></g>
-<rect x="72" y="230" width="186" height="3" rx="1.5" fill="rgba(243,238,249,.2)"/><rect class="prog" x="72" y="230" width="186" height="3" rx="1.5" fill="#DE50D2"/>
-<path d="M44 244H286L274 256H56Z" fill="#150A26"/></g>
-<g><rect x="300" y="152" width="96" height="96" rx="8" fill="url(#gScreen)"/><g transform="translate(348 222) scale(0.85 0.85)"><g class="hero "><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#F3EEF9"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g><path d="M-4.5 -15.5Q0 -11 4.5 -15.5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></g></g><rect class="prog" x="310" y="238" width="76" height="3" rx="1.5" fill="#DE50D2" style="--d:.4s"/></g>
-<g><rect x="420" y="128" width="66" height="120" rx="12" fill="url(#gScreen)"/><g transform="translate(453 214) scale(0.8 0.8)"><g class="hero "><ellipse cx="0" cy="29" rx="17" ry="3.6" fill="rgba(21,10,38,.12)"/><path d="M-15 28C-15 6-10-5 0-5S15 6 15 28Z" fill="#F3EEF9"/><circle cy="-22" r="15" fill="url(#gHero)"/><circle cx="-5" cy="-29" r="4" fill="#fff" opacity=".22"/><g class="eyes"><ellipse cx="-5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/><ellipse cx="5" cy="-23" rx="1.9" ry="2.5" fill="#fff"/></g><path d="M-4.5 -15.5Q0 -11 4.5 -15.5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></g></g><rect class="prog" x="430" y="238" width="46" height="3" rx="1.5" fill="#DE50D2" style="--d:.8s"/></g>
-<text class="slate dim" x="60" y="276">16:9</text><text class="slate dim" x="300" y="276">1:1</text><text class="slate dim" x="420" y="276">9:16</text>
-<g class="b b1"><g filter="url(#fSoft)"><rect x="232" y="34" width="190" height="34" rx="17" fill="#fff"/></g><text class="msg" x="248" y="56">Un peu plus grand, le logo ?</text></g>
-<g class="b b2"><rect x="370" y="76" width="96" height="34" rx="17" fill="#150A26"/><text class="msg w" x="386" y="98">C’est fait.</text></g>
-<g class="b b3"><g filter="url(#fSoft)"><rect x="300" y="34" width="122" height="34" rx="17" fill="#fff"/></g><text class="msg" x="316" y="56">Parfait.</text>
-<circle cx="398" cy="51" r="9" fill="#9E37FF"/><path d="M394 51l3 3 5-6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M529 26h10M534 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M529 274h10M534 269v10"/>
+<circle class="loop" cx="280" cy="146" r="96"/>
+<rect class="s2" x="218" y="111" width="124" height="70" rx="6" fill="#fff"/><path class="s2" d="M272 134L292 146L272 158Z"/>
+<path class="s faint2" d="M230 170H330"/><path class="ac prog" d="M230 170H330"/>
+<circle class="s2" cx="197" cy="98" r="5" fill="#fff"/><text class="t" x="183" y="102" text-anchor="end">v1</text><circle class="s2" cx="363" cy="98" r="5" fill="#fff"/><text class="t" x="377" y="102" text-anchor="start">v2</text><circle class="s2" cx="280" cy="242" r="5" fill="#fff"/><text class="t" x="266" y="246" text-anchor="end">v3</text>
+<g class="bb q1"><path class="s2" d="M115 46h62a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-46l-10 9v-9h-6a8 8 0 0 1-8-8v-16a8 8 0 0 1 8-8Z" fill="#fff"/><path class="s" d="M121 58H171M121 66H155"/></g><g class="bb q2"><path class="s2" d="M369 46h62a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8h-46l-10 9v-9h-6a8 8 0 0 1-8-8v-16a8 8 0 0 1 8-8Z" fill="#fff"/><path class="s" d="M375 58H425M375 66H409"/></g>
+<g transform="translate(308 242)"><g class="ok"><circle r="10" fill="url(#gDot)"/><path d="M-4.5 0l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+<circle r="4" fill="#DE50D2"><animateMotion dur="9s" repeatCount="indefinite" path="M196.86 98A96 96 0 1 1 196.85 98.01"/></circle>
+<text class="t" x="44" y="248">16:9</text><rect class="s" x="44" y="256" width="22" height="12" rx="2"/>
+<text class="t" x="90" y="248">1:1</text><rect class="s" x="90" y="256" width="12" height="12" rx="2"/>
+<text class="t" x="124" y="248">9:16</text><rect class="s" x="124" y="252" width="9" height="16" rx="2"/>
 </svg>
     </article>
   </div>
@@ -1312,7 +1269,9 @@ if(!RM){
 requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('is-in')));
 
 /* méthode : les illustrations ne s'animent que lorsqu'on les voit */
-(function(){ const io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('in',e.isIntersecting)),{rootMargin:'-10% 0px'}); $$('.mc').forEach(c=>io.observe(c)); })();
+(function(){ const io=new IntersectionObserver(es=>es.forEach(e=>{ const was=e.target.classList.contains('in'); e.target.classList.toggle('in',e.isIntersecting); const s=$('svg',e.target);
+  if(s&&s.pauseAnimations){ if(e.isIntersecting&&!was){ try{ s.setCurrentTime(0); s.unpauseAnimations(); }catch(err){} } else if(!e.isIntersecting) s.pauseAnimations(); } }),{rootMargin:'-10% 0px'});
+  $$('.mc').forEach(c=>{ const s=$('svg',c); if(s&&s.pauseAnimations) s.pauseAnimations(); if(RM&&s) s.pauseAnimations(); io.observe(c); }); })();
 
 /* ---------- vidéos d'ambiance : seulement quand on les voit ---------- */
 $$('#reel,[data-lazyplay]').forEach(v=>{ if(RM){ v.removeAttribute('autoplay'); v.pause(); return; }
