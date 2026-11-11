@@ -198,25 +198,99 @@ img,video{display:block;max-width:100%}
 .prov{margin:24px 0 0;color:var(--soft);font-size:12.5px}
 @media (max-width:760px){.stag{grid-template-columns:minmax(0,1fr);gap:72px}.stag-b{margin-top:0}.stag-b .ph{margin-bottom:28px}}
 
-/* ---------- 5. la méthode : des lignes, une image au survol ---------- */
-.rows{border-bottom:1px solid var(--line)}
-.row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px clamp(32px,6vw,110px);padding:clamp(30px,3.4vw,52px) 0;border-top:1px solid var(--line);position:relative}
-.row-k{margin:0 0 12px;color:var(--violet-d)}
-.row-n{font-size:clamp(36px,4.4vw,72px);letter-spacing:-.045em}
-.row-n .roll-w{line-height:1.12;height:1.12em}
-.row-n .roll-w span{text-shadow:0 1.7em var(--violet)}
-.row:hover .row-n .roll-w span{transform:translateY(-1.7em)}
-.row-r{display:grid;gap:18px;align-content:start;padding-top:.4em}
-.row-r p{margin:0;font-size:clamp(16.5px,1.3vw,19px);line-height:1.5;max-width:36ch}
-.row-r p.mono{color:var(--mute);font-size:11.5px}
-.row-r .mono a{border-bottom:1px solid var(--line-2)}
-.row-img{display:none}
-.rows-foot{margin:22px 0 0;color:var(--mute);font-size:14.5px;max-width:70ch}
-#preview{position:fixed;left:0;top:0;z-index:30;width:300px;aspect-ratio:16/10;border-radius:6px;overflow:hidden;pointer-events:none;opacity:0;transition:opacity .35s;will-change:transform;box-shadow:0 30px 60px -20px rgba(21,10,38,.35)}
-#preview.on{opacity:1}
-#preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.12);transition:opacity .4s,transform .9s var(--ease-out)}
-#preview img.on{opacity:1;transform:none}
-@media (max-width:860px){.row{grid-template-columns:minmax(0,1fr)}.row-r{padding-top:0}#preview{display:none}}
+/* ---------- 5. la méthode : six cartes, chacune son dessin animé, au trait ---------- */
+.mg{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(12px,1.3vw,20px)}
+.mc{grid-column:span 5;display:flex;flex-direction:column;gap:clamp(22px,2.2vw,32px);padding:clamp(24px,2.6vw,44px);background:var(--paper);border:1px solid var(--line);border-radius:6px;min-height:clamp(520px,42vw,640px);transition:border-color .5s,box-shadow .6s var(--ease-out)}
+.mc.w{grid-column:span 7}
+.mc:hover{border-color:var(--line-2);box-shadow:0 30px 60px -40px rgba(61,20,110,.25)}
+.mc-h{display:flex;justify-content:space-between;gap:16px;margin:0;color:var(--mute)}
+.mc-h span:first-child{display:inline-flex;align-items:center;gap:10px;color:var(--ink)}
+.mc-h i{width:6px;height:6px;background:var(--violet)}
+.mc-t h3{margin:0 0 14px;font-family:var(--f-head);font-weight:400;font-size:clamp(24px,2vw,32px);letter-spacing:-.04em;line-height:1.05}
+.mc-t p{margin:0;color:var(--mute);font-size:15.5px;line-height:1.6;max-width:46ch}
+.mc-t b{font-weight:400;color:var(--ink)}
+.mc.n .mc-t{order:1}.mc.n .ill{order:2;margin-top:auto}
+.mc.w .ill{order:1;margin-block:auto}.mc.w .mc-t{order:2}
+.ill{display:block;width:100%;max-width:520px;height:auto;margin-inline:auto;overflow:visible}
+.mc.w .ill{max-width:620px}
+.ill .s{fill:none;stroke:rgba(21,10,38,.34);stroke-width:1.1;vector-effect:non-scaling-stroke}
+.ill .s2{fill:none;stroke:rgba(21,10,38,.62);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.ill .faint{stroke:rgba(21,10,38,.1)}
+.ill .f{fill:#F7F5F2}.ill .f2{fill:#EEEAF4}
+.ill .s.f,.ill .f.s{fill:#F7F5F2}.ill .f2.s,.ill .s.f2{fill:#EEEAF4}
+.ill .a{fill:var(--violet)}
+.ill .d{fill:rgba(21,10,38,.32)}
+.ill .t{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.04em;fill:rgba(21,10,38,.5)}
+.ill .ta{font-family:var(--f-mono);font-size:9.5px;fill:var(--violet)}
+.ill .dash{fill:none;stroke:rgba(21,10,38,.34);stroke-width:1.1;stroke-dasharray:2 4;vector-effect:non-scaling-stroke}
+.ill .pick{fill:rgba(158,55,255,.06);stroke:var(--violet);stroke-width:1.3;opacity:1}
+.ill .ripple{fill:none;stroke:var(--violet);stroke-width:1;opacity:0}
+.ill .sk{fill:none;stroke:rgba(21,10,38,.55);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.ill .wire{fill:none;stroke:var(--violet);stroke-width:1.1;stroke-linejoin:round}
+.ill .vx{fill:var(--violet)}
+.ill .gen{fill:var(--violet);transform-box:fill-box;transform-origin:0 50%}
+.ill .flash{fill:#fff;opacity:0}
+.ill .along,.ill .along2{opacity:0}
+.ill .cur,.ill .chk{opacity:1}
+.ill .fl{opacity:0}.ill .fl.f3{opacity:1;fill:var(--violet)}
+.ill .fr3{stroke:var(--violet)}
+@media (prefers-reduced-motion:no-preference){
+  .ill *{transform-box:fill-box}
+  .mc .ill .ln,.mc .ill .sk>*,.mc .ill .wire>*{stroke-dasharray:1;stroke-dashoffset:0}
+  .mc.in .blink{animation:mBlink 1.6s steps(2,jump-none) infinite}
+  .mc.in .breathe{transform-origin:center;animation:mBreathe 4.5s ease-in-out infinite}
+  .mc.in .ripple{transform-origin:center;animation:mRipple 2.8s var(--ease-out) infinite}
+  .mc.in .talk{animation:mTalk 1.2s ease-in-out infinite;animation-delay:var(--d,0s)}
+  .mc.in .bob{animation:mBob 3.2s ease-in-out infinite;animation-delay:var(--d,0s)}
+  .mc.in .ln{animation:mType 9s var(--ease-out) infinite;animation-delay:var(--d,0s);stroke-dashoffset:1}
+  .mc.in .flow{animation:mFlow 1.4s linear infinite}
+  .mc.in .pick{animation:mPick 9s ease infinite}
+  .mc.in .cur-i{animation:mCur 9s var(--ease) infinite}
+  .mc.in .sk>*{animation:mDraw 8s var(--ease-out) infinite;animation-delay:var(--d,0s);stroke-dashoffset:1}
+  .mc.in .slide{animation:mSlide 6s linear infinite}
+  .mc.in .flash{animation:mFlash 5s ease-out infinite}
+  .mc.in .focus{transform-origin:center;animation:mFocus 5s var(--ease-out) infinite}
+  .mc.in .along{offset-path:path('M186 140C206 106 226 106 246 140');offset-rotate:0deg;animation:mAlong 5s ease-in-out infinite;animation-delay:.4s}
+  .mc.in .wire>*{animation:mDraw 5s var(--ease-out) infinite;animation-delay:calc(1.2s + var(--d,0s));stroke-dashoffset:1}
+  .mc.in .vx circle{transform-origin:center;animation:mPop 5s var(--ease-out) infinite;animation-delay:2.6s;opacity:0}
+  .mc.in .gen{animation:mGen 7s var(--ease-out) infinite;animation-delay:var(--d,0s);transform:scaleX(0)}
+  .mc.in .along2{offset-path:path('M70 44C120 12 180 16 206 32S300 58 340 38');offset-rotate:0deg;animation:mAlong 4.2s ease-in-out infinite}
+  .mc.in .ph{animation:mPlay 7s linear infinite}
+  .mc.in .fr{animation:mFr 7.5s ease infinite}
+  .mc.in .fr1{animation-delay:0s}.mc.in .fr2{animation-delay:2.5s}.mc.in .fr3{animation-delay:5s;stroke:rgba(21,10,38,.34)}
+  .mc.in .fl{animation:mFl 7.5s ease infinite;opacity:0}
+  .mc.in .fl.f1{animation-delay:0s}.mc.in .fl.f2l{animation-delay:2.5s}.mc.in .fl.f3{animation-delay:5s;fill:rgba(21,10,38,.5)}
+  .mc.in .bub{animation:mBub 7.5s var(--ease-out) infinite}
+  .mc.in .chk{transform-origin:center;animation:mChk 7.5s var(--ease-out) infinite}
+}
+@keyframes mBlink{0%{opacity:1}50%{opacity:.15}}
+@keyframes mBreathe{0%,100%{transform:scale(.88);opacity:.75}50%{transform:scale(1.06);opacity:1}}
+@keyframes mRipple{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.5);opacity:0}}
+@keyframes mTalk{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes mBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes mType{0%{stroke-dashoffset:1;opacity:1}14%{stroke-dashoffset:0}86%{stroke-dashoffset:0;opacity:1}96%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes mFlow{to{stroke-dashoffset:-12}}
+@keyframes mPick{0%,44%{opacity:0}50%,88%{opacity:1}96%,100%{opacity:0}}
+@keyframes mCur{0%{transform:translate(48px,74px);opacity:0}10%{opacity:1}38%{transform:translate(0,0)}42%{transform:translate(0,0) scale(.86)}46%,82%{transform:translate(0,0) scale(1);opacity:1}94%,100%{transform:translate(48px,74px);opacity:0}}
+@keyframes mDraw{0%{stroke-dashoffset:1;opacity:1}28%{stroke-dashoffset:0}84%{stroke-dashoffset:0;opacity:1}96%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes mSlide{from{transform:translateX(0)}to{transform:translateX(440px)}}
+@keyframes mFlash{0%,38%{opacity:0}40%{opacity:.95}62%,100%{opacity:0}}
+@keyframes mFocus{0%,30%{transform:scale(1.8);opacity:0}38%{transform:scale(1);opacity:1}60%,100%{opacity:1}}
+@keyframes mAlong{0%{offset-distance:0%;opacity:0}12%{opacity:1}88%{opacity:1}100%{offset-distance:100%;opacity:0}}
+@keyframes mPop{0%{transform:scale(0);opacity:0}8%{transform:scale(1.4);opacity:1}14%,70%{transform:scale(1);opacity:1}86%,100%{opacity:0}}
+@keyframes mGen{0%{transform:scaleX(0);opacity:1}40%{transform:scaleX(1)}85%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
+@keyframes mPlay{from{transform:translateX(0)}to{transform:translateX(296px)}}
+@keyframes mFr{0%,30%{stroke:var(--violet)}36%,100%{stroke:rgba(21,10,38,.34)}}
+@keyframes mFl{0%,30%{opacity:1;fill:var(--violet)}36%,100%{opacity:0}}
+@keyframes mBub{0%,12%{opacity:0;transform:translateY(8px)}22%,84%{opacity:1;transform:none}94%,100%{opacity:0}}
+@keyframes mChk{0%,44%{opacity:0;transform:scale(.3)}52%{opacity:1;transform:scale(1.15)}56%,84%{opacity:1;transform:scale(1)}94%,100%{opacity:0}}
+@media (max-width:900px){
+  .mc,.mc.w{grid-column:1/-1;min-height:0}
+  .mc.w .ill{order:2}.mc.w .mc-t{order:1}
+  .mc{overflow:hidden}
+  .mc .ill,.mc.w .ill{width:122%;max-width:none;margin:4px -11% -8px}
+  .mc.w .ill{width:116%;margin-inline:-8%}
+}
 
 /* ---------- 6. le prix, dans le mauve ---------- */
 .price-sec{position:relative;margin-top:var(--sec);padding:var(--sec) 0 clamp(80px,8vw,130px);background:var(--nuit);color:#F3EEF9;overflow:hidden;isolation:isolate}
@@ -602,16 +676,148 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 
 <!-- La méthode -->
 <section class="sec wrap" id="methode" aria-labelledby="t-me">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <radialGradient id="mgGlow"><stop offset="0" stop-color="#9E37FF" stop-opacity=".34"/><stop offset=".55" stop-color="#C08BFF" stop-opacity=".12"/><stop offset="1" stop-color="#9E37FF" stop-opacity="0"/></radialGradient>
+    <path id="dm" d="M0-3.2L3.2 0 0 3.2-3.2 0Z"/><path id="dmb" d="M0-5L5 0 0 5-5 0Z"/>
+  </defs></svg>
   <p class="lab mono">Méthode</p>
-  <div class="sh"><h2 class="h h2 split" id="t-me">L’histoire d’abord. <em>La réalisation ensuite.</em></h2><p class="sh-d">Trente jours entre l’atelier et la livraison. Vous validez trois fois, je fais le reste.</p></div>
-  <div class="rows">
-    <article class="row" data-img="/assets/fe-m1.jpg"><div><p class="mono row-k">Jour 1</p><h3 class="h row-n"><span class="sr">L’atelier</span><span class="roll-src" aria-hidden="true">L’atelier</span></h3></div><div class="row-r"><p>Une heure ensemble. Vous me racontez votre métier, je pose les questions. On en sort avec votre offre, en une phrase.</p><p class="mono">De votre côté : une heure</p></div></article>
-    <article class="row" data-img="/assets/fe-m2.jpg"><div><p class="mono row-k">Jour 5</p><h3 class="h row-n"><span class="sr">Le script</span><span class="roll-src" aria-hidden="true">Le script</span></h3></div><div class="row-r"><p>J’écris l’histoire et la voix off. Une fois le script validé, je viens chez vous une demi-journée photographier vos lieux et vos objets.</p><p class="mono">Validation 1 sur 3</p></div></article>
-    <article class="row" data-img="/assets/fe-m3.jpg"><div><p class="mono row-k">Jour 12</p><h3 class="h row-n"><span class="sr">Le storyboard</span><span class="roll-src" aria-hidden="true">Le storyboard</span></h3></div><div class="row-r"><p>Les premières images, plan par plan, et la voix que je vous propose.</p><p class="mono">Validation 2 sur 3</p></div></article>
-    <article class="row" data-img="/assets/fe-m4.jpg"><div><p class="mono row-k">Jour 25</p><h3 class="h row-n"><span class="sr">La vidéo</span><span class="roll-src" aria-hidden="true">La vidéo</span></h3></div><div class="row-r"><p>La vidéo complète : animation, montage, musique et son.</p><p class="mono">Validation 3 sur 3</p></div></article>
-    <article class="row" data-img="/assets/fe-m5.jpg"><div><p class="mono row-k">Jour 30</p><h3 class="h row-n"><span class="sr">La livraison</span><span class="roll-src" aria-hidden="true">La livraison</span></h3></div><div class="row-r"><p>Vos fichiers en trois formats, sous-titrés, avec la cession des droits.</p><p class="mono"><a href="#garantie-delai">Sinon, la facture baisse</a></p></div></article>
+  <div class="sh"><h2 class="h h2 split" id="t-me">Six étapes, du premier appel <em>à votre vidéo.</em></h2><p class="sh-d">L’histoire d’abord, la réalisation ensuite. Un seul interlocuteur, du premier appel à la livraison.</p></div>
+  <div class="mg">
+
+    <article class="mc n">
+      <p class="mc-h mono"><span><i></i>Étape 1</span><span>Le point de départ</span></p>
+      <div class="mc-t"><h3>Le call stratégique</h3><p>Une heure pour comprendre ce qui est compliqué à expliquer dans votre métier, et trouver le bon angle pour le raconter. Vous n’avez rien à préparer : parlez-moi de votre offre, de vos clients, de ce qui coince. <b>Aucun engagement à ce stade.</b></p></div>
+      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true">
+        <use href="#dm" class="d" x="200" y="18"/><use href="#dm" class="d" x="200" y="30"/>
+        <rect class="f s" x="90" y="48" width="220" height="182" rx="12"/>
+        <path class="s" d="M90 72H310"/>
+        <circle class="s" cx="106" cy="60" r="4"/><circle class="s" cx="118" cy="60" r="4"/><circle class="s" cx="130" cy="60" r="4"/>
+        <circle class="a blink" cx="276" cy="60" r="2.6"/><text class="ta" x="283" y="63">rec</text>
+        <circle class="breathe" cx="200" cy="152" r="66" fill="url(#mgGlow)"/>
+        <circle class="s" cx="200" cy="152" r="52"/><circle class="s" cx="200" cy="152" r="38"/>
+        <circle class="ripple" cx="200" cy="152" r="24"/>
+        <circle class="f2 s" cx="200" cy="152" r="24"/>
+        <use href="#dm" class="a" x="200" y="152"/>
+        <use href="#dm" class="d talk" x="142" y="152"/><use href="#dm" class="d talk" x="151" y="152" style="--d:.2s"/><use href="#dm" class="a talk" x="160" y="152" style="--d:.4s"/>
+        <use href="#dm" class="d" x="246" y="152"/>
+        <use href="#dm" class="d" x="90" y="96"/><use href="#dm" class="d" x="90" y="106"/><use href="#dm" class="a" x="90" y="116"/>
+        <use href="#dm" class="d" x="310" y="178"/><use href="#dm" class="d" x="310" y="188"/><use href="#dm" class="d" x="310" y="198"/>
+        <use href="#dm" class="a bob" x="36" y="152"/>
+        <use href="#dm" class="d" x="200" y="252"/><use href="#dm" class="d bob" x="200" y="266" style="--d:.6s"/><use href="#dm" class="d" x="200" y="276"/>
+      </svg>
+    </article>
+
+    <article class="mc w">
+      <p class="mc-h mono"><span><i></i>Étape 2</span><span>L’idée</span></p>
+      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true">
+        <use href="#dm" class="d" x="320" y="22"/><use href="#dm" class="a" x="320" y="34"/>
+        <rect class="f s" x="70" y="52" width="300" height="196" rx="12"/>
+        <text class="t" x="88" y="74">concept.txt</text>
+        <path class="s2 ln" pathLength="1" d="M88 96H196"/><path class="s2 ln" pathLength="1" d="M88 108H232" style="--d:.5s"/>
+        <path class="s ln" pathLength="1" d="M88 134H338" style="--d:1s"/><path class="s ln" pathLength="1" d="M88 146H318" style="--d:1.4s"/><path class="s ln" pathLength="1" d="M88 158H270" style="--d:1.8s"/>
+        <path class="s ln" pathLength="1" d="M88 184H306" style="--d:2.3s"/><path class="s ln" pathLength="1" d="M88 196H236" style="--d:2.7s"/>
+        <path class="s ln" pathLength="1" d="M88 222H176" style="--d:3.1s"/>
+        <path class="dash flow" d="M370 150H394"/>
+        <rect class="f s" x="394" y="70" width="128" height="38" rx="9"/><text class="t" x="408" y="93">Piste A</text><path class="s" d="M470 89H506"/>
+        <rect class="f s" x="394" y="131" width="128" height="38" rx="9"/><text class="t" x="408" y="154">Piste B</text><path class="s" d="M470 150H506"/>
+        <rect class="pick" x="394" y="131" width="128" height="38" rx="9"/>
+        <rect class="f s" x="394" y="192" width="128" height="38" rx="9"/><text class="t" x="408" y="215">Piste C</text><path class="s" d="M470 211H506"/>
+        <use href="#dm" class="a" x="383" y="150"/>
+        <g class="cur" transform="translate(492 152)"><g class="cur-i"><path d="M0 0V17L4.6 12.8 7.6 19.6 10.4 18.4 7.4 11.8H13Z" fill="#fff" stroke="rgba(21,10,38,.6)" stroke-width="1.1" stroke-linejoin="round"/></g></g>
+        <use href="#dm" class="d" x="30" y="150"/><use href="#dm" class="d" x="42" y="150"/><use href="#dm" class="a bob" x="54" y="150"/>
+        <use href="#dm" class="d" x="544" y="150"/>
+        <use href="#dm" class="d" x="320" y="268"/><use href="#dm" class="d" x="320" y="280"/>
+      </svg>
+      <div class="mc-t"><h3>Le concept</h3><p>Je vous propose une approche créative : un héros, une situation, une histoire qui porte votre message. Ensemble, on ajuste l’angle, le ton et la voix, jusqu’à ce que l’idée tienne en une phrase. <b>Rien n’est produit tant que le concept n’est pas validé.</b></p></div>
+    </article>
+
+    <article class="mc w">
+      <p class="mc-h mono"><span><i></i>Étape 3</span><span>Le découpage</span></p>
+      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true">
+        <text class="t" x="60" y="52">storyboard · plan par plan</text>
+        <rect class="f s" x="60" y="66" width="130" height="78" rx="6"/>
+        <rect class="f s" x="215" y="66" width="130" height="78" rx="6"/>
+        <rect class="f s" x="370" y="66" width="130" height="78" rx="6"/>
+        <g class="sk"><circle pathLength="1" cx="98" cy="92" r="8"/><path pathLength="1" d="M86 130Q98 102 110 130"/><path pathLength="1" d="M116 116H174"/><rect pathLength="1" x="140" y="90" width="26" height="18" rx="2"/></g>
+        <g class="sk" style="--d:1.2s"><path pathLength="1" d="M234 130V104L262 90 290 104V130"/><path pathLength="1" d="M224 130H336"/><path pathLength="1" d="M256 130V114H268V130"/><circle pathLength="1" cx="322" cy="88" r="7"/></g>
+        <g class="sk" style="--d:2.4s"><circle pathLength="1" cx="410" cy="90" r="7"/><circle pathLength="1" cx="460" cy="90" r="7"/><path pathLength="1" d="M399 130Q410 104 421 130"/><path pathLength="1" d="M449 130Q460 104 471 130"/><path pathLength="1" d="M420 114H450"/></g>
+        <text class="t" x="60" y="166">P.01</text><path class="s2" d="M60 180H170"/><path class="s" d="M60 192H150"/>
+        <text class="t" x="215" y="166">P.02</text><path class="s2" d="M215 180H316"/><path class="s" d="M215 192H296"/>
+        <text class="t" x="370" y="166">P.03</text><path class="s2" d="M370 180H486"/><path class="s" d="M370 192H440"/>
+        <text class="t tl" x="512" y="183">intention</text><text class="t tl" x="512" y="195">voix off</text>
+        <path class="dash" d="M60 230H500"/>
+        <use href="#dm" class="a slide" x="60" y="230"/>
+        <use href="#dm" class="d" x="125" y="230"/><use href="#dm" class="d" x="280" y="230"/><use href="#dm" class="d" x="435" y="230"/>
+        <use href="#dm" class="d" x="30" y="105"/><use href="#dm" class="a bob" x="530" y="105"/>
+        <use href="#dm" class="d" x="280" y="262"/><use href="#dm" class="d" x="280" y="274"/>
+      </svg>
+      <div class="mc-t"><h3>Le storyboard</h3><p>Chaque plan de la vidéo est dessiné, avec son intention et sa voix off. Vous voyez la vidéo avant qu’elle n’existe, plan par plan. <b>C’est le moment de tout ajuster, avant la production.</b></p></div>
+    </article>
+
+    <article class="mc n">
+      <p class="mc-h mono"><span><i></i>Étape 4</span><span>Le terrain</span></p>
+      <div class="mc-t"><h3>Le shooting et la préparation</h3><p>Je viens chez vous photographier vos lieux, vos produits, vos objets et, si vous le souhaitez, les personnes de votre équipe. Ces photos servent de base pour les modéliser en 3D. <b>Ce que vos clients connaissent, ils le reconnaîtront.</b></p></div>
+      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true">
+        <use href="#dm" class="d" x="110" y="40"/><use href="#dm" class="d" x="110" y="52"/>
+        <path class="s2" d="M40 98V80H58M162 80H180V98M180 182V200H162M58 200H40V182"/>
+        <rect class="f" x="44" y="84" width="132" height="112" rx="3"/>
+        <path class="f2 s" d="M88 122L102 110H146L132 122Z"/><path class="f s" d="M132 122L146 110V158L132 170Z"/><rect class="f s" x="88" y="122" width="44" height="48"/>
+        <path class="s" d="M66 170H160"/>
+        <path class="s focus" d="M110 136v8M106 140h8"/>
+        <rect class="flash" x="44" y="84" width="132" height="112" rx="3"/>
+        <text class="t" x="40" y="222">IMG_0412.jpg</text>
+        <path class="dash" d="M186 140C206 106 226 106 246 140"/>
+        <circle class="a along" r="3"/>
+        <g class="wire"><path pathLength="1" d="M262 128H312V180H262Z"/><path pathLength="1" d="M262 128L280 112H330L312 128" style="--d:.4s"/><path pathLength="1" d="M312 128L330 112V164L312 180" style="--d:.8s"/><path pathLength="1" d="M287 128V180M262 154H312M271 120H321M321 120V172" style="--d:1.2s"/></g>
+        <g class="vx"><circle cx="262" cy="128" r="2.4"/><circle cx="312" cy="128" r="2.4"/><circle cx="312" cy="180" r="2.4"/><circle cx="262" cy="180" r="2.4"/><circle cx="280" cy="112" r="2.4"/><circle cx="330" cy="112" r="2.4"/><circle cx="330" cy="164" r="2.4"/></g>
+        <path class="s" d="M238 198H354M250 208H342"/>
+        <text class="t" x="262" y="232">modèle 3D</text>
+        <use href="#dm" class="a bob" x="372" y="80"/><use href="#dm" class="d" x="20" y="140"/>
+        <use href="#dm" class="d" x="296" y="262"/><use href="#dm" class="d" x="296" y="274"/>
+      </svg>
+    </article>
+
+    <article class="mc n">
+      <p class="mc-h mono"><span><i></i>Étape 5</span><span>La fabrication</span></p>
+      <div class="mc-t"><h3>La génération et la production</h3><p>Je génère chaque plan en vidéo par IA, sous ma direction artistique. Viennent ensuite le motion design, la voix, la musique, le son, et le montage final. <b>Chaque plan passe par mes mains, du premier au dernier.</b></p></div>
+      <svg class="ill" viewBox="0 0 400 300" aria-hidden="true">
+        <path class="s faint" d="M10 102H390M10 214H390"/>
+        <rect class="f s" x="40" y="62" width="96" height="56" rx="7"/><text class="t" x="50" y="80">plan 01</text><rect class="gen" x="50" y="104" width="76" height="3" rx="1.5"/>
+        <rect class="f2 s" x="152" y="62" width="96" height="56" rx="7"/><text class="t" x="162" y="80">plan 02</text><rect class="gen" x="162" y="104" width="76" height="3" rx="1.5" style="--d:1.2s"/>
+        <rect class="f s" x="264" y="62" width="96" height="56" rx="7"/><text class="t" x="274" y="80">plan 03</text><rect class="gen" x="274" y="104" width="76" height="3" rx="1.5" style="--d:2.4s"/>
+        <path class="dash" d="M70 44C120 12 180 16 206 32S300 58 340 38"/>
+        <circle class="s f" cx="70" cy="44" r="4"/><circle class="s f" cx="206" cy="32" r="4"/><circle class="s f" cx="340" cy="38" r="4"/>
+        <circle class="a along2" r="3.2"/>
+        <text class="t" x="40" y="160">00:00</text><text class="t" x="182" y="160">00:45</text><text class="t" x="326" y="160">01:30</text>
+        <rect class="f s" x="40" y="168" width="320" height="56" rx="8"/>
+        <path class="s" d="M52 168v7M72 168v7M92 168v7M112 168v7M132 168v7M152 168v7M172 168v7M192 168v7M212 168v7M232 168v7M252 168v7M272 168v7M292 168v7M312 168v7M332 168v7M348 168v7"/>
+        <use href="#dm" class="d" x="70" y="200"/><use href="#dmb" class="d" x="110" y="200"/><use href="#dm" class="d" x="150" y="200"/><use href="#dmb" class="a" x="200" y="200"/><use href="#dmb" class="d" x="262" y="200"/><use href="#dm" class="d" x="318" y="200"/>
+        <g class="ph"><path class="faint s" d="M50 132V248"/><path class="s2 f" d="M45 136H55L50 144Z"/></g>
+        <use href="#dm" class="a" x="18" y="200"/><use href="#dm" class="d" x="376" y="200"/><use href="#dm" class="a" x="384" y="200"/>
+        <use href="#dm" class="d" x="200" y="244"/><use href="#dm" class="d" x="210" y="244"/><use href="#dm" class="a" x="220" y="244"/>
+      </svg>
+    </article>
+
+    <article class="mc w">
+      <p class="mc-h mono"><span><i></i>Étape 6</span><span>Le rendu</span></p>
+      <svg class="ill" viewBox="0 0 560 300" aria-hidden="true">
+        <text class="t fl f1" x="280" y="82" text-anchor="middle">16:9</text><text class="t fl f2l" x="280" y="82" text-anchor="middle">1:1</text><text class="t fl f3" x="280" y="82" text-anchor="middle">9:16</text>
+        <rect class="f s fr fr1" x="156" y="94" width="248" height="140" rx="10"/>
+        <rect class="f2 s fr fr2" x="210" y="94" width="140" height="140" rx="10"/>
+        <rect class="f s fr fr3" x="241" y="94" width="78" height="140" rx="10"/>
+        <path class="s" d="M271 152L293 164 271 176Z"/>
+        <use href="#dm" class="a" x="304" y="164"/>
+        <g class="bub"><path class="f s" d="M416 40H514A10 10 0 0 1 524 50V76A10 10 0 0 1 514 86H442L432 96V86H416A10 10 0 0 1 406 76V50A10 10 0 0 1 416 40Z"/><path class="s" d="M420 56H498M420 68H470"/></g>
+        <g class="chk"><circle cx="520" cy="44" r="10" fill="#9E37FF"/><path d="M515 44L519 48 526 40" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <use href="#dm" class="d" x="104" y="110"/><use href="#dm" class="d" x="114" y="110"/><use href="#dm" class="d" x="124" y="110"/><use href="#dm" class="a" x="134" y="110"/>
+        <use href="#dm" class="d" x="118" y="164"/><use href="#dm" class="a bob" x="134" y="164"/>
+        <use href="#dm" class="d" x="440" y="164"/><use href="#dm" class="d" x="450" y="164"/>
+        <use href="#dm" class="d" x="420" y="252"/><use href="#dm" class="a" x="430" y="252"/>
+      </svg>
+      <div class="mc-t"><h3>La livraison et les ajustements</h3><p>Vous recevez votre vidéo dans tous les formats dont vous avez besoin, pour votre site, vos réseaux et vos présentations. Je l’ajuste jusqu’à ce que vous en soyez pleinement satisfait.</p></div>
+    </article>
+
   </div>
-  <p class="rows-foot">À chaque validation, deux tours de corrections. Vous répondez sous deux jours ouvrables. Il vous faut plus de temps ? La date de livraison recule d’autant, rien d’autre.</p>
 </section>
 
 <!-- Le prix -->
@@ -767,7 +973,6 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 </main>
 
 <div class="bar" id="bar" aria-hidden="true"><button type="button" class="t" id="barTot" tabindex="-1">4 900 € HTVA</button><a class="btn sm" href="#reserver" data-open-book tabindex="-1">Réserver ma vidéo</a></div>
-<div id="preview" aria-hidden="true"></div>
 
 <!-- Réserver -->
 <div class="modal" id="reserver" hidden>
@@ -1132,6 +1337,9 @@ if(!RM){
 } else $$('.rv').forEach(el=>el.classList.add('in'));
 requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('is-in')));
 
+/* méthode : les illustrations ne s'animent que lorsqu'on les voit */
+(function(){ const io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('in',e.isIntersecting)),{rootMargin:'-10% 0px'}); $$('.mc').forEach(c=>io.observe(c)); })();
+
 /* ---------- vidéos d'ambiance : seulement quand on les voit ---------- */
 $$('#reel,[data-lazyplay]').forEach(v=>{ if(RM){ v.removeAttribute('autoplay'); v.pause(); return; }
   new IntersectionObserver(es=>{ if(es[0].isIntersecting){ v.play().catch(()=>{}); } else v.pause(); },{threshold:.15}).observe(v); });
@@ -1164,19 +1372,13 @@ setupH(); onScroll(); if(document.fonts) document.fonts.ready.then(()=>{ setupH(
 
 /* ---------- curseur, boutons aimantés, image au survol de la méthode ---------- */
 if(FINE&&!RM){
-  const cursor=$('#cursor'), cL=$('#cursorL'), pv=$('#preview'); root.classList.add('has-cursor');
-  let mx=-200,my=-200,cx=mx,cy=my,px=mx,py=my,pvOn=false,vx=0,last=mx;
+  const cursor=$('#cursor'), cL=$('#cursorL'); root.classList.add('has-cursor');
+  let mx=-200,my=-200,cx=mx,cy=my;
   addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
   document.addEventListener('mouseover',e=>{ const t=e.target.closest('[data-cursor]'); cursor.classList.toggle('big',!!t); if(t) cL.textContent=t.dataset.cursor; });
   $$('.mag').forEach(b=>{ b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect(); b.style.transition='transform .2s'; b.style.transform=`translate(${(e.clientX-(r.left+r.width/2))*0.2}px,${(e.clientY-(r.top+r.height/2))*0.28}px)`;});
     b.addEventListener('mouseleave',()=>{b.style.transition='transform .8s cubic-bezier(.16,1,.3,1),background .3s,color .3s'; b.style.transform='';}); });
-  const imgs={};
-  $$('.row[data-img]').forEach(r=>{ const src=r.dataset.img; const im=new Image(); im.src=src; im.alt=''; im.decoding='async'; pv.appendChild(im); imgs[src]=im;
-    r.addEventListener('mouseenter',()=>{ Object.values(imgs).forEach(x=>x.classList.toggle('on',x===im)); pv.classList.add('on'); pvOn=true; });
-    r.addEventListener('mouseleave',()=>{ pv.classList.remove('on'); pvOn=false; }); });
   (function f(){ cx+=(mx-cx)*0.22; cy+=(my-cy)*0.22; cursor.style.transform=`translate3d(${cx}px,${cy}px,0)`;
-    px+=(mx-px)*0.12; py+=(my-py)*0.12; vx+=((px-last)-vx)*0.2; last=px;
-    if(pvOn||pv.classList.contains('on')) pv.style.transform=`translate3d(${(px+28).toFixed(1)}px,${(py-110).toFixed(1)}px,0) rotate(${clamp(vx*0.35,-6,6).toFixed(2)}deg)`;
     requestAnimationFrame(f); })();
   /* la ligne des clients avance, et accélère au défilement */
   let mqX=0, lastY=scrollY;
