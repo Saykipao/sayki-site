@@ -648,6 +648,21 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 @media (max-width:860px){.why{grid-template-columns:minmax(0,1fr)}.why-t{grid-column:1}}
 
 .brk{display:inline}@media(max-width:700px){.brk{display:none}}
+
+/* rendez-vous : agenda Calendly intégré */
+.rdv{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:32px clamp(32px,6vw,110px);margin-top:clamp(64px,7vw,120px);padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:90px}
+.rdv-t{display:flex;flex-direction:column;gap:16px;align-self:start;position:sticky;top:110px}
+.rdv-t .rdv-k{margin:0;color:var(--violet)}
+.rdv-t h3{margin:0;font-family:var(--f-head);font-weight:400;font-size:clamp(28px,2.6vw,42px);line-height:1.05;letter-spacing:-.02em}
+.rdv-t p{margin:0;font-size:clamp(16px,1.2vw,18px);line-height:1.5;max-width:34ch}
+.rdv-t .rdv-alt{font-size:15px;color:var(--mute)}
+.rdv-alt a{color:var(--ink);border-bottom:1px solid var(--line-2)}
+.rdv-cal{position:relative;background:var(--paper);border:1px solid var(--line-2);min-height:700px;overflow:hidden}
+.rdv-cal iframe{display:block;width:100%;height:700px;border:0;opacity:0;transition:opacity .5s ease}
+.rdv-cal.ok iframe{opacity:1}
+.rdv-wait{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:var(--soft);transition:opacity .4s}
+.rdv-cal.ok .rdv-wait{opacity:0;pointer-events:none}
+@media (max-width:760px){.rdv{grid-template-columns:minmax(0,1fr)}.rdv-t{position:static}.rdv-cal{margin-inline:calc(var(--pad)*-1);border-inline:0;min-height:1000px}.rdv-cal iframe{height:1000px}}
 </style>
 </head>
 <body>
@@ -963,8 +978,20 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
     <p>Racontez-moi ce que vous faites, en deux phrases. Je vous renvoie l’idée de votre vidéo, en trois.</p>
     <div class="end-r">
       <div class="hero-btns"><button class="btn line" type="button" data-idea="13">Recevoir une idée gratuite</button><a class="btn mag" href="#prix" data-book>Réserver ma vidéo <span class="ar">→</span></a></div>
-      <p class="end-l"><span>Trente minutes pour en parler : <a href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">réserver un créneau</a></span><a href="tel:+32475226124">+32 475 22 61 24</a></p>
+      <p class="end-l"><span>Trente minutes pour en parler : <a href="#rendez-vous">choisir un créneau</a></span><a href="tel:+32475226124">+32 475 22 61 24</a></p>
       <p class="cafe">Café offert si vous passez au studio.</p>
+    </div>
+  </div>
+  <div class="rdv" id="rendez-vous">
+    <div class="rdv-t">
+      <p class="mono rdv-k">Premier rendez-vous</p>
+      <h3>Trente minutes pour en parler.</h3>
+      <p>Choisissez le jour et l’heure qui vous arrangent. La confirmation arrive aussitôt par e-mail.</p>
+      <p class="rdv-alt">Aucun créneau ne vous convient ? Appelez-moi au <a href="tel:+32475226124">+32 475 22 61 24</a>.</p>
+    </div>
+    <div class="rdv-cal" data-cal="https://calendly.com/ludovic-sayki/30min">
+      <p class="rdv-wait mono">Chargement de l’agenda…</p>
+      <noscript><p><a href="https://calendly.com/ludovic-sayki/30min" target="_blank" rel="noopener">Ouvrir l’agenda dans un nouvel onglet</a></p></noscript>
     </div>
   </div>
 </section>
@@ -1478,6 +1505,23 @@ function phStart(){
     if(v==='yes') phStart(); else if(phOn){ try{ posthog.opt_out_capturing(); }catch(err){} phOn=false; } hide(); });
   $('#ckOpen').addEventListener('click',show);
 })();
+
+/* ---------- rendez-vous : agenda Calendly chargé quand on s'en approche ---------- */
+(function(){ const box=$('.rdv-cal'); if(!box) return; let done=false;
+  const load=()=>{ if(done) return; done=true; const u=new URL(box.dataset.cal);
+    const q={embed_domain:location.hostname,embed_type:'Inline',hide_event_type_details:'1',hide_gdpr_banner:'1',background_color:'ffffff',text_color:'150a26',primary_color:'9e37ff'};
+    Object.entries(q).forEach(([k,v])=>u.searchParams.set(k,v));
+    const f=document.createElement('iframe'); f.src=u.toString(); f.title='Choisir un créneau de 30 minutes'; f.loading='lazy'; f.allow='payment';
+    f.addEventListener('load',()=>box.classList.add('ok')); box.appendChild(f); };
+  if('IntersectionObserver' in window){ const io=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ load(); io.disconnect(); } },{rootMargin:'900px 0px'}); io.observe(box); } else load();
+  addEventListener('message',e=>{ if(!/calendly\.com$/.test(new URL(e.origin||'http://x').hostname)) return; const d=e.data||{}; if(typeof d.event!=='string') return;
+    const f=$('iframe',box);
+    if(d.event==='calendly.page_height'&&f&&d.payload&&d.payload.height){ const h=parseInt(d.payload.height,10); if(h>300){ f.style.height=h+'px'; box.style.minHeight=h+'px'; } }
+    if(d.event==='calendly.date_and_time_selected') track('rdv_creneau_choisi',{page:'video-explicative'});
+    if(d.event==='calendly.event_scheduled') track('rdv_reserve',{page:'video-explicative'});
+  });
+})();
+
 })();
 
 </script>
