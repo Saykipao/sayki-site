@@ -672,6 +672,16 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 
 .mc-t .mc-you{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink)}
 .mc-t .mc-you b{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--violet);font-weight:400;margin-right:4px}
+
+.xt .xt-n{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--mute)}
+.rdv-path{margin-top:10px;padding-top:18px;border-top:1px solid var(--line)}
+.rdv-path>p{margin:0 0 12px;color:var(--mute)}
+.rdv-path ol{margin:0;padding:0;list-style:none;counter-reset:rp;display:flex;flex-direction:column;gap:14px}
+.rdv-path li{counter-increment:rp;display:grid;grid-template-columns:28px 1fr;column-gap:10px;font-size:14.5px;line-height:1.5}
+.rdv-path li::before{content:"0" counter(rp);grid-row:span 2;font-family:var(--f-mono);font-size:11px;color:var(--violet);padding-top:3px}
+.rdv-path li b{font-weight:500}
+.rdv-path li span{color:var(--mute);max-width:40ch}
+.rdv-t p.mono{font-size:12px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -772,11 +782,11 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
   <linearGradient id="gScan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9E37FF" stop-opacity="0"/><stop offset="1" stop-color="#9E37FF" stop-opacity=".22"/></linearGradient>
 </defs></svg>
   <p class="lab mono">Méthode</p>
-  <div class="sh"><h2 class="h h2 split" id="t-me">Six étapes.<br> Pour vous, <em>une heure et trois feux verts.</em></h2><p class="sh-d">L’histoire d’abord, la réalisation ensuite. Et un seul interlocuteur du début à la fin : moi.</p></div>
+  <div class="sh"><h2 class="h h2 split" id="t-me">Six étapes.<br> Pour vous, <em>une heure et trois feux verts.</em></h2><p class="sh-d">Avant elles, un <a class="lnk" href="#rendez-vous">appel découverte</a> de 30 minutes, gratuit, pour se mettre d’accord. Ensuite, l’histoire d’abord, la réalisation après. Et un seul interlocuteur du début à la fin : moi.</p></div>
   <div class="mg">
     <article class="mc n s1">
       <p class="mc-h mono"><span><i></i>Étape 1</span><span>Le point de départ</span></p>
-      <div class="mc-t"><h3>Le call stratégique</h3><p>Une heure pour comprendre ce qui est compliqué à expliquer dans votre métier, et trouver le bon angle pour le raconter. Rien à préparer : racontez-moi votre offre, vos clients, et ce que vos prospects ne comprennent jamais du premier coup. <b>Aucun engagement à ce stade.</b></p><p class="mc-you"><b>Vous :</b> une heure de conversation.</p></div>
+      <div class="mc-t"><h3>Le call stratégique</h3><p>Le bon de commande est signé, on démarre. Une heure pour comprendre ce qui est compliqué à expliquer dans votre métier, et trouver le bon angle pour le raconter. Rien à préparer : racontez-moi votre offre, vos clients, et ce que vos prospects ne comprennent jamais du premier coup. <b>Les 30 jours commencent ici.</b></p><p class="mc-you"><b>Vous :</b> une heure de conversation.</p></div>
       <svg class="ill" viewBox="0 0 400 300" aria-hidden="true"><path class="s reg" d="M21 26h10M26 21v10"/><path class="s reg" d="M369 26h10M374 21v10"/><path class="s reg" d="M21 274h10M26 269v10"/><path class="s reg" d="M369 274h10M374 269v10"/>
 <text class="t" x="374" y="52" text-anchor="end">60 min</text>
 <path class="cv" pathLength="1" style="--d:0.00s" d="M150 92C200 92 200 150 234 150"/><path class="cv" pathLength="1" style="--d:0.35s" d="M150 150C200 150 200 150 234 150"/><path class="cv" pathLength="1" style="--d:0.70s" d="M150 208C200 208 200 150 234 150"/><circle class="s2" cx="150" cy="92" r="4" fill="#fff"/><text class="t" x="138" y="95" text-anchor="end">votre offre</text><circle class="s2" cx="150" cy="150" r="4" fill="#fff"/><text class="t" x="138" y="153" text-anchor="end">vos clients</text><circle class="s2" cx="150" cy="208" r="4" fill="#fff"/><text class="t" x="138" y="211" text-anchor="end">ce qui coince</text>
@@ -912,6 +922,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
         <div class="tot"><b id="recTot">4 900 € HTVA</b></div>
         <p class="tva">TVA de 21 % en sus. <span id="recSched"></span></p>
         <a class="btn" href="#rendez-vous" id="calcBook" data-to-cal>Réserver ma vidéo <span class="ar">→</span></a>
+        <p class="xt-n">Premier pas : un appel découverte de 30 minutes, gratuit. Rien ne vous engage avant la signature du bon de commande.</p>
         <p class="share" id="envoyer"><button class="lnk" type="button" id="shCopy">Copier le lien</button><a class="lnk" id="shMail" href="mailto:">Envoyer par e-mail</a><span class="ok" id="shOk" aria-live="polite"></span></p>
       </div>
     </div>
@@ -993,10 +1004,18 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
   </div>
   <div class="rdv" id="rendez-vous">
     <div class="rdv-t">
-      <p class="mono rdv-k">Premier rendez-vous</p>
+      <p class="mono rdv-k">Appel découverte · gratuit</p>
       <h3>Trente minutes pour en parler.</h3>
-      <p>Pour voir si une vidéo a du sens pour vous. Si ce n’est pas le cas, je vous le dirai. Choisissez le jour et l’heure qui vous arrangent, la confirmation arrive aussitôt par e-mail.</p>
+      <p>Pour voir si une vidéo a du sens pour vous, et laquelle. Si ce n’est pas le cas, je vous le dirai. Choisissez le jour et l’heure qui vous arrangent, la confirmation arrive aussitôt par e-mail.</p>
       <div class="rdv-mine" id="rdvMine" hidden></div>
+      <div class="rdv-path">
+        <p class="mono">Et ensuite ?</p>
+        <ol>
+          <li><b>Appel découverte · 30 min</b><span>On se met d’accord sur la vidéo et la formule. Gratuit, sans engagement.</span></li>
+          <li><b>Bon de commande</b><span>Je vous l’envoie dans la journée. Vous signez, la facture d’acompte de 1 500 € HTVA suit.</span></li>
+          <li><b>Call stratégique · 1 h</b><span>La production démarre. Votre vidéo arrive 30 jours plus tard.</span></li>
+        </ol>
+      </div>
       <p class="rdv-alt">Aucun créneau ne vous convient ? Appelez-moi au <a href="tel:+32475226124">+32 475 22 61 24</a>.</p>
     </div>
     <div class="rdv-cal" data-cal="https://calendly.com/ludovic-sayki/30min">
@@ -1481,7 +1500,7 @@ function calLoad(){ const box=$('.rdv-cal'); if(!box) return; let f=$('iframe',b
   if(!f){ f=document.createElement('iframe'); f.title='Choisir un créneau de 30 minutes'; f.allow='payment'; f.addEventListener('load',()=>box.classList.add('ok')); box.appendChild(f); }
   const src=calSrc(); if(f.src!==src){ box.classList.remove('ok'); f.src=src; } }
 function calSync(){ const m=$('#rdvMine'); if(!m||!st.cal) return;
-  m.innerHTML=`<b>Votre vidéo</b>`+lines().map(([a,b])=>`<p>${a} · ${b.replace('+ ','+\u00a0')}</p>`).join('')+`<p><strong>${T(`Total : ${eur(total())} HTVA.`)}</strong></p><p class="rdv-mine-n">${T('Elle est déjà notée dans votre réservation.')} <a href="#prix" class="lnk" id="rdvEdit">Modifier</a></p>`;
+  m.innerHTML=`<b>Votre vidéo</b>`+lines().map(([a,b])=>`<p>${a} · ${b.replace('+ ','+\u00a0')}</p>`).join('')+`<p><strong>${T(`Total : ${eur(total())} HTVA.`)}</strong></p><p class="rdv-mine-n">${T('Elle arrive avec votre réservation : on en parle pendant l’appel.')} <a href="#prix" class="lnk" id="rdvEdit">Modifier</a></p>`;
   m.hidden=false; $('#rdvEdit').addEventListener('click',e=>{ e.preventDefault(); $('#calc').scrollIntoView({behavior:smooth,block:'start'}); });
   if($('.rdv-cal iframe')) { clearTimeout(calSync.t); calSync.t=setTimeout(calLoad,400); } }
 function toCal(){ st.cal=true; calSync(); calLoad(); history.replaceState(null,'','#rendez-vous'); $('#rendez-vous').scrollIntoView({behavior:smooth,block:'start'});
