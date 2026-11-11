@@ -663,6 +663,12 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 .rdv-wait{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:var(--soft);transition:opacity .4s}
 .rdv-cal.ok .rdv-wait{opacity:0;pointer-events:none}
 @media (max-width:760px){.rdv{grid-template-columns:minmax(0,1fr)}.rdv-t{position:static}.rdv-cal{margin-inline:calc(var(--pad)*-1);border-inline:0;min-height:1000px}.rdv-cal iframe{height:1000px}}
+
+.rdv-mine{margin-top:8px;padding:16px 18px;border:1px solid var(--line-2);background:var(--paper);font-size:15px;max-width:40ch}
+.rdv-mine b{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:400;color:var(--violet);margin-bottom:8px}
+.rdv-mine p{margin:3px 0;max-width:none}
+.rdv-mine .rdv-mine-n{margin-top:10px;color:var(--mute);font-size:14px}
+.rdv-mine .lnk{color:var(--ink);border-bottom:1px solid var(--line-2)}
 </style>
 </head>
 <body>
@@ -902,7 +908,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
         <ul id="recLines"><li><span>La vidéo 90 secondes</span><span>4 900 €</span></li></ul>
         <div class="tot"><b id="recTot">4 900 € HTVA</b></div>
         <p class="tva">TVA de 21 % en sus. <span id="recSched"></span></p>
-        <a class="btn" href="#reserver" id="calcBook" data-open-book>Réserver ma vidéo <span class="ar">→</span></a>
+        <a class="btn" href="#rendez-vous" id="calcBook" data-to-cal>Réserver ma vidéo <span class="ar">→</span></a>
         <p class="share" id="envoyer"><button class="lnk" type="button" id="shCopy">Copier le lien</button><a class="lnk" id="shMail" href="mailto:">Envoyer par e-mail</a><span class="ok" id="shOk" aria-live="polite"></span></p>
       </div>
     </div>
@@ -987,6 +993,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <p class="mono rdv-k">Premier rendez-vous</p>
       <h3>Trente minutes pour en parler.</h3>
       <p>Choisissez le jour et l’heure qui vous arrangent. La confirmation arrive aussitôt par e-mail.</p>
+      <div class="rdv-mine" id="rdvMine" hidden></div>
       <p class="rdv-alt">Aucun créneau ne vous convient ? Appelez-moi au <a href="tel:+32475226124">+32 475 22 61 24</a>.</p>
     </div>
     <div class="rdv-cal" data-cal="https://calendly.com/ludovic-sayki/30min">
@@ -1005,36 +1012,9 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 </footer>
 </main>
 
-<div class="bar" id="bar" aria-hidden="true"><button type="button" class="t" id="barTot" tabindex="-1">4 900 € HTVA</button><a class="btn sm" href="#reserver" data-open-book tabindex="-1">Réserver ma vidéo</a></div>
+<div class="bar" id="bar" aria-hidden="true"><button type="button" class="t" id="barTot" tabindex="-1">4 900 € HTVA</button><a class="btn sm" href="#rendez-vous" data-to-cal tabindex="-1">Réserver ma vidéo</a></div>
 
 <!-- Réserver -->
-<div class="modal" id="reserver" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rsT">
-    <div id="rsBody">
-      <div class="sheet-h"><h2 class="h" id="rsT">Réserver ma vidéo</h2><button type="button" class="x" data-close>Fermer</button></div>
-      <p class="intro">Un court formulaire, aucun paiement en ligne. Je vous réponds dans la journée, les jours ouvrables, avec le bon de commande.</p>
-      <p class="req">Tout est obligatoire, sauf ce qui est marqué facultatif.</p>
-      <div class="mine" id="rsMine"></div>
-      <form id="rsForm" novalidate>
-        <div class="fgrid">
-          <div class="field"><label for="rsNom">Prénom et nom</label><input id="rsNom" name="nom" autocomplete="name" data-min="2" data-max="80" required></div>
-          <div class="field"><label for="rsSoc">Société ou organisation</label><input id="rsSoc" name="societe" autocomplete="organization" data-min="2" data-max="120" required></div>
-          <div class="field"><label for="rsMail">E-mail</label><input id="rsMail" name="email" type="email" autocomplete="email" required></div>
-          <div class="field"><label for="rsTel">Téléphone (facultatif)</label><input id="rsTel" name="tel" type="tel" autocomplete="tel"></div>
-          <div class="field full"><label for="rsEch">Votre échéance (facultatif)</label><span class="help" id="rsEchH">Un salon, un lancement, une date à tenir.</span><input id="rsEch" name="echeance" type="date" aria-describedby="rsEchH" style="max-width:240px"></div>
-          <div class="field full"><label for="rsDesc">Ce que vous faites, en deux lignes (facultatif)</label><span class="help" id="rsDescH">Le reste, on le voit au call stratégique.</span><textarea id="rsDesc" name="desc" rows="3" aria-describedby="rsDescH rsDescC" data-max="300"></textarea><span class="cnt" id="rsDescC">0 / 300</span></div>
-        </div>
-        <div class="hp" aria-hidden="true"><label>Ne pas remplir <input name="fax" tabindex="-1" autocomplete="off"></label></div>
-        <div class="fsend"><button class="btn" type="submit">Envoyer ma réservation</button><p>La commande devient ferme quand vous signez le bon de commande. Votre créneau est tenu trois jours ouvrables.</p></div>
-        <p class="ferr" id="rsErr" role="alert" hidden></p>
-        <p class="priv">Sayki Studio SRL se sert de ces informations pour vous répondre et préparer votre bon de commande. Rien d’autre : aucune lettre d’information, aucune revente. Voir la <a href="/mentions-legales/">politique de confidentialité</a>.</p>
-      </form>
-    </div>
-    <div class="done" id="rsDone" hidden tabindex="-1"></div>
-  </div>
-</div>
-
-<!-- L'idée gratuite -->
 <div class="modal" id="idee" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="idT">
     <div id="idBody">
@@ -1116,7 +1096,7 @@ function render(announce){
   recSched.textContent=T(`Paiement : ${schedTxt(t)}.`);
   reset.disabled=!ORDER.some(k=>st.o[k])&&!st.ppl;
   pN.textContent=st.ppl; pMinus.disabled=st.f!=='o90'||st.ppl<=0; pPlus.disabled=st.f!=='o90'||st.ppl>=6;
-  share(); if(!$('#reserver').hidden) mine();
+  share(); calSync();
   if(announce) say(T(announce===true?`Total : ${eur(t)} HTVA.`:announce));
 }
 $$('.pick').forEach(b=>b.addEventListener('click',()=>{ st.f=b.dataset.pick; if(st.f!=='o90') st.ppl=0; render(`${OFF[st.f].t} choisie. Total : ${eur(total())} HTVA.`); track('calc_modifie',{element:'offre',etat:st.f,total:total()}); }));
@@ -1167,7 +1147,7 @@ render(false);
 
 /* ---------- navigation ---------- */
 $$('[data-book]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); history.replaceState(null,'','#prix'); $('#prix').scrollIntoView({behavior:smooth}); }));
-$$('[data-open-book]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); openModal('reserver',a); }));
+$$('[data-to-cal]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); toCal(); }));
 /* questions : une liste, une réponse à la fois (sur grand écran, dans le panneau) */
 const QI=$$('.qi'), qpIn=$('#qpIn'), WIDE=matchMedia('(min-width:861px)');
 $('#qpT').textContent=String(QI.length).padStart(2,'0');
@@ -1227,7 +1207,6 @@ $$('.player').forEach(p=>{
 /* ---------- fenêtres ---------- */
 let opener=null, idEntry='1';
 function openModal(id,from){ const m=document.getElementById(id); opener=from||null; m.hidden=false; root.classList.add('is-locked');
-  if(id==='reserver'){ mine(); track('reserver_ouvert',{offre:st.f,total:total(),options:ORDER.filter(k=>st.o[k]).join(',')||'aucune'}); }
   if(id==='idee') idEntry=(from&&from.dataset.idea)||'1';
   const body=$('[id$="Body"]',m), f=body.hidden?$('.done',m):$('input:not([name=site]),textarea',m); setTimeout(()=>f&&f.focus(),40); }
 function closeModal(m){ m.hidden=true; root.classList.remove('is-locked'); if(opener) opener.focus({preventScroll:true}); }
@@ -1294,25 +1273,6 @@ function failMsg(errEl,res,retry,name){
   errEl.hidden=false; const b=$('button',errEl); if(b) b.addEventListener('click',retry);
   track('envoi_echec',{formulaire:name,type:res.err});
 }
-const rsForm=$('#rsForm'), rsErr=$('#rsErr'); wire(rsForm);
-const rsDesc=$('#rsDesc'); rsDesc.addEventListener('input',()=>counter(rsDesc,$('#rsDescC')));
-$('#rsEch').min=new Date().toISOString().slice(0,10);
-function mine(){ const t=total();
-  $('#rsMine').innerHTML=`<b>Ce que vous réservez</b>`+lines().map(([a,b])=>`<p>${a} · ${b}</p>`).join('')+`<p><strong>${T(`Total : ${eur(t)} HTVA.`)}</strong> ${T(`TVA de ${C.tva} % en sus.`)}</p><p>${T('Paiement : '+schedTxt(t)+'.')}</p><p>${T(`Vidéo livrée en ${delay()} jours.`)} <button type="button" class="lnk" id="rsEdit">Modifier</button></p>`;
-  $('#rsEdit').addEventListener('click',()=>{ closeModal($('#reserver')); $('#calc').scrollIntoView({behavior:smooth,block:'start'}); setTimeout(()=>boxes[0].focus({preventScroll:true}),RM?0:700); }); }
-async function rsSubmit(e){ if(e) e.preventDefault(); if(!validate(rsForm)) return;
-  const f=new FormData(rsForm), t=total();
-  const data={nom:f.get('nom').trim(),societe:f.get('societe').trim(),email:f.get('email').trim(),tel:f.get('tel').trim(),echeance:f.get('echeance'),desc:f.get('desc').trim(),fax:f.get('fax'),offre:st.f==='o60'?'60 secondes':'90 secondes',options:ORDER.filter(k=>st.o[k]),personnes:st.ppl,total:t};
-  const btn=$('button[type="submit"]',rsForm), res=await send('reserver',data,btn,rsErr,'Envoyer ma réservation');
-  if(!res.ok){ if(res.err==='prix'){ render(true); mine(); } failMsg(rsErr,res,rsSubmit,'réservation'); return; }
-  track('reserver_envoye',{offre:data.offre,total:t,options:data.options.join(',')||'aucune','15_jours':st.o.j15?'oui':'non',echeance:data.echeance?'oui':'non'});
-  const done=$('#rsDone');
-  done.innerHTML=`<div class="sheet-h"><h2 class="h">C’est noté.</h2><button type="button" class="x" data-close>Fermer</button></div><p class="intro">Votre demande est partie. Voici ce que j’ai reçu :</p><div class="mine">${lines().map(([a,b])=>`<p>${a} · ${b}</p>`).join('')}<p><strong>${T(`Total : ${eur(t)} HTVA.`)}</strong> ${T(`TVA de ${C.tva} % en sus.`)}</p><p>${T('Paiement : '+schedTxt(t)+'.')}</p></div>
-    <p>${T(`La suite : je vous réponds dans la journée, les jours ouvrables, avec le bon de commande et la date du call stratégique. La facture d’acompte de ${eur(C.acompte)} HTVA suit sa signature. Votre créneau est tenu trois jours ouvrables.`)}</p>
-    <p class="mute">Une copie vient de partir à <b>${data.email.replace(/</g,'&lt;')}</b>. Si elle n’arrive pas, regardez dans les indésirables.</p>`;
-  $('#rsBody').hidden=true; done.hidden=false; done.focus();
-}
-rsForm.addEventListener('submit',rsSubmit);
 const idForm=$('#idForm'), idErr=$('#idErr'); wire(idForm);
 const idQuoi=$('#idQuoi'); idQuoi.addEventListener('input',()=>counter(idQuoi,$('#idQuoiC')));
 async function idSubmit(e){ if(e) e.preventDefault(); if(!validate(idForm)) return;
@@ -1506,19 +1466,30 @@ function phStart(){
   $('#ckOpen').addEventListener('click',show);
 })();
 
-/* ---------- rendez-vous : agenda Calendly chargé quand on s'en approche ---------- */
-(function(){ const box=$('.rdv-cal'); if(!box) return; let done=false;
-  const load=()=>{ if(done) return; done=true; const u=new URL(box.dataset.cal);
-    const q={embed_domain:location.hostname,embed_type:'Inline',hide_event_type_details:'1',hide_gdpr_banner:'1',background_color:'ffffff',text_color:'150a26',primary_color:'9e37ff'};
-    Object.entries(q).forEach(([k,v])=>u.searchParams.set(k,v));
-    const f=document.createElement('iframe'); f.src=u.toString(); f.title='Choisir un créneau de 30 minutes'; f.loading='lazy'; f.allow='payment';
-    f.addEventListener('load',()=>box.classList.add('ok')); box.appendChild(f); };
-  if('IntersectionObserver' in window){ const io=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ load(); io.disconnect(); } },{rootMargin:'900px 0px'}); io.observe(box); } else load();
-  addEventListener('message',e=>{ if(!/calendly\.com$/.test(new URL(e.origin||'http://x').hostname)) return; const d=e.data||{}; if(typeof d.event!=='string') return;
+/* ---------- rendez-vous : agenda Calendly ----------
+   « Réserver ma vidéo » descend jusqu'à l'agenda et y glisse la configuration (question n° CAL_Q du rendez-vous). */
+const CAL_Q='a3';
+function calTxt(){ return T(lines().map(([a,b])=>a+' ('+b.replace('+ ','')+')').join(' + ')+`. Total : ${eur(total())} HTVA.`); }
+function calSrc(){ const box=$('.rdv-cal'), u=new URL(box.dataset.cal);
+  const q={embed_domain:location.hostname,embed_type:'Inline',hide_event_type_details:'1',hide_gdpr_banner:'1',background_color:'ffffff',text_color:'150a26',primary_color:'9e37ff'};
+  if(st.cal) q[CAL_Q]=calTxt();
+  Object.entries(q).forEach(([k,v])=>u.searchParams.set(k,v)); return u.toString(); }
+function calLoad(){ const box=$('.rdv-cal'); if(!box) return; let f=$('iframe',box);
+  if(!f){ f=document.createElement('iframe'); f.title='Choisir un créneau de 30 minutes'; f.allow='payment'; f.addEventListener('load',()=>box.classList.add('ok')); box.appendChild(f); }
+  const src=calSrc(); if(f.src!==src){ box.classList.remove('ok'); f.src=src; } }
+function calSync(){ const m=$('#rdvMine'); if(!m||!st.cal) return;
+  m.innerHTML=`<b>Votre vidéo</b>`+lines().map(([a,b])=>`<p>${a} · ${b.replace('+ ','+\u00a0')}</p>`).join('')+`<p><strong>${T(`Total : ${eur(total())} HTVA.`)}</strong></p><p class="rdv-mine-n">${T('Elle est déjà notée dans votre réservation.')} <a href="#prix" class="lnk" id="rdvEdit">Modifier</a></p>`;
+  m.hidden=false; $('#rdvEdit').addEventListener('click',e=>{ e.preventDefault(); $('#calc').scrollIntoView({behavior:smooth,block:'start'}); });
+  if($('.rdv-cal iframe')) { clearTimeout(calSync.t); calSync.t=setTimeout(calLoad,400); } }
+function toCal(){ st.cal=true; calSync(); calLoad(); history.replaceState(null,'','#rendez-vous'); $('#rendez-vous').scrollIntoView({behavior:smooth,block:'start'});
+  track('reserver_clic',{offre:st.f,total:total(),options:ORDER.filter(k=>st.o[k]).join(',')||'aucune',personnes:st.ppl}); }
+(function(){ const box=$('.rdv-cal'); if(!box) return;
+  if('IntersectionObserver' in window){ const io=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ calLoad(); io.disconnect(); } },{rootMargin:'900px 0px'}); io.observe(box); } else calLoad();
+  addEventListener('message',e=>{ let h=''; try{ h=new URL(e.origin).hostname; }catch(err){} if(!/(^|\.)calendly\.com$/.test(h)) return; const d=e.data||{}; if(typeof d.event!=='string') return;
     const f=$('iframe',box);
-    if(d.event==='calendly.page_height'&&f&&d.payload&&d.payload.height){ const h=parseInt(d.payload.height,10); if(h>300){ f.style.height=h+'px'; box.style.minHeight=h+'px'; } }
-    if(d.event==='calendly.date_and_time_selected') track('rdv_creneau_choisi',{page:'video-explicative'});
-    if(d.event==='calendly.event_scheduled') track('rdv_reserve',{page:'video-explicative'});
+    if(d.event==='calendly.page_height'&&f&&d.payload&&d.payload.height){ const ht=parseInt(d.payload.height,10); if(ht>300){ f.style.height=ht+'px'; box.style.minHeight=ht+'px'; } }
+    if(d.event==='calendly.date_and_time_selected') track('rdv_creneau_choisi',{avec_video:st.cal?'oui':'non',total:st.cal?total():0});
+    if(d.event==='calendly.event_scheduled') track('rdv_reserve',{avec_video:st.cal?'oui':'non',offre:st.cal?st.f:'',total:st.cal?total():0});
   });
 })();
 
