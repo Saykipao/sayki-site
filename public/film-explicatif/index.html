@@ -640,6 +640,12 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 .qa p{margin:0 0 10px}.qa ul{margin:0;padding-left:1.1em}
 @media (max-width:860px){.qx{grid-template-columns:minmax(0,1fr)}.qp{display:none}.qb i{opacity:.5;transform:rotate(90deg)}.qi.on .qb i{transform:rotate(-90deg)}.qi.on .qb{padding-left:0}.qi.on .qb::before{display:none}}
 @media (prefers-reduced-motion:reduce){.qp-in.sw{animation:none}}
+
+/* le principe : un seul paragraphe */
+.why{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(28px,4vw,72px)}
+.why-t{grid-column:2;margin:0;font-family:var(--f-head);font-size:clamp(22px,2vw,32px);line-height:1.32;letter-spacing:-.025em;color:var(--soft);max-width:44ch;text-wrap:pretty}
+.why-t b{font-weight:400;color:var(--ink)}
+@media (max-width:860px){.why{grid-template-columns:minmax(0,1fr)}.why-t{grid-column:1}}
 </style>
 </head>
 <body>
@@ -725,18 +731,10 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <!-- Le principe -->
 <section class="sec wrap" id="principe" aria-labelledby="t-pr">
   <p class="lab mono">Le principe</p>
-  <h2 class="h big split" id="t-pr">Vos clients ne retiennent pas les vidéos. Ils retiennent les <em>histoires.</em></h2>
-  <div class="stag">
-    <div class="stag-a">
-      <div class="blk rv"><p class="mono n">01 · L’effort</p><h3 class="h h3">Une explication demande un effort. Une histoire, non.</h3><p>Alors je pars de votre sujet et j’en tire un héros : un personnage en 3D qui a le problème que vous réglez. On le suit une minute et demie, au plus. Quand il s’en sort, on a compris, sans effort.</p></div>
-      <figure class="ph"><div class="ph-f"><img src="/assets/fe-p1.jpg" alt="La salle d’attente du cabinet, dans la vidéo Mint Dentistes" width="900" height="1125" loading="lazy" decoding="async" data-par="1"></div><figcaption class="mono">Mint Dentistes · la salle d’attente</figcaption></figure>
-    </div>
-    <div class="stag-b">
-      <figure class="ph"><div class="ph-f"><img src="/assets/fe-p2.jpg" alt="Une collaboratrice de Nikita Concept à son bureau, en 3D" width="900" height="1125" loading="lazy" decoding="async" data-par="1"></div><figcaption class="mono">Nikita Concept · l’agence</figcaption></figure>
-      <div class="blk rv"><p class="mono n">02 · La mémoire</p><h3 class="h h3">On oublie une explication. On raconte une histoire.</h3><p>Expliquez votre métier deux minutes : on hoche la tête, poliment. Le soir même, la même personne racontera à table un film vu la veille. En entier, et dans l’ordre.</p></div>
-    </div>
+  <h2 class="h big split" id="t-pr" style="margin-bottom:clamp(40px,5vw,80px)">Vos clients ne retiennent pas les vidéos. Ils retiennent les <em>histoires.</em></h2>
+  <div class="why">
+    <p class="why-t rv">Une animation montre ce qu’un discours ne fait que décrire : un service qu’on ne voit pas, un processus, un avant et un après. On suit quelqu’un qui vit le problème de vos clients, et <b>on comprend sans effort.</b> Longtemps, ce format a demandé plusieurs mois de production et un budget à cinq chiffres. <b>L’IA a changé ça, à condition de savoir s’en servir.</b> Je fais de la communication d’entreprise depuis vingt ans, et je maîtrise les outils qui produisent aujourd’hui une animation de qualité publicitaire en quelques semaines. <b>Les deux vont rarement ensemble.</b></p>
   </div>
-  <p class="prov">Textes provisoires, en attente des vôtres.</p>
 </section>
 
 <!-- La méthode -->
@@ -925,26 +923,6 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <p class="mute">Celui qui vous écoute à l’atelier est celui qui écrit et réalise votre vidéo. Si vous appelez, c’est moi qui décroche.</p>
       <p class="who-a">Studio : Business Center Actibel, Route de Louvain-la-Neuve 4, bte 19, 5001 Belgrade (Namur)<br><a href="tel:+32475226124">+32 475 22 61 24</a> · <a href="mailto:ludovic@sayki.studio">ludovic@sayki.studio</a></p>
     </div>
-  </div>
-</section>
-
-<!-- Ce que vous recevez -->
-<section class="recv" id="contenu" aria-labelledby="t-rc">
-  <div class="recv-in">
-    <div class="wrap">
-      <h2 class="lab mono" id="t-rc">Ce que vous recevez</h2>
-    </div>
-    <ol class="track wrap" id="track">
-      <li class="frame" style="--i:0"><span class="n" aria-hidden="true">1</span><h3>Une phrase</h3><p>Votre offre tient en une phrase. On la trouve ensemble, à l’atelier.</p><p class="val">Elle est à vous, même si on s’arrête là.</p></li>
-      <li class="frame" style="--i:1"><span class="n" aria-hidden="true">2</span><h3>Une histoire</h3><p>J’écris le scénario et la voix off. Vous n’écrivez rien : vous avez déjà un métier.</p><p class="val">Livrable : le script validé.</p></li>
-      <li class="frame" style="--i:2"><span class="n" aria-hidden="true">3</span><h3>Un héros</h3><p>Un héros en 3D et jusqu’à six personnages, tous inventés pour vous. Je ne les réutilise pour personne d’autre.</p><p class="val">Livrable : la fiche de chaque personnage, de face, de profil, de dos.</p></li>
-      <li class="frame" style="--i:3"><span class="n" aria-hidden="true">4</span><h3>Votre monde</h3><p>Votre interface, vos produits, vos véhicules, vos lieux. Reconnaissables, à vos couleurs.</p><p class="val">Une demi-journée de photos chez vous.</p></li>
-      <li class="frame" style="--i:4"><span class="n" aria-hidden="true">5</span><h3>La vidéo</h3><p>De 60 à 90 secondes, avec voix, musique et son. Sous-titrée dans votre langue.</p><p class="val">Livrable : une version avec sous-titres, une sans.</p></li>
-      <li class="frame" style="--i:5"><span class="n" aria-hidden="true">6</span><h3>Tous vos écrans</h3><p>À l’horizontale pour votre site, à la verticale pour les réseaux, au carré pour LinkedIn.</p><p class="val">Livrable : masters 16:9, 9:16 et 1:1.</p></li>
-      <li class="frame" style="--i:6"><span class="n" aria-hidden="true">7</span><h3>Le kit de lancement</h3><p>Une vignette, trois images HD, dix endroits où mettre votre vidéo. Le tiroir n’est pas dans la liste.</p><p class="val">Livrable : le kit, prêt à publier.</p></li>
-      <li class="frame" style="--i:7"><span class="n" aria-hidden="true">8</span><h3>Les droits</h3><p>La cession écrite, et la liste des outils. Oui, il y a de l’IA : je m’en explique <a class="lnk" href="#question-ia">dans les questions</a>.</p><p class="val">Livrable : le dossier droits et IA.</p></li>
-    </ol>
-    <div class="wrap recv-x" aria-hidden="true"><div class="recv-bar"><i id="recvBar"></i></div></div>
   </div>
 </section>
 
@@ -1188,9 +1166,9 @@ $$('a[href="#option-univers"]').forEach(a=>a.addEventListener('click',e=>{ e.pre
   $$('a',m).forEach(a=>a.addEventListener('click',()=>set(false)));
   addEventListener('keydown',e=>{ if(e.key==='Escape'&&!m.hidden){ set(false); btn.focus(); } }); })();
 /* en-tête : se pose au défilement, passe au sombre sur le mauve */
-(function(){ const hd=$('#hd'), darks=$$('[data-dark]'), recv=$('#contenu'); let raf=0;
+(function(){ const hd=$('#hd'), darks=$$('[data-dark]'); let raf=0;
   const upd=()=>{ raf=0; hd.classList.toggle('sc-on',scrollY>10); const y=34;
-    const list=innerWidth<900?[...darks,recv]:darks;
+    const list=darks;
     hd.classList.toggle('dark',list.some(s=>{ const r=s.getBoundingClientRect(); return r.top<=y&&r.bottom>=y; })); };
   addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(upd); },{passive:true}); addEventListener('resize',upd); upd(); })();
 
@@ -1397,32 +1375,6 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('is-in'))
 /* ---------- vidéos d'ambiance : seulement quand on les voit ---------- */
 $$('#reel,[data-lazyplay]').forEach(v=>{ if(RM){ v.removeAttribute('autoplay'); v.pause(); return; }
   new IntersectionObserver(es=>{ if(es[0].isIntersecting){ v.play().catch(()=>{}); } else v.pause(); },{threshold:.15}).observe(v); });
-
-/* ---------- ce que vous recevez : la bande défile à l'horizontale (grand écran) ---------- */
-const recv=$('#contenu'), recvIn=$('.recv-in'), track_=$('#track'), recvBar=$('#recvBar');
-let H_ON=false, extra=0;
-function setupH(){ H_ON=!RM&&innerWidth>=900; root.classList.toggle('h-on',H_ON);
-  if(H_ON){ track_.style.transform=''; extra=Math.max(0,track_.scrollWidth-innerWidth); recv.style.setProperty('--h',(innerHeight+extra)+'px'); }
-  else { recv.style.removeProperty('--h'); track_.style.transform=''; } }
-/* mobile : la carte recouverte recule un peu quand la suivante arrive */
-const cards=$$('.frame',track_);
-function stack(){ if(innerWidth>=900){ cards.forEach(c=>{c.style.transform='';c.style.filter='';}); return; }
-  for(let i=0;i<cards.length;i++){ const c=cards[i], n=cards[i+1]; if(!n){ c.style.transform=''; c.style.filter=''; continue; }
-    const a=c.getBoundingClientRect(), b=n.getBoundingClientRect(), k=clamp(1-(b.top-a.top)/Math.max(1,a.height),0,1);
-    c.style.transform=k?`scale(${(1-0.06*k).toFixed(4)})`:''; c.style.filter=k?`brightness(${(1-0.3*k).toFixed(3)})`:''; } }
-function onScroll(){
-  if(H_ON){ const r=recv.getBoundingClientRect(), span=r.height-innerHeight, p=span>0?clamp(-r.top/span,0,1):0;
-    track_.style.transform=`translate3d(${(-p*extra).toFixed(1)}px,0,0)`; recvBar.style.transform=`scaleX(${p.toFixed(4)})`; }
-  else stack();
-  par();
-}
-/* légère profondeur sur les photos du principe */
-const pars=$$('[data-par]');
-function par(){ if(RM) return; pars.forEach(img=>{ const r=img.parentElement.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) return;
-  const p=(r.top+r.height/2-innerHeight/2)/innerHeight; img.style.transform=`translate3d(0,${(-7-p*7).toFixed(2)}%,0)`; }); }
-let sraf=0; addEventListener('scroll',()=>{ if(!sraf) sraf=requestAnimationFrame(()=>{ sraf=0; onScroll(); }); },{passive:true});
-addEventListener('resize',()=>{ setupH(); onScroll(); });
-setupH(); onScroll(); if(document.fonts) document.fonts.ready.then(()=>{ setupH(); onScroll(); });
 
 /* ---------- curseur, boutons aimantés, image au survol de la méthode ---------- */
 if(FINE&&!RM){
