@@ -175,7 +175,8 @@ img,video{display:block;max-width:100%}
 .pl-err{position:absolute;left:16px;right:16px;bottom:16px;margin:0;padding:12px 14px;border-radius:8px;background:rgba(21,10,38,.85);font-size:14px}
 .pl-err a{color:#fff;text-decoration:underline}
 .case b{font-family:var(--f-head);font-weight:400;font-size:22px;letter-spacing:-.03em}
-.case p{grid-column:1/-1;margin:6px 0 0;color:var(--mute);font-size:15px}
+.case p{grid-column:1/-1;margin:8px 0 0;color:var(--mute);font-size:15px;line-height:1.55;max-width:62ch}
+.case p.use{margin-top:12px;font-size:10.5px;letter-spacing:.05em;color:var(--violet-d);line-height:1.6}
 .case-t{display:grid;grid-template-columns:1fr auto;gap:0 16px;padding-top:16px}
 .case-t .mono{color:var(--mute);align-self:baseline}
 .ex-note{margin:clamp(22px,2.4vw,32px) 0 0;color:var(--soft);font-size:13px}
@@ -646,21 +647,21 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <!-- Exemples -->
 <section class="sec wrap" id="exemples" aria-labelledby="t-ex">
   <p class="lab mono">Exemples de réalisation</p>
-  <div class="sh"><h2 class="h h2 split" id="t-ex">Deux métiers, <em>deux histoires.</em></h2><p class="sh-d">Toutes deux dans le style maison. C’est celui de votre vidéo.</p></div>
+  <div class="sh"><h2 class="h h2 split" id="t-ex">Vidéos <em>explicatives.</em></h2></div>
   <div class="ex">
     <figure class="case rv">
       <div class="player" data-film="nikita" data-bunny="" data-mp4="/assets/fe-nikita.mp4" data-page="https://sayki.studio/" data-cursor="Lecture">
         <img src="/assets/fe-nikita.jpg" alt="L’équipe de Nikita Concept en personnages 3D" width="1600" height="900" loading="lazy" decoding="async">
         <button class="pl-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Voir la vidéo</button>
       </div>
-      <figcaption class="case-t"><b>Nikita Concept</b><span class="mono">Présentation · 1:33</span><p>Une agence de communication présente son équipe et sa façon de travailler.</p></figcaption>
+      <figcaption class="case-t"><b>Nikita Concept</b><span class="mono">1:33</span><p>Nikita Concept est une agence de communication. Son défi : expliquer à quoi sert une agence quand tout le monde peut produire une image avec l’IA. La vidéo part du problème de ses clients et montre comment la méthode de Nikita le résout.</p><p class="use mono">Utilisée en réunion de démarchage, sur le site, sur les réseaux sociaux et dans les e-mails de prospection</p></figcaption>
     </figure>
     <figure class="case rv" style="transition-delay:.12s">
       <div class="player" data-film="mint" data-bunny="6b06c60f-0321-4702-9ba7-c2982a9e3181" data-page="https://sayki.studio/films/mint-dentistes/" data-cursor="Lecture">
         <img src="/assets/vocli.jpg" alt="Pierre, le dentiste de la vidéo Mint Dentistes" width="1280" height="720" loading="lazy" decoding="async">
         <button class="pl-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Voir la vidéo</button>
       </div>
-      <figcaption class="case-t"><b>Mint Dentistes</b><span class="mono">Explicative · 1:30</span><p>Pensée pour ouvrir les rendez-vous de prospection.</p></figcaption>
+      <figcaption class="case-t"><b>Mint Dentistes</b><span class="mono">1:30</span><p>Mint Dentistes est un réseau de cliniques dentaires adossé à un centre de services, à Gembloux. Son métier : décharger les dentistes indépendants de tout ce qui leur bouffe le quotidien. La vidéo montre comment ce quotidien change grâce à ses services.</p><p class="use mono">Utilisée en réunion de démarchage, sur le site et dans les e-mails de prospection</p></figcaption>
     </figure>
   </div>
   <p class="ex-note">Ces deux vidéos montrent de vraies personnes, en option. La vidéo de base n’a que des personnages inventés.</p>
@@ -940,7 +941,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
           <div class="field full"><label for="rsEch">Votre échéance (facultatif)</label><span class="help" id="rsEchH">Un salon, un lancement, une date à tenir.</span><input id="rsEch" name="echeance" type="date" aria-describedby="rsEchH" style="max-width:240px"></div>
           <div class="field full"><label for="rsDesc">Ce que vous faites, en deux lignes (facultatif)</label><span class="help" id="rsDescH">Le reste, on le voit à l’atelier.</span><textarea id="rsDesc" name="desc" rows="3" aria-describedby="rsDescH rsDescC" data-max="300"></textarea><span class="cnt" id="rsDescC">0 / 300</span></div>
         </div>
-        <div class="hp" aria-hidden="true"><label>Ne pas remplir <input name="site" tabindex="-1" autocomplete="off"></label></div>
+        <div class="hp" aria-hidden="true"><label>Ne pas remplir <input name="fax" tabindex="-1" autocomplete="off"></label></div>
         <div class="fsend"><button class="btn" type="submit">Envoyer ma réservation</button><p>La commande devient ferme quand vous signez le bon de commande. Votre créneau est tenu trois jours ouvrables.</p></div>
         <p class="ferr" id="rsErr" role="alert" hidden></p>
         <p class="priv">Sayki Studio SRL se sert de ces informations pour vous répondre et préparer votre bon de commande. Rien d’autre : aucune lettre d’information, aucune revente. Voir la <a href="/mentions-legales/">politique de confidentialité</a>.</p>
@@ -955,14 +956,16 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="idT">
     <div id="idBody">
       <div class="sheet-h"><h2 class="h" id="idT">Recevoir une idée, gratuitement</h2><button type="button" class="x" data-close>Fermer</button></div>
-      <p class="intro">Trois lignes à remplir. Je vous réponds par e-mail avec l’idée de votre vidéo, en trois phrases, sous deux jours ouvrables.</p>
+      <p class="intro">Quelques lignes à remplir. Je vous réponds par e-mail avec l’idée de votre vidéo, en trois phrases, sous deux jours ouvrables.</p>
       <form id="idForm" novalidate>
         <div class="fgrid">
+          <div class="field"><label for="idNom">Prénom et nom</label><span class="help" id="idNomH">Pour savoir à qui je réponds.</span><input id="idNom" aria-describedby="idNomH" name="nom" autocomplete="name" data-min="2" data-max="80" required></div>
+          <div class="field"><label for="idWeb">Votre site</label><span class="help" id="idWebH">Pour aller voir ce que vous faites.</span><input id="idWeb" name="web" type="text" inputmode="url" autocomplete="url" placeholder="votresite.be" aria-describedby="idWebH" required></div>
           <div class="field full"><label for="idQuoi">Ce que vous faites, en deux phrases</label><span class="help" id="idQuoiH">Comme vous le diriez à un voisin. Inutile de soigner.</span><textarea id="idQuoi" name="quoi" rows="4" aria-describedby="idQuoiH idQuoiC" data-min="20" data-max="500" required></textarea><span class="cnt" id="idQuoiC">0 / 500</span></div>
           <div class="field full"><label for="idQui">À qui vous devez l’expliquer</label><span class="help" id="idQuiH">Des propriétaires qui rénovent, des responsables de PME, les habitants d’une commune…</span><input id="idQui" name="qui" aria-describedby="idQuiH" data-min="3" data-max="200" required></div>
           <div class="field full"><label for="idMail">Votre e-mail</label><input id="idMail" name="email" type="email" autocomplete="email" required></div>
         </div>
-        <div class="hp" aria-hidden="true"><label>Ne pas remplir <input name="site" tabindex="-1" autocomplete="off"></label></div>
+        <div class="hp" aria-hidden="true"><label>Ne pas remplir <input name="fax" tabindex="-1" autocomplete="off"></label></div>
         <div class="fsend"><button class="btn" type="submit">Recevoir mon idée</button><p>Gratuit, sans engagement, sans relance automatique.</p></div>
         <p class="ferr" id="idErr" role="alert" hidden></p>
         <p class="priv">Sayki Studio SRL se sert de ces trois réponses pour écrire votre idée et vous l’envoyer. Rien d’autre. Voir la <a href="/mentions-legales/">politique de confidentialité</a>.</p>
@@ -1141,6 +1144,8 @@ const MSG={
   rsTel:{bad:'Ce numéro semble incomplet. Exemple : 0475 12 34 56'},
   rsEch:{bad:'Cette date est déjà passée.'},
   rsDesc:{long:'C’est un peu long : 300 caractères au maximum.'},
+  idNom:{empty:'Il me manque votre nom.',short:'Il me manque votre nom.'},
+  idWeb:{empty:'Il me manque l’adresse de votre site. Pas de site ? Écrivez « aucun ».',bad:'Cette adresse semble incomplète. Exemple : votresite.be'},
   idQuoi:{empty:'Dites-moi en deux phrases ce que vous faites. C’est tout ce qu’il me faut pour chercher.',short:'C’est un peu court pour trouver une idée. Ajoutez une phrase.',long:'C’est un peu long : 500 caractères au maximum.'},
   idQui:{empty:'Dites-moi à qui vous devez l’expliquer. L’idée change selon la personne qui regarde.',short:'Dites-moi à qui vous devez l’expliquer. L’idée change selon la personne qui regarde.',long:'C’est un peu long : 200 caractères au maximum.'},
   idMail:{empty:'Il me manque votre e-mail. C’est par là que l’idée arrive.',bad:'Cette adresse semble incomplète. Exemple : prenom@societe.be'}
@@ -1150,6 +1155,7 @@ function check(el){
   if(!v){ if(el.required) k='empty'; }
   else if(el.type==='email'){ if(!MAILRE.test(v)) k='bad'; }
   else if(el.type==='tel'){ const d=v.replace(/\D/g,''); if(d.length<8||d.length>15) k='bad'; }
+  else if(el.id==='idWeb'){ if(!/^aucun$/i.test(v)&&!/^(https?:\/\/)?[^\s.\/]+(\.[^\s.\/]+)+(\/\S*)?$/i.test(v)) k='bad'; }
   else if(el.type==='date'){ const m_=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v); if(!m_||new Date(Date.UTC(+m_[1],+m_[2]-1,+m_[3]))<today()) k='bad'; }
   else if(max&&v.length>max) k='long';
   else if(min&&v.length<min) k='short';
@@ -1161,9 +1167,9 @@ function check(el){
   return !k;
 }
 const counter=(el,out)=>{ const n=el.value.length, max=+el.dataset.max; out.textContent=`${n} / ${max}`; out.style.color=n>max?'#B42318':''; };
-function wire(form){ $$('input:not([name="site"]),textarea',form).forEach(el=>{ el.addEventListener('blur',()=>{ if(el.value||el.dataset.touched) check(el); el.dataset.touched=1; });
+function wire(form){ $$('input:not([name="fax"]),textarea',form).forEach(el=>{ el.addEventListener('blur',()=>{ if(el.value||el.dataset.touched) check(el); el.dataset.touched=1; });
   el.addEventListener('input',()=>{ if(el.closest('.field').classList.contains('bad')) check(el); }); }); }
-function validate(form){ const bad=$$('input:not([name="site"]),textarea',form).filter(el=>!check(el));
+function validate(form){ const bad=$$('input:not([name="fax"]),textarea',form).filter(el=>!check(el));
   if(bad.length){ bad[0].focus(); say(bad.length===1?'1 champ à corriger.':`${bad.length} champs à corriger.`); return false; } return true; }
 const lastSent={};
 async function send(kind,data,btn,errEl,label){
@@ -1192,7 +1198,7 @@ function mine(){ const t=total();
   $('#rsEdit').addEventListener('click',()=>{ closeModal($('#reserver')); $('#calc').scrollIntoView({behavior:smooth,block:'start'}); setTimeout(()=>boxes[0].focus({preventScroll:true}),RM?0:700); }); }
 async function rsSubmit(e){ if(e) e.preventDefault(); if(!validate(rsForm)) return;
   const f=new FormData(rsForm), t=total();
-  const data={nom:f.get('nom').trim(),societe:f.get('societe').trim(),email:f.get('email').trim(),tel:f.get('tel').trim(),echeance:f.get('echeance'),desc:f.get('desc').trim(),site:f.get('site'),options:ORDER.filter(k=>st.o[k]),personnes:st.ppl,total:t};
+  const data={nom:f.get('nom').trim(),societe:f.get('societe').trim(),email:f.get('email').trim(),tel:f.get('tel').trim(),echeance:f.get('echeance'),desc:f.get('desc').trim(),fax:f.get('fax'),options:ORDER.filter(k=>st.o[k]),personnes:st.ppl,total:t};
   const btn=$('button[type="submit"]',rsForm), res=await send('reserver',data,btn,rsErr,'Envoyer ma réservation');
   if(!res.ok){ if(res.err==='prix'){ render(true); mine(); } failMsg(rsErr,res,rsSubmit,'réservation'); return; }
   track('reserver_envoye',{total:t,options:data.options.join(',')||'aucune','15_jours':st.o.j15?'oui':'non',echeance:data.echeance?'oui':'non'});
@@ -1206,7 +1212,7 @@ rsForm.addEventListener('submit',rsSubmit);
 const idForm=$('#idForm'), idErr=$('#idErr'); wire(idForm);
 const idQuoi=$('#idQuoi'); idQuoi.addEventListener('input',()=>counter(idQuoi,$('#idQuoiC')));
 async function idSubmit(e){ if(e) e.preventDefault(); if(!validate(idForm)) return;
-  const f=new FormData(idForm); const data={quoi:f.get('quoi').trim(),qui:f.get('qui').trim(),email:f.get('email').trim(),site:f.get('site'),entree:idEntry};
+  const f=new FormData(idForm); const data={nom:f.get('nom').trim(),web:f.get('web').trim(),quoi:f.get('quoi').trim(),qui:f.get('qui').trim(),email:f.get('email').trim(),fax:f.get('fax'),entree:idEntry};
   const btn=$('button[type="submit"]',idForm), res=await send('idee',data,btn,idErr,'Recevoir mon idée');
   if(!res.ok){ failMsg(idErr,res,idSubmit,'idée'); return; }
   track('idee_envoyee',{point_entree:idEntry});
