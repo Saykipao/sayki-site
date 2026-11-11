@@ -682,6 +682,19 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 .rdv-path li b{font-weight:500}
 .rdv-path li span{color:var(--mute);max-width:40ch}
 .rdv-t p.mono{font-size:12px;line-height:1.4}
+
+/* avis : la vidéo, ce qu'on en fait, ce qu'on en dit */
+.pv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,1.6vw,24px)}
+.pv-c{margin:0;display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line)}
+.pv-c .player{border-radius:0!important}
+.pv-b{flex:1;display:flex;flex-direction:column;padding:clamp(22px,2.2vw,34px)}
+.pv-k{margin:0 0 10px;color:var(--violet-d)}
+.pv-u{margin:0 0 22px;font-family:var(--f-head);font-size:clamp(24px,2.2vw,34px);line-height:1.08;letter-spacing:-.035em;text-wrap:balance}
+.pv-c blockquote{margin:0 0 26px;flex:1}
+.pv-c blockquote p{margin:0;font-size:clamp(15.5px,1.1vw,17px);line-height:1.6;color:var(--mute)}
+.pv-c blockquote p::before{content:"“";color:var(--violet)}
+.pv-c blockquote p::after{content:"”";color:var(--violet)}
+@media (max-width:760px){.pv{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -939,12 +952,57 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <!-- Avis -->
 <section class="sec wrap" id="avis" aria-labelledby="t-av">
   <p class="lab mono">Clients</p>
-  <div class="pr-hd"><h2 class="h h2 split" id="t-av">Ils le disent <em>mieux</em> que moi.</h2>
-    <div class="pr-nav"><p class="pr-count mono"><b id="prTot">07</b> avis</p>
-      <button class="pr-btn" id="prPrev" type="button" aria-label="Avis précédent"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <button class="pr-btn" id="prNext" type="button" aria-label="Avis suivant"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
-  <div class="pr-track" id="prTrack" tabindex="0" aria-label="Avis clients, faites défiler horizontalement"></div>
-  <div class="pr-bar" aria-hidden="true"><i id="prBar"></i></div>
+  <div class="sh"><h2 class="h h2 split" id="t-av">Ils le disent <em>mieux</em> que moi.</h2><p class="sh-d">Ce qu’ils en pensent. Et surtout, ce qu’ils en font.</p></div>
+  <div class="pv">
+    <figure class="pv-c rv">
+      <div class="player" data-film="av-mint-dentistes" data-bunny="6b06c60f-0321-4702-9ba7-c2982a9e3181" data-page="https://sayki.studio/films/mint-dentistes/" data-cursor="Lecture">
+        <img src="/assets/av-mint.jpg" alt="Un dentiste débordé, tard le soir, devant son ordinateur" width="1280" height="720" loading="lazy" decoding="async">
+        <button class="pl-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Voir la vidéo</button>
+      </div>
+      <div class="pv-b">
+        <p class="pv-k mono">Où elle sert</p>
+        <p class="pv-u">Avant chaque réunion client.</p>
+        <blockquote><p>J’ai déjà montré la vidéo à beaucoup de personnes en interne. Tout le monde est bluffé du résultat ! Je suis donc convaincu que cela pourra générer d’autres collaborations. Merci beaucoup, top résultat !</p></blockquote>
+        <figcaption class="pr-foot"><span class="pr-m"><span class="pr-av" aria-hidden="true"><img src="/assets/temoin-vocli.jpg" alt="" loading="lazy" decoding="async"></span><span class="pr-who"><b>Grégory Vanhamme</b><span>Fondateur & CEO · VOCLIdental</span></span></span></figcaption>
+      </div>
+    </figure>
+    <figure class="pv-c rv" style="transition-delay:.1s">
+      <div class="player" data-film="av-arkopharma-le-pharmacien" data-bunny="82f063a6-0ec2-46ed-844b-498faf2ad51c" data-page="https://sayki.studio/films/arkopharma-le-pharmacien/" data-cursor="Lecture">
+        <img src="/assets/av-arko.jpg" alt="Un homme trempé par la pluie, l’air inquiet" width="1280" height="720" loading="lazy" decoding="async">
+        <button class="pl-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Voir la vidéo</button>
+      </div>
+      <div class="pv-b">
+        <p class="pv-k mono">Où elle sert</p>
+        <p class="pv-u">Par les représentants Arkopharma, en officine.</p>
+        <blockquote><p>Merci encore pour cet excellent travail ! Cette vidéo sera à coup sûr un succès.</p></blockquote>
+        <figcaption class="pr-foot"><span class="pr-m"><span class="pr-av" aria-hidden="true"><img src="/assets/temoin-arkopharma.jpg" alt="" loading="lazy" decoding="async"></span><span class="pr-who"><b>Christel Fosset</b><span>Marketing & Digital Manager · Arkopharma</span></span></span></figcaption>
+      </div>
+    </figure>
+    <figure class="pv-c rv">
+      <div class="player" data-film="av-arkopharma-espagne" data-bunny="d269fd23-a063-442b-b91a-8db04e9b5917" data-page="https://sayki.studio/films/arkopharma-espagne/" data-cursor="Lecture">
+        <img src="/assets/av-arkoesp.jpg" alt="Une pharmacienne dans une rue ensoleillée" width="1280" height="720" loading="lazy" decoding="async">
+        <button class="pl-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Voir la vidéo</button>
+      </div>
+      <div class="pv-b">
+        <p class="pv-k mono">Où elle sert</p>
+        <p class="pv-u">Par les représentants Arkopharma España, en officine.</p>
+        <blockquote><p>Thank you Ludovic, it’s incredible. Such a great work ! En plus de l’espagnol et de l’anglais, nous allons réaliser les versions catalane et française.</p></blockquote>
+        <figcaption class="pr-foot"><span class="pr-m"><span class="pr-av" aria-hidden="true"><img src="/assets/temoin-arkoesp.jpg" alt="" loading="lazy" decoding="async"></span><span class="pr-who"><b>Olivier Ricq</b><span>Directeur général · Arkopharma España</span></span></span></figcaption>
+      </div>
+    </figure>
+    <figure class="pv-c rv" style="transition-delay:.1s">
+      <div class="player" data-film="av-pharmacie-smits" data-bunny="559c809b-78c2-4a31-ab45-28ac6ec1e816" data-page="https://sayki.studio/films/pharmacie-smits/" data-cursor="Lecture">
+        <img src="/assets/av-smits.jpg" alt="L’ours pharmacien de la Pharmacie Smits" width="1280" height="720" loading="lazy" decoding="async">
+        <button class="pl-go" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Voir la vidéo</button>
+      </div>
+      <div class="pv-b">
+        <p class="pv-k mono">Où elle sert</p>
+        <p class="pv-u">Sur tous les écrans des pharmacies Smits, et sur les réseaux.</p>
+        <blockquote><p>Je suis content. Merci pour ce beau travail !</p></blockquote>
+        <figcaption class="pr-foot"><span class="pr-m"><span class="pr-av" aria-hidden="true">GS</span><span class="pr-who"><b>Gilles Smits</b><span>CEO · Pharmacie Smits</span></span></span></figcaption>
+      </div>
+    </figure>
+  </div>
 </section>
 
 <!-- Qui -->
@@ -1330,35 +1388,7 @@ mq.innerHTML=(CLIENTS.map(c=>`<span>${c}<i aria-hidden="true">·</i></span>`).jo
 })();
 
 /* ---------- avis : ceux du site ---------- */
-const PROOFS=[
-  {q:'J’ai déjà montré la vidéo à beaucoup de personnes en interne. Tout le monde est bluffé du résultat ! Je suis donc convaincu que cela pourra générer d’autres collaborations. Merci beaucoup, top résultat !',name:'Grégory Vanhamme',role:'Fondateur & CEO',co:'VOCLIdental',photo:'assets/temoin-vocli.jpg',film:'vocli'},
-  {q:'La vidéo a un succès dingue, de « émouvant » à « bluffant »… Trop chouette !',name:'Baudouin',role:'Invitation privée',co:'',photo:'assets/temoin-baudouin.jpg',film:'baudouin'},
-  {q:'Merci encore pour cet excellent travail ! Cette vidéo sera à coup sûr un succès.',name:'Christel Fosset',role:'Marketing & Digital Manager',co:'Arkopharma',photo:'assets/temoin-arkopharma.jpg',film:'arkopharma'},
-  {q:'J’aime beaucoup ce dark teal, avec le jaune c’est tellement fort. Des couleurs qu’on ne voit pas dans la concurrence. Merci beaucoup, j’aime beaucoup le résultat.',name:'Mohamed Arbai',role:'CEO',co:'La Forge',photo:'assets/temoin-laforge.jpg',film:'laforge'},
-  {q:'Thank you Ludovic, it’s incredible. Such a great work ! En plus de l’espagnol et de l’anglais, nous allons réaliser les versions catalane et française.',name:'Olivier Ricq',role:'Directeur général',co:'Arkopharma España',photo:'assets/temoin-arkoesp.jpg',film:'arkoesp'},
-  {q:'C’est super !',name:'Jean-Luc Oosters',role:'Cofondateur',co:'FID-Manager',photo:'assets/temoin-fid.jpg',film:'fid'},
-  {q:'Je suis content. Merci pour ce beau travail !',name:'Gilles Smits',role:'CEO',co:'Pharmacie Smits',photo:'',film:'smits'}
-];
 const SLUG={supercan:'supercan',aurobindo:'aurobindo',vocli:'mint-dentistes',bwplus:'bw-plus',elba:'elba',delforge:'guy-delforge',laforge:'la-forge',fid:'fid-manager',arkoesp:'arkopharma-espagne',smits:'pharmacie-smits',arkopharma:'arkopharma-le-pharmacien',baudouin:'invitation-privee',rall:'rall',sorcery:'sorcery-systems',loophole:'the-loop-hole-project',sayki:'sayki-serie',sayki2:'sayki-clip',disney:'disney-a-la-maison',ikari:'ikari',ascension:'l-ascension',iam:'iam',reveal:'sayki-reveal'};
-(function(){
-  const tr=$('#prTrack'), bar=$('#prBar'), prev=$('#prPrev'), next=$('#prNext');
-  $('#prTot').textContent=String(PROOFS.length).padStart(2,'0');
-  PROOFS.forEach(p=>{
-    const ini=p.name.split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
-    const c=document.createElement('figure'); c.className='pr-card';
-    c.innerHTML=`<blockquote><p>${p.q}</p></blockquote><figcaption class="pr-foot"><span class="pr-m"><span class="pr-av" aria-hidden="true">${p.photo?`<img src="/${p.photo}" alt="" loading="lazy" decoding="async">`:ini}</span><span class="pr-who"><b>${p.name}</b><span>${[p.role,p.co].filter(Boolean).join(' · ')}</span></span></span>`
-      +(p.film&&SLUG[p.film]?`<a class="pr-film" href="/films/${SLUG[p.film]}/" target="_blank" rel="noopener">La vidéo →</a>`:'')+`</figcaption>`;
-    tr.appendChild(c);
-  });
-  const cards=$$('.pr-card',tr);
-  function upd(){ const max=tr.scrollWidth-tr.clientWidth, r=max>0?tr.scrollLeft/max:0, w=Math.min(100,tr.clientWidth/tr.scrollWidth*100);
-    bar.style.width=w+'%'; bar.style.transform=`translateX(${(r*(100/w-1))*100}%)`; prev.disabled=tr.scrollLeft<4; next.disabled=tr.scrollLeft>max-4; }
-  const step=d=>tr.scrollBy({left:d*(cards[0].getBoundingClientRect().width+parseFloat(getComputedStyle(tr).columnGap||0)),behavior:smooth});
-  prev.addEventListener('click',()=>step(-1)); next.addEventListener('click',()=>step(1));
-  tr.addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd);
-  tr.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'){e.preventDefault();step(1);} if(e.key==='ArrowLeft'){e.preventDefault();step(-1);} });
-  upd();
-})();
 
 /* ---------- textes qui roulent, lettres qui montent ---------- */
 function splitRoll(text){ const g=document.createElement('span'); g.className='roll-g'; g.setAttribute('aria-hidden','true'); let i=0;
