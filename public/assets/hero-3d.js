@@ -16,8 +16,9 @@ const DUR=90.6;
 const ACTS=[
   {a:0,b:10,d:'10 s',n:'hook',h:.14,c:C.vio,t:'La question qui fait lever la tête.',l:['Quelques secondes, avant qu’on décroche.','Une question que votre client se pose déjà.']},
   {a:10,b:40,d:'30 s',n:'problème',h:.24,c:C.lav,t:'Le quotidien de votre client, tel quel.',l:['Il s’y reconnaît, alors il reste.','On parle de lui avant de parler de vous.']},
-  {a:40,b:80,d:'40 s',n:'solution',h:.36,c:C.mid,t:'Votre service entre en scène.',l:['Ce que vous faites, montré, pas récité.','Une étape à la fois, sans jargon.']},
-  {a:80,b:DUR,d:'10 s',n:'expertise',h:.5,c:C.white,t:'Pourquoi vous, et pas un autre.',l:['Vos preuves : années, clients, méthode.','Et la suite : on vous appelle.']}];
+  {a:40,b:58,d:'18 s',n:'solution',h:.36,c:C.mid,t:'Votre service entre en scène.',l:['Ce que vous faites, montré, pas récité.','Une étape à la fois, sans jargon.']},
+  {a:58,b:75,d:'17 s',n:'expertise',h:.48,c:C.white,t:'Pourquoi vous, et pas un autre.',l:['Vos preuves : années, clients, méthode.','Et la suite : on vous appelle.']},
+  {a:75,b:DUR,d:'15 s',n:'cta',h:.6,c:C.vio,t:'La suite : on vous appelle.',l:['Une seule chose à faire.','Et une envie de la faire.']}];
 
 try{ await document.fonts.load('500 40px "Geist Mono"'); }catch(e){}
 let R; try{ R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true}); }catch(e){ root.classList.add('no-hero-gl'); throw e; }
@@ -119,8 +120,8 @@ const tcSet=()=>{};
 /* les quatre temps */
 const blocks=ACTS.map((A,i)=>{ const w=X(A.b)-X(A.a)-.04, m=box(w,A.h,.5,A.c,A.c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
   m.castShadow=false; m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); tl.add(m);
-  const l=label(A.n,.12,{color:i===0?VIO:GREY}); l.position.set(X(A.a)+.02,TY+.002,.43); tl.add(l);
-  const n=label(A.d,.085,{color:i===0?VIO:GREY}); n.position.set(X(A.a)+.02,TY+.002,.56); tl.add(n); return m; });
+  const l=label(A.n,.12,{color:A.c===C.vio?VIO:GREY}); l.position.set(X(A.a)+.02,TY+.002,.43); tl.add(l);
+  const n=label(A.d,.085,{color:A.c===C.vio?VIO:GREY}); n.position.set(X(A.a)+.02,TY+.002,.56); tl.add(n); return m; });
 /* tête de lecture */
 const sh=new THREE.Group();
 const veil=new THREE.Mesh(new THREE.PlaneGeometry(.72,1),new THREE.MeshBasicMaterial({color:0xB47CFF,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
@@ -251,7 +252,7 @@ function frameFn(now){
     const on=i===ci; m.material.emissive.setHex(on||u.base?C.vio:0); m.material.emissiveIntensity=u.base?u.base:on?.12:0; });
   const vh=blocks[ci].userData.h+.3; sh.position.set(xs,TY,0); veil.scale.y=vh; edge.position.y=vh; pl.position.set(xs,TY+.004,0); pl.material.opacity=drag?.65:.45;
   knob.scale.setScalar(drag?1.25:hov?1.12:1);
-  const e=back(seg(s,DUR-11,DUR-10)), b3=blocks[3].userData; ok.scale.setScalar(nz(e)); ok.position.set(b3.x,TY+b3.h+.2+Math.sin(now/500)*.025,.1); ok.visible=e>.01;
+  const e=back(seg(s,DUR-11,DUR-10)), b3=blocks[blocks.length-1].userData; ok.scale.setScalar(nz(e)); ok.position.set(b3.x,TY+b3.h+.2+Math.sin(now/500)*.025,.1); ok.visible=e>.01;
   if(mob){ R.render(scene,cam); }
   else{
     /* zone nette : de la table au haut de l'écran ; au-delà, le flou monte doucement */
