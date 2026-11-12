@@ -891,7 +891,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <video muted loop playsinline preload="none" data-src="assets/fid.mp4"></video>
     </div>
     <div class="cap"><p class="mono cap-k">FID-Manager · Film pour événement</p><span class="tc mono">6 min</span><h3 class="display">La comptabilité, version blockbuster</h3></div></a></article>
-<article class="film p7" data-film="loophole" hidden><a href="/films/the-loop-hole-project/" data-open="loophole" aria-label="The Loop Hole Project, Une créature venue des abysses">
+<article class="film p7" data-film="loophole"><a href="/films/the-loop-hole-project/" data-open="loophole" aria-label="The Loop Hole Project, Une créature venue des abysses">
     <div class="media" data-cursor="Voir|le film">
       <img class="m-color" src="assets/loophole.jpg" alt="The Loop Hole Project, ip originale" loading="lazy" decoding="async">
       <img class="m-duo" src="assets/loophole-duo.jpg" alt="" loading="lazy" decoding="async">
@@ -1263,7 +1263,7 @@ const FILMS={
     defi:'Notre série d’animation. Un ado, une cassette, une ville sous la pluie. Premier épisode en préparation.'},
   sayki2:{year:'2026',t:'Sayki · clip',hook:'Le terrain, le micro et les rêves',type:'Série originale · clip',sect:'IP',client:'Sayki Studio',tc:'60 s',fmt:'9:16 · 720×1280',fps:'24 i/s',tags:['labo','ip','perso'],v:true,ht:true,
     defi:'Un deuxième extrait de la série : un ado entre le micro de sa chambre et le terrain de basket.'},
-  loophole:{year:'2026',t:'The Loop Hole Project',hook:'Une créature venue des abysses',type:'IP originale',sect:'IP',client:'Sayki Studio',tc:'20 s',fmt:'16:9 · 2560×1440',fps:'24 i/s',tags:['labo','ip','perso'],v:false,
+  loophole:{year:'2026',une:true,t:'The Loop Hole Project',hook:'Une créature venue des abysses',type:'IP originale',sect:'IP',client:'Sayki Studio',tc:'20 s',fmt:'16:9 · 2560×1440',fps:'24 i/s',tags:['labo','ip','perso'],v:false,
     defi:'Notre propre univers : une créature, son monde et ses règles, de l’idée jusqu’au teaser.'},
   ascension:{year:'2026',t:'L’ascension',hook:'Bruxelles, après la fin du monde',type:'R&D',sect:'Recherche',client:'Sayki Studio',tc:'33 s',fmt:'16:9',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'L’Atomium dans un monde d’après. Un test pour voir jusqu’où l’image peut porter l’émotion, sans tournage et sans figurants.'},
@@ -1293,7 +1293,7 @@ const grid=$('#grid');
 if(!grid.children.length) ORDER.forEach((id,idx)=>{
   const f=FILMS[id];
   const el=document.createElement('article');
-  el.className='film p'+(idx%PAGE+1); el.dataset.film=id; if(idx>=PAGE||f.tags.includes('labo')) el.hidden=true;
+  el.className='film p'+(idx%PAGE+1); el.dataset.film=id; if(idx>=PAGE||(f.tags.includes('labo')&&!f.une)) el.hidden=true;
   el.innerHTML=`<a href="/films/${SLUG[id]}/" data-open="${id}" aria-label="${f.t}, ${f.hook}">
     <div class="media${f.v&&!f.ht?' v':''}" data-cursor="Voir|le film">
       <img class="m-color" src="assets/${th(id)}.jpg" alt="${f.t}, ${f.type.toLowerCase()}" loading="lazy" decoding="async">
@@ -1509,7 +1509,8 @@ let filtering=false;
 let curF='all', limit=PAGE;
 const more=$('#more'), moreN=$('#moreN');
 /* « Tous » = le travail livré ; le Labo (IP + R&D) a son propre filtre */
-function listFor(f){ return ORDER.filter(id=>f==='all'?!FILMS[id].tags.includes('labo'):FILMS[id].tags.includes(f)); }
+/* une:true = un projet du Labo aussi montré dans « Tous » */
+function listFor(f){ return ORDER.filter(id=>f==='all'?(!FILMS[id].tags.includes('labo')||FILMS[id].une):FILMS[id].tags.includes(f)); }
 function syncMore(){ const n=listFor(curF).length-limit; more.hidden=n<=0; if(n>0) moreN.textContent='+'+n; }
 function applyFilter(f,lim){
   filtering=true; curF=f; limit=lim||PAGE;
