@@ -138,7 +138,7 @@ html.hero-gl .hx-note.on{opacity:1}
 @media (max-width:900px){html:not(.no-hero-gl) .reel-f.hx-f{aspect-ratio:1/1}html:not(.no-hero-gl) .reel figcaption{display:none}}
 /* le haut de page tient dans l'écran, la ligne des clients visible en bas (ordinateur) */
 @media (min-width:901px){
-  .hero{--rh:calc(90px + 2vw);min-height:calc(90svh - var(--rh));display:flex;flex-direction:column;padding-top:calc(68px + clamp(40px,6vh,90px));padding-bottom:clamp(20px,3vh,36px)}
+  .hero{--rh:calc(90px + 2vw);min-height:calc(100svh - var(--rh));display:flex;flex-direction:column;padding-top:calc(68px + clamp(40px,6vh,90px));padding-bottom:clamp(20px,3vh,36px)}
   .hero .h1{font-size:min(clamp(46px,7.4vw,124px),9.4vh)}
   .hero-l{gap:20px}
   .hero .br-d{display:block;height:0;overflow:hidden}
@@ -977,6 +977,29 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 .g3.w{aspect-ratio:640/400}.g3.n{aspect-ratio:460/420}
 .g3 canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .8s ease}
 .g3.ready canvas{opacity:1}
+
+/* ===== hero sombre (nov. 2026) : un beau noir, la salle éclairée seulement par l'écran ===== */
+.hero::before{background:radial-gradient(60% 55% at 72% 42%,#1A1226 0%,rgba(26,18,38,0) 70%),linear-gradient(180deg,#09070D 0%,#0D0A13 100%)!important}
+.hero{color:#F3EEF9}
+.hero .h1{color:#F3EEF9}
+.hero .h1 em{color:#B266FF}
+.hero .h1-a{font-size:.8em}
+.hero-k{color:rgba(243,238,249,.55)}
+.hero-sub{color:rgba(243,238,249,.72)}
+.hero .btn.line{color:#F3EEF9;border-color:rgba(243,238,249,.3)}
+.hero .btn.line:hover{background:#F3EEF9;color:#150A26;border-color:#F3EEF9}
+.hero .facts{border-color:rgba(243,238,249,.14)}
+.hero .facts div{border-color:rgba(243,238,249,.14)}
+.hero .facts dt{color:rgba(243,238,249,.5)}
+.hero .facts dd{color:#F3EEF9}
+.hero .facts a{border-color:rgba(243,238,249,.35)}
+@media (min-width:901px){
+  .refs{color:#F3EEF9}
+  .refs .lab{color:rgba(243,238,249,.55)}
+  .refs .marquee{border-color:rgba(243,238,249,.1)}
+  .refs .marquee-t span{color:#F3EEF9}
+  .refs .marquee-t span:nth-child(even){color:rgba(243,238,249,.38)}
+}
 </style>
 </head>
 <body>
@@ -1007,12 +1030,12 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <main id="main">
 
 <!-- Héros -->
-<section class="hero wrap" id="haut" aria-labelledby="t-hero">
+<section class="hero wrap" id="haut" aria-labelledby="t-hero" data-dark>
   <canvas class="hx-cv" aria-hidden="true"></canvas>
   <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
   <script type="module" src="/assets/hero-3d.js"></script>
   <p class="mono hero-k fade">« Et concrètement, vous faites quoi ? »</p>
-  <h1 class="h h1" id="t-hero"><span class="ln"><span style="--d:0">Ce que vous faites,</span></span><span class="ln"><span style="--d:1"><em>compris en<span class="br-d"> </span>90 secondes.</em></span></span></h1>
+  <h1 class="h h1" id="t-hero"><span class="ln"><span style="--d:0" class="h1-a">Ce que vous faites,</span></span><span class="ln"><span style="--d:1"><em>compris en<span class="br-d"> </span>90 secondes.</em></span></span></h1>
   <div class="hero-g fade">
     <div class="hero-l">
       <p class="hero-sub">Un film d’animation qui explique ce que vous faites à quelqu’un qui n’y connaît rien.</p>
@@ -1033,7 +1056,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 </section>
 
 <!-- Clients -->
-<div class="refs" aria-label="Clients et partenaires">
+<div class="refs" aria-label="Clients et partenaires" data-dark-d>
   <p class="lab mono wrap">Clients et partenaires</p>
   <div class="marquee"><div class="marquee-t" id="marquee"></div></div>
 </div>
@@ -1454,7 +1477,7 @@ $$('a[href="#option-univers"]').forEach(a=>a.addEventListener('click',e=>{ e.pre
   $$('a',m).forEach(a=>a.addEventListener('click',()=>set(false)));
   addEventListener('keydown',e=>{ if(e.key==='Escape'&&!m.hidden){ set(false); btn.focus(); } }); })();
 /* en-tête : se pose au défilement, passe au sombre sur le mauve */
-(function(){ const hd=$('#hd'), darks=$$('[data-dark]'); let raf=0;
+(function(){ const hd=$('#hd'), darks=$$('[data-dark]').concat(innerWidth>900?$$('[data-dark-d]'):[]); let raf=0;
   const upd=()=>{ raf=0; hd.classList.toggle('sc-on',scrollY>10); const y=34;
     const list=darks;
     hd.classList.toggle('dark',list.some(s=>{ const r=s.getBoundingClientRect(); return r.top<=y&&r.bottom>=y; })); };

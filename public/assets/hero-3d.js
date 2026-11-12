@@ -2,6 +2,7 @@
 // On peut faire glisser la tête de lecture ; chaque temps s'explique en deux puces.
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RectAreaLightUniformsLib} from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
 const root=document.documentElement, hero=document.querySelector('.hero'), cv=hero&&hero.querySelector('.hx-cv'), fig=hero&&hero.querySelector('.hx-f'), note=hero&&hero.querySelector('.hx-note');
 if(!cv||!fig) throw new Error('hero');
@@ -24,10 +25,11 @@ let R; try{ R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true}); }c
 R.setClearColor(0,0); R.outputColorSpace=THREE.SRGBColorSpace; R.shadowMap.enabled=true; R.shadowMap.type=THREE.PCFSoftShadowMap;
 
 const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,100);
-scene.add(new THREE.HemisphereLight(0xffffff,0xE6E3EA,2.1));
-const sun=new THREE.DirectionalLight(0xffffff,1.5); sun.position.set(-3.5,10,-1.2); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024);
+RectAreaLightUniformsLib.init();
+scene.add(new THREE.HemisphereLight(0x8A78B4,0x050308,.45));
+const sun=new THREE.DirectionalLight(0xffffff,0); sun.position.set(-3.5,10,-1.2); sun.castShadow=false; sun.shadow.mapSize.set(1024,1024);
 Object.assign(sun.shadow.camera,{left:-7,right:7,top:7,bottom:-7,near:1,far:40}); sun.shadow.bias=-.0005; sun.shadow.normalBias=.02; sun.shadow.radius=6; sun.shadow.mapSize.set(2048,2048); sun.position.set(-4,12,4); scene.add(sun);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.ShadowMaterial({opacity:.08,color:0x24212C})); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.ShadowMaterial({opacity:.3,color:0x000000})); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
 
 
 const box=(w,h,d,color,o={})=>{ const m=new THREE.Mesh(new RoundedBoxGeometry(w,h,d,3,Math.min(.03,h/2.4,w/2.4,d/2.4)),new THREE.MeshStandardMaterial({color,roughness:.5,...o})); m.castShadow=m.receiveShadow=true; return m; };
@@ -74,11 +76,11 @@ const NOI=`float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453
   float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
   float fbm(vec2 p){float v=0.,a=.5;for(int k=0;k<4;k++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}`;
 const VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}';
-const scrMat=new THREE.ShaderMaterial({uniforms:{map:{value:poster},bg:{value:new THREE.Color(0xF6F5F4)}},vertexShader:VS,
+const scrMat=new THREE.ShaderMaterial({uniforms:{map:{value:poster},bg:{value:new THREE.Color(0x0B0810)}},vertexShader:VS,
   fragmentShader:`uniform sampler2D map;uniform vec3 bg;varying vec2 vUv;
     void main(){ vec3 c=texture2D(map,vUv).rgb;
       /* un voile clair, plus fort à gauche, là où passe le titre */
-      float w=.32*(1.-smoothstep(.0,.3,vUv.x));
+      float w=.45*(1.-smoothstep(.0,.25,vUv.x));
       c=mix(c,bg,w);
       gl_FragColor=vec4(c,1.);
       #include <colorspace_fragment>
@@ -86,8 +88,8 @@ const scrMat=new THREE.ShaderMaterial({uniforms:{map:{value:poster},bg:{value:ne
 const scr=new THREE.Mesh(bend(new THREE.PlaneGeometry(SW,SH,64,1),CR),scrMat); scr.position.set(0,SY,SZ); scene.add(scr);
 
 /* halo : l'image, très floue, déborde et se diffuse dans la page */
-const HX=1.22, HY=1.5;
-const haloMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},t:{value:0}},vertexShader:VS,
+const HX=1.3, HY=1.65;
+const haloMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{map:{value:poster},t:{value:0}},vertexShader:VS,
   fragmentShader:`uniform sampler2D map;uniform float t;varying vec2 vUv;${NOI}
     void main(){ vec2 vu=(vUv-.5)*vec2(${HX.toFixed(2)},${HY.toFixed(2)})+.5;
       float w=fbm(vUv*vec2(3.,2.)+vec2(t*.05,-t*.04));
@@ -95,8 +97,8 @@ const haloMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,unifor
       vec3 c=vec3(0.); for(int i=0;i<12;i++){ float a=float(i)*.5236; c+=texture2D(map,clamp(cu+vec2(cos(a),sin(a)*1.8)*r,.0,1.)).rgb; } c/=12.;
       float d=length(max(abs(vu-.5)-.5,0.)*vec2(1.,.8));
       float a=(1.-smoothstep(.0,.1+.08*w,d))*.55;
-      float l=dot(c,vec3(.299,.587,.114)); c=mix(vec3(l),c,1.35); c=mix(c,vec3(1.),.62);
-      gl_FragColor=vec4(c,a);
+      float l=dot(c,vec3(.299,.587,.114)); c=mix(vec3(l),c,1.3);
+      gl_FragColor=vec4(c*.75,a);
       #include <colorspace_fragment>
     }`});
 const halo=new THREE.Mesh(bend(new THREE.PlaneGeometry(SW*HX,SH*HY,64,1),CR*HX),haloMat); halo.position.set(0,SY,SZ-.2); halo.renderOrder=-1; scene.add(halo);
@@ -141,20 +143,26 @@ const plant=new THREE.Group(); const pot=new THREE.Mesh(new THREE.CylinderGeomet
 [[0,.62,0,.2],[.1,.82,.05,.15],[-.09,.74,-.04,.16],[.03,.95,-.05,.12]].forEach(([x,y,z,r])=>{ const f=new THREE.Mesh(new THREE.IcosahedronGeometry(r,1),new THREE.MeshStandardMaterial({color:0xD9CCF2,roughness:.7,flatShading:true})); f.position.set(x,y,z); f.castShadow=true; plant.add(f); });
 plant.position.set(RW/2+1.05,0,-RD/2-.7); room.add(plant);
 /* le sol de la salle : une tache claire, très douce */
-const rug=pool(RW+3.4,RD+3.2,0xE9E6EE,.55); rug.position.set(0,.002,-.4); room.add(rug);
+const rug=new THREE.Object3D();
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
+const tvA=new THREE.RectAreaLight(0xffffff,3.2,SW*.95,SH*.95); tvA.position.set(0,SY,SZ+.25); tvA.lookAt(0,SY,SZ+5); scene.add(tvA);
+const tvS=new THREE.SpotLight(0xffffff,16,22,1.1,.9,1.4); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(0,0,SZ+TZ+.5); tvS.castShadow=true;
+tvS.shadow.mapSize.set(1024,1024); tvS.shadow.bias=-.002; tvS.shadow.normalBias=.04; tvS.shadow.radius=6; scene.add(tvS,tvS.target);
+const AV=document.createElement('canvas'); AV.width=8; AV.height=4; const AX=AV.getContext('2d',{willReadFrequently:true}); const tvC=new THREE.Color(0xB8A8E0), tvT=new THREE.Color(); let avN=0;
+const tvLight=()=>{ if(!vOn||(avN++%6)) return; try{ AX.drawImage(VC,0,0,8,4); const d=AX.getImageData(0,0,8,4).data; let r=0,g=0,b=0; for(let i=0;i<d.length;i+=4){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; } const n=d.length/4;
+  tvT.setRGB(r/n/255,g/n/255,b/n/255,THREE.SRGBColorSpace); tvT.lerp(new THREE.Color(1,1,1),.35); }catch(e){} };
 /* reflet : la table est laquée, l'écran s'y reflète, flou et qui s'efface vers nous */
 const SPILL=[];
-const reflMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},sx:{value:RW/SW}},vertexShader:VS,
+const reflMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{map:{value:poster},sx:{value:RW/SW}},vertexShader:VS,
   fragmentShader:`uniform sampler2D map;uniform float sx;varying vec2 vUv;
     void main(){ float d=1.-vUv.y; vec2 u=vec2(.5+(vUv.x-.5)*sx,clamp(d*.85,.0,1.)); float r=.004+d*.035;
       vec3 c=vec3(0.); for(int i=0;i<10;i++){ float a=float(i)*.628; c+=texture2D(map,clamp(u+vec2(cos(a),sin(a))*r,.0,1.)).rgb; } c/=10.;
-      float a=.5*pow(1.-d,1.3)*(1.-pow(abs(vUv.x-.5)*2.,4.));
+      float a=.55*pow(1.-d,1.3)*(1.-pow(abs(vUv.x-.5)*2.,4.));
       gl_FragColor=vec4(c,a);
       #include <colorspace_fragment>
     }`}); SPILL.push(reflMat);
 const refl=new THREE.Mesh(new THREE.PlaneGeometry(RW-.06,RD-.06),reflMat); refl.rotation.x=-Math.PI/2; refl.position.y=TH+.003; refl.renderOrder=2; room.add(refl);
-top.material.roughness=.18; top.material.metalness=.05;
+top.material.roughness=.32; top.material.metalness=0; top.material.color.set(0xE9E6EF);
 
 /* ---------- la note : ce que fait chaque temps ---------- */
 let cur=-1;
@@ -205,7 +213,7 @@ function frameFn(now){
   Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
   /* état de lecture */
   const s=FT!==null?+FT:dragS!==null?dragS:RM?DUR*.6:(vid.currentTime||0), xs=X(s), ap=eo(seg(now/1000,.2,1.2));
-  haloMat.uniforms.t.value=now/1000; grab();
+  haloMat.uniforms.t.value=now/1000; grab(); tvLight(); tvC.lerp(tvT.r+tvT.g+tvT.b>0?tvT:tvC,.06); tvA.color.copy(tvC); tvS.color.copy(tvC);
   let ci=0; ACTS.forEach((A,i)=>{ if(s>=A.a) ci=i; });
   blocks.forEach((m,i)=>{ const u=m.userData, kk=back(clamp((xs-u.st)/.25)), sy=nz(kk*ap); m.scale.set(1,sy,1); m.position.y=TY+u.h*sy/2;
     const on=i===ci; m.material.emissive.setHex(on||u.base?C.vio:0); m.material.emissiveIntensity=u.base?u.base:on?.12:0; });
