@@ -473,6 +473,19 @@ html:not(.h-on) .track{gap:8px}
 .ag-hd h2{margin:0;line-height:.95}
 .ag-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,120px);align-items:start}
 #mani2{margin:0;max-width:15ch}
+#mani3{margin:0;max-width:15ch}
+/* entreprises : la mise en page des agences, en miroir */
+@media (min-width:900px){
+  .ag-flip .ag-hd{text-align:right}
+  .ag-flip .ag-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+  .ag-flip #mani3{grid-column:2;grid-row:1;justify-self:end;text-align:right}
+  .ag-flip .ag-txt{grid-column:1;grid-row:1}
+  .ag-flip .ag-band{grid-template-columns:auto minmax(0,1fr)}
+  .ag-flip .ag-btn{grid-column:1;grid-row:1;justify-self:start}
+  .ag-flip .ag-who{grid-column:2;grid-row:1;text-align:right}
+  .ag-flip .ag-who ul{justify-content:flex-end}
+}
+@media (max-width:899px){#mani3{font-size:clamp(25px,7.3vw,44px);line-height:1.08;max-width:none}#entreprises .ag-txt p,#entreprises .ag-txt .m-fold p:first-child{border-top:0;padding:0 0 14px}}
 .ag-txt p{margin:0;padding:20px 0;border-top:1px solid rgba(243,238,249,.14);font-size:clamp(15px,1.15vw,18px);line-height:1.6;color:rgba(243,238,249,.84);max-width:46ch}
 .ag-txt>p:first-child{padding-top:0;border-top:0}
 .ag-band{margin-top:clamp(48px,6vw,104px);padding-top:clamp(28px,3vw,44px);border-top:1px solid rgba(243,238,249,.16);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:center}
@@ -798,6 +811,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
     <a class="roll" href="#films">Films</a>
     <a class="roll" href="#services">Services</a>
     <a class="roll" href="#agences">Agences</a>
+    <a class="roll" href="#entreprises">Entreprises</a>
     <a class="roll" href="#studio">Studio</a>
   </nav>
   <button class="hd-menu mono" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
@@ -811,6 +825,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
   <a class="big" href="#films">Films</a>
   <a class="big" href="#services">Services</a>
   <a class="big" href="#agences">Agences</a>
+  <a class="big" href="#entreprises">Entreprises</a>
   <a class="big" href="#studio">Studio</a>
 </div>
 
@@ -1095,6 +1110,29 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <div class="ag-band">
         <div class="ag-who"><p class="mono">Ils travaillent déjà avec moi</p><ul><li>Hilarious</li><li>Nikita Concept</li><li>Tree Agency</li><li>BeeSight</li></ul></div>
         <a class="btn ag-btn" href="mailto:ludovic@sayki.studio?subject=Prochain%20pitch">Parlons de votre prochain pitch <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="sec ag-sec ag-flip" id="entreprises" aria-labelledby="en-t">
+    <div class="wrap">
+      <div class="ag-hd"><p class="mono kicker">Entreprises et indépendants</p><h2 class="display t-xl split" id="en-t" data-glow>Pour les <em>entreprises</em></h2></div>
+      <div class="ag-grid">
+        <p class="display mani" id="mani3">Ce que vous faites,<br class="m-br"> <em>compris en 90 secondes.</em></p>
+        <div class="ag-txt">
+          <p>Vous connaissez votre métier par cœur. Vos clients, beaucoup moins. J’en fais une vidéo d’animation qu’on comprend du premier coup, même sans rien y connaître.</p>
+          <div class="m-fold" id="foldEntreprises"><div class="m-fold-in">
+            <p>Vous savez, ce moment en rendez-vous où vous attrapez un bic pour dessiner un schéma sur un coin de feuille ? On va s’en passer.</p>
+            <p>Une heure pour trouver le bon angle, un script que vous validez, une demi-journée de photos chez vous. Trente jours plus tard, la vidéo tourne sur votre site, dans vos rendez-vous et sur vos réseaux. Avec vous et votre équipe dedans, si vous le voulez.</p>
+            <p>Le prix est affiché, pas négocié. Et si elle ne se comprend pas, je la refais.</p>
+          </div></div>
+          <button class="m-more-btn mono" type="button" aria-expanded="false" aria-controls="foldEntreprises"><b>Lire la suite</b><span aria-hidden="true">+</span></button>
+        </div>
+      </div>
+      <div class="ag-band">
+        <div class="ag-who"><p class="mono">En bref</p><ul><li>Livrée en 30 jours</li><li>Dès 3 400 € HTVA</li><li>Comprise, ou refaite</li></ul></div>
+        <a class="btn ag-btn" href="/film-explicatif/">Découvrir la vidéo explicative <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
@@ -1437,6 +1475,10 @@ const mani2=$('#mani2'), agSec=$('#agences');
   const frag=document.createDocumentFragment(); [...mani2.childNodes].forEach(n=>proc(n,frag)); mani2.textContent=''; mani2.appendChild(frag);
 })();
 const words2=$$('.mw',mani2);
+const mani3=$('#mani3');
+(function(){ if(!mani3) return; const proc=(node,parent)=>{ if(node.nodeType===3){node.textContent.split(/([ \n\t]+)/).forEach(p=>{if(!p)return; if(/^[ \n\t]+$/.test(p)){parent.appendChild(document.createTextNode(' '));return;} const w=document.createElement('span'); w.className='mw'; w.textContent=p; parent.appendChild(w);});} else if(node.nodeType===1){const c=node.cloneNode(false); parent.appendChild(c); [...node.childNodes].forEach(n=>proc(n,c));} };
+  const frag=document.createDocumentFragment(); [...mani3.childNodes].forEach(n=>proc(n,frag)); mani3.textContent=''; mani3.appendChild(frag); })();
+const words3=mani3?$$('.mw',mani3):[];
 
 /* menu mobile */
 const menu=$('#menu'), menuBtn=$('#menuBtn');
@@ -1524,6 +1566,7 @@ function pinUpdate(){
   const r2=mani2.getBoundingClientRect(), pr2=clamp((innerHeight*0.88-r2.top)/(innerHeight*0.5),0,1);
   const lit2=pr2*(words2.length+1)-0.5;
   words2.forEach((w,i)=>{w.style.opacity=(0.14+0.86*clamp(lit2-i,0,1)).toFixed(3);});
+  if(mani3){ const r3=mani3.getBoundingClientRect(), pr3=clamp((innerHeight*0.88-r3.top)/(innerHeight*0.5),0,1), lit3=pr3*(words3.length+1)-0.5; words3.forEach((w,i)=>{w.style.opacity=(0.14+0.86*clamp(lit3-i,0,1)).toFixed(3);}); }
   if(H_ON){
     const h=pinOffset(meth);
     if(SMOOTH) methIn.style.transform=`translate3d(0,${h.off.toFixed(1)}px,0)`;
@@ -2389,7 +2432,7 @@ function focusNow(){
   return {x:(r.left+r.width/2)/innerWidth, y:1-(r.top+r.height/2)/innerHeight, a};
 }
 /* indicateur de section */
-const SECS=[['#top','Accueil'],['#films','Films'],['#manifeste','Conviction'],['#services','Services'],['#methode','Méthode'],['#preuves','Preuves'],['#studio','Studio'],['#agences','Agences'],['#contact','Contact']].map(([s,n])=>[$(s),n]);
+const SECS=[['#top','Accueil'],['#films','Films'],['#manifeste','Conviction'],['#services','Services'],['#methode','Méthode'],['#preuves','Preuves'],['#studio','Studio'],['#agences','Agences'],['#entreprises','Entreprises'],['#contact','Contact']].map(([s,n])=>[$(s),n]);
 const hdSec=$('#hdSec'), hdSecT=$('span',hdSec);
 let secName='Accueil', secTick=0;
 function secUpdate(){
