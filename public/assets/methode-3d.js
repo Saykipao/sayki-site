@@ -160,39 +160,40 @@ function s2(){
   return B;
 }
 
-/* ---------- 3 · le storyboard : six dessins sur calques transparents, posés un à un ---------- */
-function inkMat(map){
-  return new THREE.ShaderMaterial({uniforms:{map:{value:map},op:{value:.4},blur:{value:1}},transparent:true,depthWrite:false,
-    vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:`uniform sampler2D map;uniform float op;uniform float blur;varying vec2 vUv;
-      void main(){ vec2 d=vec2(.0045,.008)*blur; vec3 c=texture2D(map,vUv).rgb*.36;
-        c+=(texture2D(map,vUv+vec2(d.x,0.)).rgb+texture2D(map,vUv-vec2(d.x,0.)).rgb+texture2D(map,vUv+vec2(0.,d.y)).rgb+texture2D(map,vUv-vec2(0.,d.y)).rgb)*.11;
-        c+=(texture2D(map,vUv+d).rgb+texture2D(map,vUv-d).rgb+texture2D(map,vUv+vec2(d.x,-d.y)).rgb+texture2D(map,vUv+vec2(-d.x,d.y)).rgb)*.05;
-        float l=pow(dot(c,vec3(.299,.587,.114)),1./2.2); float a=smoothstep(.07,.62,1.-l)*op;
-        gl_FragColor=vec4(vec3(.16,.13,.22)*(.55+.45*l),a);
-        #include <colorspace_fragment>
-      }`});
-}
+/* ---------- 3 · le storyboard : six cases sur une bande, validées une à une ---------- */
+function frameTex(k){ const c=document.createElement('canvas'); c.width=320; c.height=180; const g=c.getContext('2d');
+  const BG='#EFE7FC', S2='#D6C1F8', SU='#9E37FF', W='#ffffff'; g.fillStyle=BG; g.fillRect(0,0,320,180);
+  const circ=(x,y,r,col)=>{ g.fillStyle=col; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); }, rect=(x,y,w,h,col)=>{ g.fillStyle=col; g.fillRect(x,y,w,h); };
+  if(k===0){ rect(0,118,320,62,S2); rect(196,62,46,56,S2); circ(110,104,9,SU); rect(104,112,12,20,SU); }          // plan large
+  if(k===1){ circ(160,72,30,SU); g.fillStyle=SU; g.beginPath(); g.moveTo(92,180); g.quadraticCurveTo(160,96,228,180); g.fill(); } // plan moyen
+  if(k===2){ circ(196,96,74,SU); rect(0,0,70,180,S2); }                                                            // gros plan
+  if(k===3){ circ(92,96,40,S2); circ(232,82,30,SU); rect(0,150,320,30,S2); }                                         // dialogue
+  if(k===4){ rect(126,40,68,108,W); circ(160,80,18,SU); rect(140,112,40,6,S2); rect(146,124,28,6,S2); rect(0,148,320,32,S2); } // produit
+  if(k===5){ circ(160,66,24,SU); rect(104,108,112,12,SU); rect(124,130,72,8,S2); }                                  // fin
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=4; return t; }
 function s3(){
-  const B=base(1.82,new THREE.Vector3(0,.15,0)); B.dur=10;
-  const cards=[];
-  [1,2,3,4,5,6].forEach((n,i)=>{ const g=new THREE.Group(); const b=box(1.62,.06,.94,C.white); b.position.y=.03; g.add(b);
-    const lay=new THREE.Group(); const plate=box(1.62,.018,.94,C.white,{transparent:true,opacity:.35,roughness:.12,depthWrite:false}); plate.castShadow=false; plate.receiveShadow=false; lay.add(plate);
-    const d=new THREE.Mesh(new THREE.PlaneGeometry(1.53,.86),inkMat(tex(`/assets/sb3-${n}.jpg`))); d.rotation.x=-Math.PI/2; d.position.y=.011; d.renderOrder=2; lay.add(d); g.add(lay);
-    const ck=check(.22); ck.position.set(.62,.07,-.33); g.add(ck);
-    g.userData={x:-1.82+(i%3)*1.82,z:-.68+Math.floor(i/3)*1.36,lay,plate,d,ck}; B.scene.add(g); cards.push(g); });
-  const pl=pool(0xA45BFF,2.4,1.7); B.scene.add(pl);
+  const B=base(1.62,new THREE.Vector3(0,.22,0)); B.dur=10;
+  const N=6, CW=.82, CD=.64, GAP=.1, L=N*CW+(N-1)*GAP, x0=-L/2+CW/2;
+  const track=box(L+.4,.06,1.02,C.white); track.position.y=.03; B.scene.add(track);
+  const cases=[...Array(N)].map((_,k)=>{ const g=new THREE.Group(); g.add(box(CW,.05,CD,C.white));
+    const s=new THREE.Mesh(new THREE.PlaneGeometry(CW-.08,(CW-.08)*9/16),imgMat(frameTex(k))); s.rotation.x=-Math.PI/2; s.position.set(0,.026,-.07); g.add(s);
+    const n=label(B,'0'+(k+1),.11,{color:GREY}); n.position.set(-CW/2+.04,.026,CD/2-.075); g.add(n);
+    const ck=check(.13); ck.position.set(CW/2-.1,.04,CD/2-.09); g.add(ck);
+    g.userData={x:x0+k*(CW+GAP),s,ck}; B.scene.add(g); return g; });
+  const sh=new THREE.Group();
+  const veil=new THREE.Mesh(new THREE.PlaneGeometry(.9,1),new THREE.MeshBasicMaterial({color:0xB47CFF,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
+  veil.rotation.y=Math.PI/2; veil.geometry.translate(0,.5,0); veil.scale.y=.55; sh.add(veil);
+  const edge=box(.025,.025,.92,C.vio,{emissive:C.vio,emissiveIntensity:1.3}); edge.position.y=.55; edge.castShadow=false; sh.add(edge);
+  const foot=box(.03,.02,1.0,C.vio,{emissive:C.vio,emissiveIntensity:1.3}); foot.castShadow=false; sh.add(foot);
+  B.scene.add(sh); const pl=pool(0xA45BFF,1.4,1.6); B.scene.add(pl);
   B.update=t=>{
-    const fo=1-seg(t,9.2,9.75);
-    let px=0,pz=0,pw=0;
-    cards.forEach((g,i)=>{ const u=g.userData, a=eo(seg(t,.12*i,.9+.12*i)), v=1.6+i*.8, dn=io3(seg(t,v-.45,v+.2)), sh=dn*(1-dn)*4;
-      g.position.set(u.x,(1-a)*-.4,u.z); g.scale.setScalar(nz(a*fo));
-      u.lay.position.y=lerp(.42+.035*Math.sin(t*1.3+i),.069,dn);
-      u.d.material.uniforms.op.value=a; u.d.material.uniforms.blur.value=.6*(1-dn);
-      u.plate.material.opacity=.35*(1-dn)*a; u.plate.visible=dn<.98;
-      if(sh>pw){ pw=sh; px=u.x; pz=u.z; }
-      const c=back(seg(t,v+.2,v+.6)); u.ck.scale.setScalar(nz(c)); });
-    pl.position.set(px,.004,pz); pl.material.opacity=.45*pw*fo;
+    const fo=1-seg(t,9.3,9.85), ta=eo(seg(t,0,.6))*fo; track.scale.set(nz(ta),1,1);
+    const on=seg(t,1.8,2.1)*(1-seg(t,7.4,7.8)), x=-L/2-.1+(L+.2)*io3(seg(t,2,7.3));
+    sh.visible=on>.01; sh.position.set(x,.06,0); sh.scale.set(1,nz(on),1); pl.position.set(x,.065,0); pl.material.opacity=.5*on;
+    cases.forEach((g,k)=>{ const u=g.userData, a=eo(seg(t,.4+.2*k,1+.2*k)), p=clamp((x-(u.x-CW/2))/CW), hit=Math.sin(Math.PI*clamp((x-u.x+.25)/.6));
+      g.position.set(u.x,.06+(1-a)*.6+.06*hit,0); g.scale.setScalar(nz(a*fo));
+      u.s.material.uniforms.sat.value=x>u.x?io3(clamp((x-u.x)/.35)):0;
+      const c=back(clamp((x-u.x-.05)/.4)); u.ck.scale.setScalar(nz(c)); });
   };
   return B;
 }
