@@ -15,9 +15,9 @@ const mm=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 const DUR=90.6;
 const ACTS=[
   {a:0,b:10,d:'10 s',n:'hook',h:.14,c:C.vio,t:'La question qui fait lever la tête.',l:['Quelques secondes, avant qu’on décroche.','Une question que votre client se pose déjà.']},
-  {a:10,b:36,d:'26 s',n:'problème',h:.24,c:C.lav,t:'Le quotidien de votre client, tel quel.',l:['Il s’y reconnaît, alors il reste.','On parle de lui avant de parler de vous.']},
-  {a:36,b:58,d:'22 s',n:'solution',h:.36,c:C.mid,t:'Votre service entre en scène.',l:['Ce que vous faites, montré, pas récité.','Une étape à la fois, sans jargon.']},
-  {a:58,b:77,d:'19 s',n:'expertise',h:.48,c:C.white,t:'Pourquoi vous, et pas un autre.',l:['Vos preuves : années, clients, méthode.','Et la suite : on vous appelle.']},
+  {a:10,b:36,d:'26 s',n:'problème de\nvotre client',h:.24,c:C.lav,t:'Le quotidien de votre client, tel quel.',l:['Il s’y reconnaît, alors il reste.','On parle de lui avant de parler de vous.']},
+  {a:36,b:58,d:'22 s',n:'votre\nsolution',h:.36,c:C.mid,t:'Votre service entre en scène.',l:['Ce que vous faites, montré, pas récité.','Une étape à la fois, sans jargon.']},
+  {a:58,b:77,d:'19 s',n:'votre\nexpertise',h:.48,c:C.white,t:'Pourquoi vous, et pas un autre.',l:['Vos preuves : années, clients, méthode.','Et la suite : on vous appelle.']},
   {a:77,b:DUR,d:'14 s',n:'cta',h:.6,c:C.vio,t:'La suite : on vous appelle.',l:['Une seule chose à faire.','Et une envie de la faire.']}];
 
 try{ await document.fonts.load('500 40px "Geist Mono"'); }catch(e){}
@@ -36,11 +36,11 @@ floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; floor.renderOrder=-2; sce
 
 const box=(w,h,d,color,o={})=>{ const m=new THREE.Mesh(new RoundedBoxGeometry(w,h,d,3,Math.min(.03,h/2.4,w/2.4,d/2.4)),new THREE.MeshStandardMaterial({color,roughness:.5,...o})); m.castShadow=m.receiveShadow=true; return m; };
 function textTex(txt,{size=96,color='#150A26'}={}){
-  const c=document.createElement('canvas'), g=c.getContext('2d'), t=txt.toUpperCase(), f=`500 ${size}px "Geist Mono", ui-monospace, monospace`;
-  g.font=f; g.letterSpacing=Math.round(size*.06)+'px'; const h=Math.ceil(size*1.3), w=Math.ceil(g.measureText(t).width)+24;
-  c.width=w; c.height=h; g.font=f; g.letterSpacing=Math.round(size*.06)+'px'; g.fillStyle=color; g.textBaseline='middle'; g.fillText(t,12,h/2+size*.04);
-  const tx=new THREE.CanvasTexture(c); tx.colorSpace=THREE.SRGBColorSpace; tx.anisotropy=4; return {tx,asp:w/h}; }
-function label(txt,h,o={}){ const {tx,asp}=textTex(txt,o), w=h*asp, g=new THREE.PlaneGeometry(w,h); g.translate(w/2,0,0);
+  const c=document.createElement('canvas'), g=c.getContext('2d'), L=txt.toUpperCase().split('\n'), f=`500 ${size}px "Geist Mono", ui-monospace, monospace`, ls=Math.round(size*.06)+'px';
+  g.font=f; g.letterSpacing=ls; const lh=Math.ceil(size*1.3), h=lh*L.length, w=Math.ceil(Math.max(...L.map(l=>g.measureText(l).width)))+24;
+  c.width=w; c.height=h; g.font=f; g.letterSpacing=ls; g.fillStyle=color; g.textBaseline='middle'; L.forEach((l,k)=>g.fillText(l,12,lh*k+lh/2+size*.04));
+  const tx=new THREE.CanvasTexture(c); tx.colorSpace=THREE.SRGBColorSpace; tx.anisotropy=4; return {tx,asp:w/h,n:L.length}; }
+function label(txt,h,o={}){ const {tx,asp,n}=textTex(txt,o), hh=h*n, w=hh*asp, g=new THREE.PlaneGeometry(w,hh); g.translate(w/2,-hh/2+h/2,0);
   const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false})); m.renderOrder=3; m.rotation.x=-Math.PI/2; return m; }
 const PT=(()=>{ const c=document.createElement('canvas'); c.width=c.height=128; const g=c.getContext('2d'), r=g.createRadialGradient(64,64,0,64,64,64);
   r.addColorStop(0,'rgba(255,255,255,1)'); r.addColorStop(.4,'rgba(255,255,255,.42)'); r.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=r; g.fillRect(0,0,128,128); return new THREE.CanvasTexture(c); })();
@@ -120,7 +120,7 @@ const tcSet=()=>{};
 /* les quatre temps */
 const blocks=ACTS.map((A,i)=>{ const w=X(A.b)-X(A.a)-.04, m=box(w,A.h,.5,A.c,A.c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
   m.castShadow=false; m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); tl.add(m);
-  const l=label(A.n,.135,{color:A.c===C.vio?'#DCC0FF':'#F1ECF8'}); l.position.set(X(A.a)+.02,TY+.002,.5); l.material.depthTest=false; l.renderOrder=10; tl.add(l);
+  const l=label(A.n,.12,{color:A.c===C.vio?'#E9D8FF':'#F1ECF8'}); l.position.set(X(A.a)+.02,TY+.002,.5); l.material.depthTest=false; l.renderOrder=10; tl.add(l);
   return m; });
 /* tête de lecture */
 const sh=new THREE.Group();
