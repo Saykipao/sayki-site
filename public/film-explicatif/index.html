@@ -135,7 +135,7 @@ html.hero-gl .hx-note.on{opacity:1}
 .hx-note ul{margin:0;padding:0;list-style:none;font-size:14px;line-height:1.45;color:var(--mute)}
 .hx-note li{position:relative;padding-left:16px;margin-top:3px}.hx-note li::before{content:"";position:absolute;left:0;top:.68em;width:8px;height:1.5px;background:#9E37FF}
 .hero.hx-drag,.hero.hx-drag *{cursor:grabbing!important}
-@media (max-width:900px){html:not(.no-hero-gl) .reel-f.hx-f{aspect-ratio:1/1}html:not(.no-hero-gl) .reel figcaption{display:none}}
+@media (max-width:900px){html:not(.no-hero-gl) .reel-f.hx-f{aspect-ratio:4/3;margin-inline:calc(-1 * var(--pad))}html:not(.no-hero-gl) .reel figcaption{display:none}}
 /* le haut de page tient dans l'écran, la ligne des clients visible en bas (ordinateur) */
 @media (min-width:901px){
   .hero{--rh:calc(90px + 2vw);min-height:calc(100svh - var(--rh));display:flex;flex-direction:column;padding-top:calc(68px + clamp(40px,6vh,90px));padding-bottom:clamp(20px,3vh,36px)}
@@ -177,11 +177,12 @@ html:not(.no-hero-gl) .hero-g{pointer-events:none}html:not(.no-hero-gl) .hero-l,
 @media (max-width:900px){
   .hero-g{grid-template-columns:minmax(0,1fr);gap:30px}
   .hero-l{display:contents}
-  .hero-sub{order:1}.hero-btns{order:2}.reel{order:3}.facts{order:4}
+  .hero-sub{order:2}.hero-btns{order:3}.reel{order:1}.facts{order:4}
 }
 @media (max-width:640px){
-  .hero{padding-top:calc(60px + 38px)}
-  .hero-g{margin-top:22px;gap:24px}
+  .hero{padding-top:calc(60px + 26px)}
+  .hero-k{margin-bottom:12px;font-size:10px}
+  .hero-g{margin-top:6px;gap:22px}
   .hero-btns .btn{flex:1 1 100%}
   .reel figcaption span:last-child{display:none}
 }

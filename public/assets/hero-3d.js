@@ -250,8 +250,8 @@ function frameFn(now){
   /* scène : la frise posée au sol, pile devant le centre de l'écran (même axe x) ; la caméra cadre l'ensemble */
   tl.scale.set(TSc,TSc*.62,TSc); tl.position.set(0,TH-TY*TSc*.62+.004,SZ+TZ+TLZ); PL.constant=-TH; tl.updateMatrixWorld(true);
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  const k=mob?1.05*W/(xr-xl):Math.min(Math.min(.62*W,rf.width*1.3)/(xr-xl),1.02*(r0.height-60)/(yt-yb));
-  const cxp=mob?W*.55:Math.min(W*.68,rf.left-rc.left+rf.width*.56), by=mob?rf.bottom-rc.top-6:r0.height-30;
+  const k=mob?Math.min(.94*W/(xr-xl),1.2*rf.height/(yt-yb)):Math.min(Math.min(.62*W,rf.width*1.3)/(xr-xl),1.02*(r0.height-60)/(yt-yb));
+  const cxp=mob?W*.46:Math.min(W*.68,rf.left-rc.left+rf.width*.56), by=mob?rf.bottom-rc.top-2:r0.height-30;
   const left=(xl+xr)/2-cxp/k, top=yb+by/k;
   Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
   /* état de lecture */
