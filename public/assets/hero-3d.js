@@ -120,7 +120,7 @@ const tcSet=()=>{};
 /* les quatre temps */
 const blocks=ACTS.map((A,i)=>{ const w=X(A.b)-X(A.a)-.04, m=box(w,A.h,.5,A.c,A.c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
   m.castShadow=false; m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); tl.add(m);
-  const l=label(A.n,.12,{color:A.c===C.vio?VIO:GREY}); l.position.set(X(A.a)+.02,TY+.002,.43); tl.add(l);
+  const l=label(A.n,.15,{color:A.c===C.vio?'#DCC0FF':'#F1ECF8'}); l.position.set(X(A.a)+.02,TY+.002,i%2?.7:.48); l.material.depthTest=false; l.renderOrder=10; tl.add(l);
   return m; });
 /* tête de lecture */
 const sh=new THREE.Group();
@@ -177,8 +177,8 @@ put(notebook(),SX[1]-.08,BZ,.25); put(cup(),SX[1]+.32,BZ-.06); put(phone(),SX[1]
 put(laptop(),SX[2],BZ,-.1); put(phone(),SX[2]-.42,BZ+.02,.2);
 
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
-const tvA=new THREE.PointLight(0xffffff,5,16,1.4); tvA.position.set(0,SY-.1,SZ+.9); scene.add(tvA);
-const tvS=new THREE.SpotLight(0xffffff,17,26,1.25,.75,1.3); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(0,0,SZ+TZ+.5); tvS.castShadow=true; floor.position.set(0,0,SZ+TZ+.6);
+const tvA=new THREE.PointLight(0xffffff,4,16,1.4); tvA.position.set(-.8,SY-.1,SZ+.9); scene.add(tvA);
+const tvS=new THREE.SpotLight(0xffffff,17,26,1.25,.75,1.3); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(-1.1,0,SZ+TZ-.35); tvS.castShadow=true; floor.position.set(0,0,SZ+TZ+.6);
 tvS.shadow.mapSize.set(2048,2048); tvS.shadow.bias=-.002; tvS.shadow.normalBias=.04; tvS.shadow.radius=6; scene.add(tvS,tvS.target);
 const AV=document.createElement('canvas'); AV.width=8; AV.height=4; const AX=AV.getContext('2d',{willReadFrequently:true}); const tvC=new THREE.Color(0xB8A8E0), tvT=new THREE.Color(); let avN=0;
 let avT=0; const tvLight=now=>{ if(!vOn||now-avT<250) return; avT=now; try{ AX.drawImage(vid,0,0,8,4); const d=AX.getImageData(0,0,8,4).data; let r=0,g=0,b=0; for(let i=0;i<d.length;i+=4){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; } const n=d.length/4;
@@ -259,7 +259,7 @@ function frameFn(now){
   else{
     /* zone nette : de la table au haut de l'écran ; au-delà, le flou monte doucement */
     const pj=(x,y,z)=>{ V3.set(x,y,z).project(cam); return [(V3.x+1)/2,(V3.y+1)/2]; };
-    const cA=pj(0,(TH+SY)/2,SZ+TZ*.45), eX=pj(RW*.5,TH,SZ+TZ), eY=pj(0,SY+SH*.5,SZ);
+    const cA=pj(0,(TH+SY)/2,SZ+TZ*.45), eX=pj(RW*.62,TH,SZ+TZ+RD*.5), eY=pj(0,SY+SH*.5,SZ);
     [bH,bV].forEach(m=>{ m.uniforms.c.value.set(cA[0],cA[1]); m.uniforms.r.value.set(Math.abs(eX[0]-cA[0])+.02,Math.abs(eY[1]-cA[1])); m.uniforms.mx.value=5.5*dpr; });
     if(lastT){ const dt=now-lastT; slowN=dt>30?slowN+1:Math.max(0,slowN-1); if(slowN>45&&fx){ fx=false; } } lastT=now;
     R.setRenderTarget(rtA); R.clear(); R.render(scene,cam);
