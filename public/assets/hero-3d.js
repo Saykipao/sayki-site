@@ -81,6 +81,7 @@ const setNote=i=>{ if(i===cur||!note) return; cur=i; const A=ACTS[i]; note.class
   setTimeout(()=>{ if(cur!==i) return; note.innerHTML=`<p class="mono hx-k">0${i+1} · ${A.n} · ${mm(A.a)}–${mm(A.b)}</p><p class="hx-t">${A.t}</p><ul>${A.l.map(x=>`<li>${x}</li>`).join('')}</ul>`; note.classList.add('on'); },180); };
 
 /* ---------- cadrage : l'illustration part du cadre de l'ancienne vidéo, et peut déborder ---------- */
+const EXT=[[-L/2-.15,0,.65],[L/2+.15,0,.65],[L/2+.15,0,-.65],[-L/2-.15,0,-.65],[-SW/2,SY+SH/2,SZ],[SW/2,SY+SH/2,SZ],[-SW/2,SY-SH/2,SZ],[SW/2,SY-SH/2,SZ]].map(a=>new THREE.Vector3(...a));
 const TG=new THREE.Vector3(0,.95,-.1), ISO=new THREE.Vector3(10,10,10), UP=new THREE.Vector3(0,1,0), off=new THREE.Vector3(), V3=new THREE.Vector3();
 let mxT=0,myT=0,mx=0,my=0;
 addEventListener('pointermove',e=>{ mxT=e.clientX/innerWidth-.5; myT=e.clientY/innerHeight-.5; },{passive:true});
@@ -108,10 +109,14 @@ function frameFn(now){
   const r0=hero.getBoundingClientRect(), rc=cv.getBoundingClientRect(), rf=fig.getBoundingClientRect(), dpr=Math.min(1.5,devicePixelRatio||1), mob=r0.width<900;
   const W=Math.round(rc.width), H=Math.round(rc.height); if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ R.setPixelRatio(dpr); R.setSize(W,H,false); }
   /* échelle : l'illustration est plus grande que le cadre, elle déborde vers le haut */
-  const VIEW=mob?2.25:1.28, k=rf.height/(2*VIEW), cx=rf.left-rc.left+rf.width/2, cy=rf.top-rc.top+rf.height*(mob?.4:.38);
-  Object.assign(cam,{left:-cx/k,right:(W-cx)/k,top:cy/k,bottom:-(H-cy)/k}); cam.updateProjectionMatrix();
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
-  off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG);
+  off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
+  /* étendue de la scène vue par la caméra (en unités) : on l'ajuste au cadre, sans dépasser le haut de page */
+  let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
+  const top0=mob?rf.top-rc.top:Math.max(84,r0.top<0?84:84)-(rc.top-r0.top), bot=rf.bottom-rc.top-(mob?0:34);
+  const k=Math.min((rf.width*(mob?1:1.06))/(xr-xl),(bot-top0)/(yt-yb));
+  const cxp=rf.left-rc.left+rf.width*(mob?.5:.56), left=(xl+xr)/2-cxp/k, bottom=yb-(H-bot)/k;
+  Object.assign(cam,{left,right:left+W/k,bottom,top:bottom+H/k}); cam.updateProjectionMatrix();
   /* état de lecture */
   const s=FT!==null?+FT:dragS!==null?dragS:RM?DUR*.6:(vid.currentTime||0), xs=X(s), ap=eo(seg(now/1000,.2,1.2));
   tcSet(s); bar.scale.x=nz(s/DUR);
@@ -124,9 +129,7 @@ function frameFn(now){
   R.render(scene,cam);
   /* note : posée à droite de l'écran (ordinateur), sous la frise (mobile) */
   if(note){ setNote(ci); let nx,ny; const nw=note.offsetWidth, nh=note.offsetHeight;
-    if(mob){ nx=rf.left-r0.left; ny=rf.bottom-r0.top-nh; }
-    else{ V3.set(-SW/2,SY-SH/2,SZ).project(cam);
-      nx=rc.left-r0.left+(V3.x+1)/2*rc.width-nw-36; ny=rc.top-r0.top+(1-V3.y)/2*rc.height-nh-10; }
+    nx=rf.left-r0.left; ny=rf.bottom-r0.top-nh-(mob?0:44);
     note.style.transform=`translate3d(${Math.max(0,nx).toFixed(1)}px,${ny.toFixed(1)}px,0)`; }
   if(!started){ started=true; root.classList.add('hero-gl'); root.classList.remove('no-hero-gl'); const rv=document.getElementById('reel'); if(rv) rv.pause(); }
   if(!RM) raf=requestAnimationFrame(frameFn);
