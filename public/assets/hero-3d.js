@@ -45,9 +45,22 @@ function check(s){ const c=document.createElement('canvas'); c.width=c.height=12
   g.strokeStyle='#fff'; g.lineWidth=12; g.lineCap=g.lineJoin='round'; g.beginPath(); g.moveTo(36,66); g.lineTo(56,86); g.lineTo(94,44); g.stroke(); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
   const gr=new THREE.Group(), b=box(s,s*.42,s,C.vio,{emissive:C.vio,emissiveIntensity:.3}); b.castShadow=false; gr.add(b); const top=new THREE.Mesh(new THREE.PlaneGeometry(s*.84,s*.84),new THREE.MeshBasicMaterial({map:t})); top.rotation.x=-Math.PI/2; top.position.y=s*.21+.002; gr.add(top); return gr; }
 
+/* ---------- profondeur de champ : ce qui sort de la table et de l'écran se floute doucement (passe en deux temps) ---------- */
+const HF=R.extensions.has('EXT_color_buffer_float')||R.extensions.has('EXT_color_buffer_half_float');
+const rtA=new THREE.WebGLRenderTarget(2,2,{type:HF?THREE.HalfFloatType:THREE.UnsignedByteType,samples:4}), rtB=new THREE.WebGLRenderTarget(2,2,{type:HF?THREE.HalfFloatType:THREE.UnsignedByteType});
+const pScene=new THREE.Scene(), pCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1), quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2)); quad.frustumCulled=false; pScene.add(quad);
+const blurMat=last=>new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:THREE.NoBlending,
+  uniforms:{tex:{value:null},dir:{value:new THREE.Vector2()},c:{value:new THREE.Vector2(.5,.5)},r:{value:new THREE.Vector2(.3,.3)},mx:{value:6}},
+  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader:`uniform sampler2D tex;uniform vec2 dir,c,r;uniform float mx;varying vec2 vUv;
+    void main(){ float b=smoothstep(1.,1.75,length((vUv-c)/r))*mx; vec4 acc=vec4(0.); float ws=0.;
+      for(int i=-4;i<=4;i++){ float w=exp(-float(i*i)/8.); acc+=texture2D(tex,vUv+dir*float(i)*b*.25)*w; ws+=w; } acc/=ws;
+      ${last?'vec3 col=acc.a>.0001?acc.rgb/acc.a:vec3(0.); vec4 o=linearToOutputTexel(vec4(col,1.)); gl_FragColor=vec4(o.rgb*acc.a,acc.a);':'gl_FragColor=acc;'} }`});
+const bH=blurMat(false), bV=blurMat(true);
+
 /* ---------- la scène ---------- */
 const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
-const VC=document.createElement('canvas'); VC.width=1024; VC.height=438; const VX=VC.getContext('2d'); const VT=new THREE.CanvasTexture(VC); VT.colorSpace=THREE.SRGBColorSpace; VT.anisotropy=4; let vLast=-1, vOn=false;
+const VC=document.createElement('canvas'); VC.width=innerWidth<900?640:1280; VC.height=Math.round(VC.width*274/640); const VX=VC.getContext('2d'); const VT=new THREE.CanvasTexture(VC); VT.colorSpace=THREE.SRGBColorSpace; VT.generateMipmaps=false; VT.minFilter=THREE.LinearFilter; let vLast=-1, vOn=false;
 const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=6.2, SH=SW*274/640, SZ=-3.2, SY=1.05+SH/2, TY=.07;
 /* la frise : posée devant le bas de l'écran, côté droit, à l'écart du texte */
 const TS=.82, tl=new THREE.Group(); tl.scale.setScalar(TS); scene.add(tl);
@@ -65,7 +78,7 @@ const scrMat=new THREE.ShaderMaterial({uniforms:{map:{value:poster},bg:{value:ne
   fragmentShader:`uniform sampler2D map;uniform vec3 bg;varying vec2 vUv;
     void main(){ vec3 c=texture2D(map,vUv).rgb;
       /* un voile clair, plus fort à gauche, là où passe le titre */
-      float w=.1+.38*(1.-smoothstep(.0,.45,vUv.x));
+      float w=.32*(1.-smoothstep(.0,.3,vUv.x));
       c=mix(c,bg,w);
       gl_FragColor=vec4(c,1.);
       #include <colorspace_fragment>
@@ -73,7 +86,7 @@ const scrMat=new THREE.ShaderMaterial({uniforms:{map:{value:poster},bg:{value:ne
 const scr=new THREE.Mesh(bend(new THREE.PlaneGeometry(SW,SH,64,1),CR),scrMat); scr.position.set(0,SY,SZ); scene.add(scr);
 
 /* halo : l'image, très floue, déborde et se diffuse dans la page */
-const HX=1.45, HY=1.9;
+const HX=1.22, HY=1.5;
 const haloMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},t:{value:0}},vertexShader:VS,
   fragmentShader:`uniform sampler2D map;uniform float t;varying vec2 vUv;${NOI}
     void main(){ vec2 vu=(vUv-.5)*vec2(${HX.toFixed(2)},${HY.toFixed(2)})+.5;
@@ -81,8 +94,9 @@ const haloMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,unifor
       vec2 cu=clamp(vu,.01,.99); float r=.05;
       vec3 c=vec3(0.); for(int i=0;i<12;i++){ float a=float(i)*.5236; c+=texture2D(map,clamp(cu+vec2(cos(a),sin(a)*1.8)*r,.0,1.)).rgb; } c/=12.;
       float d=length(max(abs(vu-.5)-.5,0.)*vec2(1.,.8));
-      float a=(1.-smoothstep(.0,.16+.14*w,d))*.75;
-      gl_FragColor=vec4(mix(c,vec3(1.),.08),a);
+      float a=(1.-smoothstep(.0,.1+.08*w,d))*.55;
+      float l=dot(c,vec3(.299,.587,.114)); c=mix(vec3(l),c,1.35); c=mix(c,vec3(1.),.62);
+      gl_FragColor=vec4(c,a);
       #include <colorspace_fragment>
     }`});
 const halo=new THREE.Mesh(bend(new THREE.PlaneGeometry(SW*HX,SH*HY,64,1),CR*HX),haloMat); halo.position.set(0,SY,SZ-.2); halo.renderOrder=-1; scene.add(halo);
@@ -129,17 +143,18 @@ plant.position.set(RW/2+1.05,0,-RD/2-.7); room.add(plant);
 /* le sol de la salle : une tache claire, très douce */
 const rug=pool(RW+3.4,RD+3.2,0xE9E6EE,.55); rug.position.set(0,.002,-.4); room.add(rug);
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
-/* la lumière du film se pose sur la table et sur le sol : couleurs de l'image, floues, qui s'éteignent en s'éloignant de l'écran */
+/* reflet : la table est laquée, l'écran s'y reflète, flou et qui s'efface vers nous */
 const SPILL=[];
-function spill(w,d,op){ const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},op:{value:op}},vertexShader:VS,
-  fragmentShader:`uniform sampler2D map;uniform float op;varying vec2 vUv;
-    void main(){ vec3 c=vec3(0.); for(int i=0;i<9;i++){ float a=float(i)*.698; c+=texture2D(map,vec2(clamp(vUv.x+cos(a)*.08,.0,1.),.12+sin(a)*.08)).rgb; } c/=9.;
-      float a=pow(vUv.y,1.7)*op*(1.-pow(abs(vUv.x-.5)*2.,3.));
-      gl_FragColor=vec4(mix(c,vec3(1.),.15),a);
+const reflMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},sx:{value:RW/SW}},vertexShader:VS,
+  fragmentShader:`uniform sampler2D map;uniform float sx;varying vec2 vUv;
+    void main(){ float d=1.-vUv.y; vec2 u=vec2(.5+(vUv.x-.5)*sx,clamp(d*.85,.0,1.)); float r=.004+d*.035;
+      vec3 c=vec3(0.); for(int i=0;i<10;i++){ float a=float(i)*.628; c+=texture2D(map,clamp(u+vec2(cos(a),sin(a))*r,.0,1.)).rgb; } c/=10.;
+      float a=.5*pow(1.-d,1.3)*(1.-pow(abs(vUv.x-.5)*2.,4.));
+      gl_FragColor=vec4(c,a);
       #include <colorspace_fragment>
-    }`}); SPILL.push(m); const p=new THREE.Mesh(new THREE.PlaneGeometry(w,d),m); p.rotation.x=-Math.PI/2; p.renderOrder=2; return p; }
-const sT=spill(RW,RD,.42); sT.position.set(0,TH+.004,0); room.add(sT);
-const sF=spill(SW*1.05,TZ-RD/2+.4,.32); sF.position.set(0,.004,(-TZ-RD/2+.4)/2); room.add(sF);
+    }`}); SPILL.push(reflMat);
+const refl=new THREE.Mesh(new THREE.PlaneGeometry(RW-.06,RD-.06),reflMat); refl.rotation.x=-Math.PI/2; refl.position.y=TH+.003; refl.renderOrder=2; room.add(refl);
+top.material.roughness=.18; top.material.metalness=.05;
 
 /* ---------- la note : ce que fait chaque temps ---------- */
 let cur=-1;
@@ -176,8 +191,8 @@ const grab=()=>{ if(vid.readyState<2||vid.seeking) return; const t=vid.currentTi
 vid.addEventListener('seeked',()=>{ if(dragS!==null&&Math.abs(vid.currentTime-dragS)>.08) vid.currentTime=dragS; vLast=-1; grab(); });
 function frameFn(now){
   raf=0; if(!vis) return;
-  const r0=hero.getBoundingClientRect(), rc=cv.getBoundingClientRect(), rf=fig.getBoundingClientRect(), dpr=Math.min(1.5,devicePixelRatio||1), mob=r0.width<900;
-  const W=Math.round(rc.width), H=Math.round(rc.height); if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ R.setPixelRatio(dpr); R.setSize(W,H,false); }
+  const r0=hero.getBoundingClientRect(), rc=cv.getBoundingClientRect(), rf=fig.getBoundingClientRect(), mob=r0.width<900, dpr=Math.min(mob?1.5:1.75,devicePixelRatio||1);
+  const W=Math.round(rc.width), H=Math.round(rc.height); if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ R.setPixelRatio(dpr); R.setSize(W,H,false); rtA.setSize(cv.width,cv.height); rtB.setSize(cv.width,cv.height); }
   /* échelle : l'illustration est plus grande que le cadre, elle déborde vers le haut */
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
@@ -197,7 +212,16 @@ function frameFn(now){
   const vh=blocks[ci].userData.h+.3; sh.position.set(xs,TY,0); veil.scale.y=vh; edge.position.y=vh; pl.position.set(xs,TY+.004,0); pl.material.opacity=drag?.65:.45;
   knob.scale.setScalar(drag?1.25:hov?1.12:1);
   const e=back(seg(s,DUR-11,DUR-10)), b3=blocks[3].userData; ok.scale.setScalar(nz(e)); ok.position.set(b3.x,TY+b3.h+.2+Math.sin(now/500)*.025,.1); ok.visible=e>.01;
-  R.render(scene,cam);
+  if(mob){ R.render(scene,cam); }
+  else{
+    /* zone nette : de la table au haut de l'écran ; au-delà, le flou monte doucement */
+    const pj=(x,y,z)=>{ V3.set(x,y,z).project(cam); return [(V3.x+1)/2,(V3.y+1)/2]; };
+    const cA=pj(0,(TH+SY)/2,SZ+TZ*.45), eX=pj(RW*.5,TH,SZ+TZ), eY=pj(0,SY+SH*.5,SZ);
+    [bH,bV].forEach(m=>{ m.uniforms.c.value.set(cA[0],cA[1]); m.uniforms.r.value.set(Math.abs(eX[0]-cA[0])+.02,Math.abs(eY[1]-cA[1])); m.uniforms.mx.value=5.5*dpr; });
+    R.setRenderTarget(rtA); R.clear(); R.render(scene,cam);
+    quad.material=bH; bH.uniforms.tex.value=rtA.texture; bH.uniforms.dir.value.set(1/cv.width,0); R.setRenderTarget(rtB); R.clear(); R.render(pScene,pCam);
+    quad.material=bV; bV.uniforms.tex.value=rtB.texture; bV.uniforms.dir.value.set(0,1/cv.height); R.setRenderTarget(null); R.clear(); R.render(pScene,pCam);
+  }
   /* note : posée à droite de l'écran (ordinateur), sous la frise (mobile) */
   if(note){ setNote(ci); let nx,ny; const nw=note.offsetWidth, nh=note.offsetHeight;
     nx=rf.left-r0.left; ny=rf.bottom-r0.top-nh-(mob?0:44);
