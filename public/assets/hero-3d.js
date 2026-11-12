@@ -118,7 +118,7 @@ const PX=1, PY=1;
 const tcSet=()=>{};
 /* les quatre temps */
 const blocks=ACTS.map((A,i)=>{ const w=X(A.b)-X(A.a)-.04, m=box(w,A.h,.5,A.c,A.c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
-  m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); tl.add(m);
+  m.castShadow=false; m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); tl.add(m);
   const l=label(A.n,.12,{color:i===0?VIO:GREY}); l.position.set(X(A.a)+.02,TY+.002,.43); tl.add(l);
   const n=label(A.d,.085,{color:i===0?VIO:GREY}); n.position.set(X(A.a)+.02,TY+.002,.56); tl.add(n); return m; });
 /* tête de lecture */
@@ -132,7 +132,7 @@ tl.add(sh); const pl=pool(1.3,1.4); tl.add(pl);
 const ok=check(.24); tl.add(ok);
 
 /* ---------- la salle de réunion : une table, des chaises, un café ; même matière que le reste ---------- */
-const TSc=SW*.78/L, TZ=2.5, TH=.74, RW=L*TSc+.7, RD=1.3*TSc+1.3, TLZ=.4;
+const TSc=SW*.78/L, TZ=2.5, TH=.74, RW=L*TSc+.7, RD=1.3*TSc+1.3, TLZ=.12;
 const room=new THREE.Group(); room.position.set(0,0,SZ+TZ); scene.add(room);
 const CLAY=0x3A2858, CLAY2=0x2E1F48;
 const top=box(RW,.07,RD,0xffffff); top.position.y=TH-.035; room.add(top);
@@ -147,9 +147,9 @@ function chair(){ const g=new THREE.Group(); const seat=box(.5,.07,.48,CLAY); se
 const mug=new THREE.Group(); const mb=new THREE.Mesh(new THREE.CylinderGeometry(.07,.065,.15,20),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.35})); mb.position.y=.075; mb.castShadow=true; mug.add(mb);
 const mh=new THREE.Mesh(new THREE.TorusGeometry(.04,.012,8,16,Math.PI),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.35})); mh.position.set(.075,.08,0); mh.rotation.z=-Math.PI/2; mug.add(mh);
 const cof=new THREE.Mesh(new THREE.CircleGeometry(.06,20),new THREE.MeshBasicMaterial({color:0x6B4A3A})); cof.rotation.x=-Math.PI/2; cof.position.y=.14; mug.add(cof);
-mug.position.set(-RW/2+.32,TH,RD/2-.22); room.add(mug);
-const nb=box(.42,.025,.3,0xffffff); nb.position.set(RW/2-.42,TH+.012,RD/2-.24); nb.rotation.y=.18; room.add(nb);
-const pen=box(.26,.014,.014,C.vio,{emissive:C.vio,emissiveIntensity:.3}); pen.position.set(RW/2-.4,TH+.032,RD/2-.2); pen.rotation.y=.5; room.add(pen);
+
+const nb=box(.42,.025,.3,0xffffff); nb.position.set(RW/2-.42,TH+.012,RD/2-.24); nb.rotation.y=.18;
+const pen=box(.26,.014,.014,C.vio,{emissive:C.vio,emissiveIntensity:.3}); pen.position.set(RW/2-.4,TH+.032,RD/2-.2); 
 /* une plante, côté gauche */
 const plant=new THREE.Group(); const pot=new THREE.Mesh(new THREE.CylinderGeometry(.2,.16,.42,24),new THREE.MeshStandardMaterial({color:CLAY,roughness:.6})); pot.position.y=.21; pot.castShadow=true; plant.add(pot);
 [[0,.62,0,.2],[.1,.82,.05,.15],[-.09,.74,-.04,.16],[.03,.95,-.05,.12]].forEach(([x,y,z,r])=>{ const f=new THREE.Mesh(new THREE.IcosahedronGeometry(r,1),new THREE.MeshStandardMaterial({color:0xD9CCF2,roughness:.7,flatShading:true})); f.position.set(x,y,z); f.castShadow=true; plant.add(f); });
@@ -174,7 +174,7 @@ const BZ=-RD/2+.42, SX=[-1.9*TSc*.62,0,1.9*TSc*.62], put=(o,x,z,r=0)=>{ o.positi
 put(laptop(),SX[0],BZ,Math.PI+.12); put(cup(),SX[0]+.42,BZ+.08);
 put(notebook(),SX[1]-.08,BZ,.25); put(cup(),SX[1]+.32,BZ-.06); put(phone(),SX[1]-.42,BZ+.05,-.3);
 put(laptop(),SX[2],BZ,Math.PI-.1); put(phone(),SX[2]-.42,BZ+.02,.2);
-put(cup(),-RW/2+.32,-.2); put(notebook(),RW/2-.3,-.35,-1.4);
+
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
 const tvA=new THREE.PointLight(0xffffff,5,16,1.4); tvA.position.set(0,SY-.1,SZ+.9); scene.add(tvA);
 const tvS=new THREE.SpotLight(0xffffff,17,26,1.25,.75,1.3); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(0,0,SZ+TZ+.5); tvS.castShadow=true; floor.position.set(0,0,SZ+TZ+.6);
