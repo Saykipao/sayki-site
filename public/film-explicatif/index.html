@@ -706,7 +706,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 .rdv-t p{margin:0;font-size:clamp(16px,1.2vw,18px);line-height:1.5;max-width:34ch}
 .rdv-t .rdv-alt{font-size:15px;color:var(--mute)}
 .rdv-alt a{color:var(--ink);border-bottom:1px solid var(--line-2)}
-.rdv-cal{position:relative;background:var(--paper);border:1px solid var(--line-2);min-height:700px;overflow:hidden}
+.rdv-cal{position:relative;min-height:700px;overflow:hidden;max-width:640px}   /* comme sur les petits écrans : Calendly seul, sans second cadre */
 .rdv-cal iframe{display:block;width:100%;height:700px;border:0;opacity:0;transition:opacity .5s ease}
 .rdv-cal.ok iframe{opacity:1}
 .rdv-wait{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:var(--soft);transition:opacity .4s}
@@ -1022,8 +1022,8 @@ html,body{overflow-x:clip}
   .hero-g{gap:24px;margin-top:20px}
   .hero-sub{font-size:16px}
   .hero-k{display:none}
-  .hero .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .hero .facts div:nth-child(3){display:none}
+  .hero .facts{grid-template-columns:auto auto auto;justify-content:space-between;gap:12px}
+  .hero .facts dd{white-space:nowrap}
   .hero{padding-bottom:44px}
   .hd.dark,.hd.sc-on.dark{border-color:transparent}
   .hd-in{height:72px}
@@ -1077,7 +1077,7 @@ html,body{overflow-x:clip}
         <button class="btn line" type="button" data-idea="1"><span class="t-lg">Recevoir une idée gratuite</span><span class="t-sm" aria-hidden="true">Idée gratuite</span></button>
       </div>
       <dl class="facts">
-        <div><dt class="mono">Prix</dt><dd>Dès 3 400 € HTVA</dd></div>
+        <div><dt class="mono">Prix</dt><dd>Dès 3 400 €<span class="t-lg"> HTVA</span></dd></div>
         <div><dt class="mono">Délai</dt><dd>30 jours<span class="t-lg"> après le call stratégique</span></dd></div>
         <div><dt class="mono">Garantie</dt><dd><a href="#garantie-comprise">Comprise, ou refaite</a></dd></div>
       </dl>
