@@ -184,21 +184,13 @@ function s3(){
 }
 
 /* ---------- 4 · le shooting : on photographie, l'IA en tire des images de référence ---------- */
-function person(P){ const g=new THREE.Group(), add=(geo,c,x,y,z,o)=>{ const m=new THREE.Mesh(geo,mat(c,o)); m.position.set(x,y,z); g.add(m); return m; };
-  [-1,1].forEach(k=>{ add(new THREE.BoxGeometry(.15,.05,.09),P.shoe,.025,.025,k*.075);
-    add(new THREE.CapsuleGeometry(.055,.3,4,12),P.pants,0,.24,k*.075);
-    const a=add(new THREE.CapsuleGeometry(.045,.28,4,12),P.shirt,0,.6,k*.205); a.rotation.x=k*.12;
-    add(new THREE.SphereGeometry(.045,16,12),P.skin,.01,.42,k*.225); });
-  add(new THREE.CylinderGeometry(.13,.12,.1,24),P.pants,0,.43,0).scale.z=1.25;
-  const tor=add(new THREE.CylinderGeometry(.15,.13,.34,24),P.shirt,0,.63,0); tor.scale.set(.85,1,1.25);
-  add(new THREE.SphereGeometry(.15,24,12,0,Math.PI*2,0,Math.PI/2),P.shirt,0,.78,0).scale.set(.85,.45,1.25);
-  add(new THREE.CylinderGeometry(.045,.05,.08,16),P.skin,0,.86,0);
-  const h=add(new THREE.SphereGeometry(.12,28,20),P.skin,0,.99,0); h.scale.set(.95,1.08,.95);
-  const hair=add(new THREE.SphereGeometry(.127,28,16,0,Math.PI*2,0,Math.PI*.55),P.hair,-.01,1.0,0); hair.rotation.z=.45; hair.scale.set(.97,1.1,.97);
-  [-1,1].forEach(k=>add(new THREE.SphereGeometry(.014,10,8),P.eye,.112,.99,k*.042));
+/* un humain simple : une silhouette lisse et une tête */
+function person(P){ const g=new THREE.Group();
+  const pr=[[0,0],[.12,0],[.135,.03],[.125,.3],[.13,.48],[.15,.64],[.16,.72],[.145,.78],[.1,.82],[.05,.84],[.045,.87],[0,.87]].map(([a,b])=>new THREE.Vector2(a,b));
+  const b=new THREE.Mesh(new THREE.LatheGeometry(pr,40),mat(P.body)); b.scale.z=1.35; g.add(b);
+  const h=new THREE.Mesh(new THREE.SphereGeometry(.115,32,24),mat(P.head)); h.position.y=.98; h.scale.set(.95,1.1,.95); g.add(h);
   return shade(g); }
-const PERS={clay:{shirt:C.clay,pants:C.clay2,skin:0xF6F5F8,hair:C.clay2,shoe:C.clay2,eye:0x9A97A2},
-  ref:{shirt:C.vio,pants:0x2B2338,skin:0xF6E3DA,hair:C.ink,shoe:0xffffff,eye:C.ink}};
+const PERS={clay:{body:C.clay,head:0xF6F5F8},ref:{body:C.vio,head:0xF6E3DA}};
 function pack(c,band,logo){ const cv=document.createElement('canvas'); cv.width=256; cv.height=340; const x=cv.getContext('2d');
   x.fillStyle=c; x.fillRect(0,0,256,340); x.fillStyle=band; x.fillRect(0,196,256,60); x.fillStyle=logo; x.beginPath(); x.arc(128,110,42,0,7); x.fill();
   x.fillStyle=band; x.fillRect(64,280,128,10); x.fillRect(88,302,80,8);
