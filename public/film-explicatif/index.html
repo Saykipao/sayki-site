@@ -929,7 +929,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 /* ===== Méthode, DA « isométrie WebGL » (nov. 2026) — scènes dans assets/methode-3d.js.
    Versions précédentes : methode-ligne-1600/, methode-scene-nuit/, methode-interface/, methode-motion-ui/ ===== */
 .g3{position:relative;display:block;width:100%;max-width:none!important;margin:0!important;overflow:hidden;
-  background:radial-gradient(70% 60% at 92% 0%,rgba(158,55,255,.10),transparent 70%),radial-gradient(60% 55% at 0% 100%,rgba(222,80,210,.06),transparent 70%),linear-gradient(180deg,#FBF9FD,#F3EFF8)}
+  background:#F4F4F6}
 .g3.w{aspect-ratio:640/400}.g3.n{aspect-ratio:460/420}
 .g3 canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .8s ease}
 .g3.ready canvas{opacity:1}
@@ -1026,7 +1026,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 </section>
 
 <!-- La méthode -->
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <section class="sec wrap" id="methode" aria-labelledby="t-me">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <linearGradient id="gDot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9E37FF"/><stop offset="1" stop-color="#DE50D2"/></linearGradient>
@@ -1609,16 +1609,19 @@ if(FINE&&!RM){
     else { pvw.classList.remove('on'); setTimeout(()=>{ if(!pvw.classList.contains('on')) pvv.pause(); },400); } };
   if(pvw&&pz){ addEventListener('mousemove',()=>pvSet(pvIn()),{passive:true}); addEventListener('scroll',()=>pvSet(pvIn()),{passive:true});
     document.documentElement.addEventListener('mouseleave',()=>pvSet(false)); }
-  (function f(){ cx+=(mx-cx)*0.22; cy+=(my-cy)*0.22; cursor.style.transform=`translate3d(${cx}px,${cy}px,0)`;
+  (function f(){ const dx=mx-cx, dy=my-cy; if(Math.abs(dx)+Math.abs(dy)>.15){ cx+=dx*0.22; cy+=dy*0.22; cursor.style.transform=`translate3d(${cx}px,${cy}px,0)`; }
     if(pvw&&pvw.classList.contains('on')){ const ox=ppx; ppx+=(mx-ppx)*0.12; ppy+=(my-ppy)*0.12; pvx+=((ppx-ox)-pvx)*0.2;
       pof+=((mx>innerWidth-440?-28-pvw.offsetWidth:28)-pof)*0.14;
       pvw.style.transform=`translate3d(${(ppx+pof).toFixed(1)}px,${(ppy-pvw.offsetHeight/2).toFixed(1)}px,0) rotate(${Math.max(-10,Math.min(10,pvx*0.5)).toFixed(2)}deg)`; }
     requestAnimationFrame(f); })();
   /* la ligne des clients avance, et accélère au défilement */
-  let mqX=0, lastY=scrollY;
-  (function m(){ const v=scrollY-lastY; lastY=scrollY; const half=mq.scrollWidth/2; mqX-=0.5+Math.min(Math.abs(v)*0.35,10); if(mqX<-half) mqX+=half;
-    if(innerWidth>=900) mq.style.transform=`translate3d(${mqX.toFixed(2)}px,0,0)`; requestAnimationFrame(m); })();
-} else if(!RM){ let mqX=0; (function m(){ const half=mq.scrollWidth/2; mqX-=0.4; if(mqX<-half) mqX+=half; if(innerWidth>=900) mq.style.transform=`translate3d(${mqX.toFixed(2)}px,0,0)`; requestAnimationFrame(m); })(); }
+  /* la ligne ne tourne que lorsqu'elle est à l'écran */
+  let mqX=0, lastY=scrollY, mqOn=false, mqR=0, half=0;
+  function m(){ mqR=0; if(!mqOn) return; const v=scrollY-lastY; lastY=scrollY; mqX-=0.5+Math.min(Math.abs(v)*0.35,10); if(mqX<-half) mqX+=half;
+    if(innerWidth>=900) mq.style.transform=`translate3d(${mqX.toFixed(2)}px,0,0)`; mqR=requestAnimationFrame(m); }
+  new IntersectionObserver(es=>{ mqOn=es[0].isIntersecting; if(mqOn){ half=mq.scrollWidth/2; lastY=scrollY; if(!mqR) mqR=requestAnimationFrame(m); } }).observe(mq);
+} else if(!RM){ let mqX=0, mqOn=false, mqR=0, half=0; function m(){ mqR=0; if(!mqOn) return; mqX-=0.4; if(mqX<-half) mqX+=half; if(innerWidth>=900) mq.style.transform=`translate3d(${mqX.toFixed(2)}px,0,0)`; mqR=requestAnimationFrame(m); }
+  new IntersectionObserver(es=>{ mqOn=es[0].isIntersecting; if(mqOn){ half=mq.scrollWidth/2; if(!mqR) mqR=requestAnimationFrame(m); } }).observe(mq); }
 
 /* ---------- le mauve du prix : le fond WebGL de l'accueil, dans la section ---------- */
 (function(){
