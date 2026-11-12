@@ -26,10 +26,13 @@ R.setClearColor(0,0); R.outputColorSpace=THREE.SRGBColorSpace; R.shadowMap.enabl
 
 const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,100);
 RectAreaLightUniformsLib.init();
-scene.add(new THREE.HemisphereLight(0x8A78B4,0x050308,.45));
+scene.add(new THREE.HemisphereLight(0xA77BFF,0x1A0D2E,.7));
 const sun=new THREE.DirectionalLight(0xffffff,0); sun.position.set(-3.5,10,-1.2); sun.castShadow=false; sun.shadow.mapSize.set(1024,1024);
 Object.assign(sun.shadow.camera,{left:-7,right:7,top:7,bottom:-7,near:1,far:40}); sun.shadow.bias=-.0005; sun.shadow.normalBias=.02; sun.shadow.radius=6; sun.shadow.mapSize.set(2048,2048); sun.position.set(-4,12,4); scene.add(sun);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.ShadowMaterial({opacity:.3,color:0x000000})); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+const FA=(()=>{ const c=document.createElement('canvas'); c.width=c.height=256; const g=c.getContext('2d'), r=g.createRadialGradient(128,128,0,128,128,128);
+  r.addColorStop(0,'#fff'); r.addColorStop(.45,'#bbb'); r.addColorStop(1,'#000'); g.fillStyle=r; g.fillRect(0,0,256,256); return new THREE.CanvasTexture(c); })();
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(16,12),new THREE.MeshStandardMaterial({color:0x2A1846,roughness:.85,transparent:true,alphaMap:FA,depthWrite:false}));
+floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; floor.renderOrder=-2; scene.add(floor);
 
 
 const box=(w,h,d,color,o={})=>{ const m=new THREE.Mesh(new RoundedBoxGeometry(w,h,d,3,Math.min(.03,h/2.4,w/2.4,d/2.4)),new THREE.MeshStandardMaterial({color,roughness:.5,...o})); m.castShadow=m.receiveShadow=true; return m; };
@@ -145,9 +148,9 @@ plant.position.set(RW/2+1.05,0,-RD/2-.7); room.add(plant);
 /* le sol de la salle : une tache claire, très douce */
 const rug=new THREE.Object3D();
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
-const tvA=new THREE.RectAreaLight(0xffffff,3.2,SW*.95,SH*.95); tvA.position.set(0,SY,SZ+.25); tvA.lookAt(0,SY,SZ+5); scene.add(tvA);
-const tvS=new THREE.SpotLight(0xffffff,16,22,1.1,.9,1.4); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(0,0,SZ+TZ+.5); tvS.castShadow=true;
-tvS.shadow.mapSize.set(1024,1024); tvS.shadow.bias=-.002; tvS.shadow.normalBias=.04; tvS.shadow.radius=6; scene.add(tvS,tvS.target);
+const tvA=new THREE.RectAreaLight(0xffffff,2.2,SW*.95,SH*.95); tvA.position.set(0,SY,SZ+.25); tvA.lookAt(0,SY,SZ+5); scene.add(tvA);
+const tvS=new THREE.SpotLight(0xffffff,17,26,1.25,.75,1.3); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(0,0,SZ+TZ+.5); tvS.castShadow=true; floor.position.set(0,0,SZ+TZ+.6);
+tvS.shadow.mapSize.set(2048,2048); tvS.shadow.bias=-.002; tvS.shadow.normalBias=.04; tvS.shadow.radius=6; scene.add(tvS,tvS.target);
 const AV=document.createElement('canvas'); AV.width=8; AV.height=4; const AX=AV.getContext('2d',{willReadFrequently:true}); const tvC=new THREE.Color(0xB8A8E0), tvT=new THREE.Color(); let avN=0;
 const tvLight=()=>{ if(!vOn||(avN++%6)) return; try{ AX.drawImage(VC,0,0,8,4); const d=AX.getImageData(0,0,8,4).data; let r=0,g=0,b=0; for(let i=0;i<d.length;i+=4){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; } const n=d.length/4;
   tvT.setRGB(r/n/255,g/n/255,b/n/255,THREE.SRGBColorSpace); tvT.lerp(new THREE.Color(1,1,1),.35); }catch(e){} };
