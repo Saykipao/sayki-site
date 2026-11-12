@@ -132,7 +132,7 @@ tl.add(sh); const pl=pool(1.3,1.4); tl.add(pl);
 const ok=check(.24); tl.add(ok);
 
 /* ---------- la salle de réunion : une table, des chaises, un café ; même matière que le reste ---------- */
-const TSc=SW*.78/L, TZ=2.1, TH=.74, RW=L*TSc+.7, RD=1.3*TSc+.5;
+const TSc=SW*.78/L, TZ=2.5, TH=.74, RW=L*TSc+.7, RD=1.3*TSc+1.3, TLZ=.4;
 const room=new THREE.Group(); room.position.set(0,0,SZ+TZ); scene.add(room);
 const CLAY=0x3A2858, CLAY2=0x2E1F48;
 const top=box(RW,.07,RD,0xffffff); top.position.y=TH-.035; room.add(top);
@@ -156,6 +156,25 @@ const plant=new THREE.Group(); const pot=new THREE.Mesh(new THREE.CylinderGeomet
 plant.position.set(RW/2+1.05,0,-RD/2-.7); room.add(plant);
 /* le sol de la salle : une tache claire, très douce */
 const rug=new THREE.Object3D();
+const DK=0x2B1E42, DK2=0x3E2C5E;
+function laptop(){ const g=new THREE.Group(); const b=box(.48,.022,.33,DK2); b.position.y=.011; g.add(b);
+  const k=new THREE.Mesh(new THREE.PlaneGeometry(.4,.16),new THREE.MeshStandardMaterial({color:DK,roughness:.8})); k.rotation.x=-Math.PI/2; k.position.set(0,.023,-.03); g.add(k);
+  const lid=new THREE.Group(); lid.position.set(0,.022,.16); const l=box(.48,.32,.016,DK2); l.position.y=.16; lid.add(l);
+  const scr=new THREE.Mesh(new THREE.PlaneGeometry(.44,.28),new THREE.MeshBasicMaterial({color:0x7E5BC4})); scr.position.set(0,.16,-.009); scr.rotation.y=Math.PI; lid.add(scr);
+  const dot=new THREE.Mesh(new THREE.CircleGeometry(.025,20),new THREE.MeshBasicMaterial({color:C.vio})); dot.position.set(0,.17,.009); lid.add(dot);
+  lid.rotation.x=-.32; g.add(lid); return g; }
+function cup(){ const g=new THREE.Group(); const b=new THREE.Mesh(new THREE.CylinderGeometry(.055,.048,.12,20),new THREE.MeshStandardMaterial({color:0xF2EEF8,roughness:.4})); b.position.y=.06; g.add(b);
+  const h=new THREE.Mesh(new THREE.TorusGeometry(.032,.01,8,16,Math.PI),new THREE.MeshStandardMaterial({color:0xF2EEF8,roughness:.4})); h.position.set(.058,.065,0); h.rotation.z=-Math.PI/2; g.add(h);
+  const c=new THREE.Mesh(new THREE.CircleGeometry(.047,20),new THREE.MeshBasicMaterial({color:0x4A3226})); c.rotation.x=-Math.PI/2; c.position.y=.112; g.add(c); return g; }
+function notebook(){ const g=new THREE.Group(); const n=box(.3,.02,.38,0xD9D2E6); n.position.y=.01; g.add(n);
+  const p=box(.22,.012,.012,C.vio,{emissive:C.vio,emissiveIntensity:.35}); p.position.set(.04,.026,.02); p.rotation.y=.6; g.add(p); return g; }
+function phone(){ const g=new THREE.Group(); const p=box(.09,.012,.18,0x1A1128); p.position.y=.006; g.add(p);
+  const s=new THREE.Mesh(new THREE.PlaneGeometry(.075,.16),new THREE.MeshBasicMaterial({color:0x5B3E8E})); s.rotation.x=-Math.PI/2; s.position.y=.013; g.add(s); return g; }
+const BZ=-RD/2+.42, SX=[-1.9*TSc*.62,0,1.9*TSc*.62], put=(o,x,z,r=0)=>{ o.position.set(x,TH,z); o.rotation.y=r; room.add(o); };
+put(laptop(),SX[0],BZ,Math.PI+.12); put(cup(),SX[0]+.42,BZ+.08);
+put(notebook(),SX[1]-.08,BZ,.25); put(cup(),SX[1]+.32,BZ-.06); put(phone(),SX[1]-.42,BZ+.05,-.3);
+put(laptop(),SX[2],BZ,Math.PI-.1); put(phone(),SX[2]-.42,BZ+.02,.2);
+put(cup(),-RW/2+.32,-.2); put(notebook(),RW/2-.3,-.35,-1.4);
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
 const tvA=new THREE.PointLight(0xffffff,5,16,1.4); tvA.position.set(0,SY-.1,SZ+.9); scene.add(tvA);
 const tvS=new THREE.SpotLight(0xffffff,17,26,1.25,.75,1.3); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(0,0,SZ+TZ+.5); tvS.castShadow=true; floor.position.set(0,0,SZ+TZ+.6);
@@ -218,10 +237,10 @@ function frameFn(now){
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
   /* scène : la frise posée au sol, pile devant le centre de l'écran (même axe x) ; la caméra cadre l'ensemble */
-  tl.scale.set(TSc,TSc*.62,TSc); tl.position.set(0,TH-TY*TSc*.62+.004,SZ+TZ); PL.constant=-TH; tl.updateMatrixWorld(true);
+  tl.scale.set(TSc,TSc*.62,TSc); tl.position.set(0,TH-TY*TSc*.62+.004,SZ+TZ+TLZ); PL.constant=-TH; tl.updateMatrixWorld(true);
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  const k=mob?1.05*W/(xr-xl):Math.min(.62*W/(xr-xl),1.02*(r0.height-60)/(yt-yb));
-  const cxp=mob?W*.55:W*.68, by=mob?rf.bottom-rc.top-6:r0.height-30;
+  const k=mob?1.05*W/(xr-xl):Math.min(Math.min(.62*W,rf.width*1.3)/(xr-xl),1.02*(r0.height-60)/(yt-yb));
+  const cxp=mob?W*.55:Math.min(W*.68,rf.left-rc.left+rf.width*.56), by=mob?rf.bottom-rc.top-6:r0.height-30;
   const left=(xl+xr)/2-cxp/k, top=yb+by/k;
   Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
   /* état de lecture */
