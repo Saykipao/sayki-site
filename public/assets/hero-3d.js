@@ -120,7 +120,7 @@ const tcSet=()=>{};
 /* les quatre temps */
 const blocks=ACTS.map((A,i)=>{ const w=X(A.b)-X(A.a)-.04, m=box(w,A.h,.5,A.c,A.c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
   m.castShadow=false; m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); tl.add(m);
-  const l=label(A.n,.15,{color:A.c===C.vio?'#DCC0FF':'#F1ECF8'}); l.position.set(X(A.a)+.02,TY+.002,i%2?.7:.48); l.material.depthTest=false; l.renderOrder=10; tl.add(l);
+  const l=label(A.n,.135,{color:A.c===C.vio?'#DCC0FF':'#F1ECF8'}); l.position.set(X(A.a)+.02,TY+.002,.5); l.material.depthTest=false; l.renderOrder=10; tl.add(l);
   return m; });
 /* tête de lecture */
 const sh=new THREE.Group();
