@@ -352,8 +352,10 @@ document.querySelectorAll('.g3').forEach(el=>{ const n=+el.dataset.s, S=MAKE[n](
   S.ctx=S.cv.getContext('2d'); items.push(S); ob.observe(el); el.classList.add('ready'); });
 /* qualité adaptative : on baisse la définition si les images tardent */
 let Q=Math.min(1.5,devicePixelRatio||1), last=0, slow=0;
+let lastF=0;
 function frame(now){
   requestAnimationFrame(frame);
+  if(FT===null&&now-lastF<32) return; lastF=now;
   const vis=items.filter(i=>i.vis&&!i.done); if(!vis.length){ last=0; return; }
   if(last){ const dt=now-last; slow=dt>26?slow+1:Math.max(0,slow-1); if(slow>20&&Q>.9){ Q=Math.max(.85,Q-.2); slow=0; } } last=now;
   let MW=1,MH=1;
