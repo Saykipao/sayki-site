@@ -849,13 +849,13 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
         <button aria-pressed="false" data-f="labo" class="f-labo"><i aria-hidden="true"></i>Labo<sup>08</sup></button>
       </div>
     </div>
-    <div class="grid" id="grid"><article class="film p1" data-film="vocli"><a href="/films/mint-dentistes/" data-open="vocli" aria-label="Mint Dentistes, Le dentiste noyé sous la paperasse">
+    <div class="grid" id="grid"><article class="film p1" data-film="nikita"><a href="/films/nikita-concept/" data-open="nikita" aria-label="Nikita Concept, Une agence, pour quoi faire ?">
     <div class="media" data-cursor="Voir|le film">
-      <img class="m-color" src="assets/vocli.jpg" alt="Mint Dentistes, film d’animation explicatif" loading="lazy" decoding="async">
-      <img class="m-duo" src="assets/vocli-duo.jpg" alt="" loading="lazy" decoding="async">
-      <video muted loop playsinline preload="none" data-src="assets/vocli.mp4"></video>
+      <img class="m-color" src="assets/nikita.jpg" alt="Nikita Concept, film d’animation explicatif" loading="lazy" decoding="async">
+      <img class="m-duo" src="assets/nikita-duo.jpg" alt="" loading="lazy" decoding="async">
+      <video muted loop playsinline preload="none" data-src="assets/nikita.mp4"></video>
     </div>
-    <div class="cap"><p class="mono cap-k">Mint Dentistes · Film d’animation explicatif</p><span class="tc mono">90 s</span><h3 class="display">Le dentiste noyé sous la paperasse</h3></div></a></article>
+    <div class="cap"><p class="mono cap-k">Nikita Concept · Film d’animation explicatif</p><span class="tc mono">90 s</span><h3 class="display">Une agence, pour quoi faire ?</h3></div></a></article>
 <article class="film p2" data-film="supercan"><a href="/films/supercan/" data-open="supercan" aria-label="Supercan, La canette qui rêvait d’être plus grande">
     <div class="media" data-cursor="Voir|le film">
       <img class="m-color" src="assets/supercan.jpg" alt="Supercan, publicité narrative · démo" loading="lazy" decoding="async">
@@ -877,13 +877,13 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <video muted loop playsinline preload="none" data-src="assets/delforge.mp4"></video>
     </div>
     <div class="cap"><p class="mono cap-k">Guy Delforge · Publicité narrative · démo</p><span class="tc mono">15 s</span><h3 class="display">Faire sentir un parfum à travers un écran</h3></div></a></article>
-<article class="film p5" data-film="laforge"><a href="/films/la-forge/" data-open="laforge" aria-label="La Forge, Une identité qui transpire">
+<article class="film p5" data-film="vocli"><a href="/films/mint-dentistes/" data-open="vocli" aria-label="Mint Dentistes, Le dentiste noyé sous la paperasse">
     <div class="media" data-cursor="Voir|le film">
-      <img class="m-color" src="assets/laforge.jpg" alt="La Forge, identité visuelle" loading="lazy" decoding="async">
-      <img class="m-duo" src="assets/laforge-duo.jpg" alt="" loading="lazy" decoding="async">
-      <video muted loop playsinline preload="none" data-src="assets/laforge.mp4"></video>
+      <img class="m-color" src="assets/vocli.jpg" alt="Mint Dentistes, film d’animation explicatif" loading="lazy" decoding="async">
+      <img class="m-duo" src="assets/vocli-duo.jpg" alt="" loading="lazy" decoding="async">
+      <video muted loop playsinline preload="none" data-src="assets/vocli.mp4"></video>
     </div>
-    <div class="cap"><p class="mono cap-k">La Forge · Identité visuelle</p><span class="tc mono">60 s</span><h3 class="display">Une identité qui transpire</h3></div></a></article>
+    <div class="cap"><p class="mono cap-k">Mint Dentistes · Film d’animation explicatif</p><span class="tc mono">90 s</span><h3 class="display">Le dentiste noyé sous la paperasse</h3></div></a></article>
 <article class="film p6" data-film="fid"><a href="/films/fid-manager/" data-open="fid" aria-label="FID-Manager, La comptabilité, version blockbuster">
     <div class="media" data-cursor="Voir|le film">
       <img class="m-color" src="assets/fid.jpg" alt="FID-Manager, film pour événement" loading="lazy" decoding="async">
@@ -1273,6 +1273,8 @@ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const FILMS={
   aurobindo:{year:'2026',t:'Aurobindo',bunny:'788157/6a9bbe6a-8d70-4f0c-bcbe-deaa92deb617',hook:'Le géant discret des génériques',type:'Film de notoriété',sect:'Pharma',client:'Aurobindo Belgique',agence:'Nikita Concept',tc:'60 s',fmt:'16:9',fps:'24 i/s',tags:['marque'],v:false,
     defi:'Faire connaître en Belgique un des plus grands fabricants de génériques au monde. Laboratoires et lignes de production reconstitués sans tournage, à partir du rapport annuel.'},
+  nikita:{year:'2026',date:'Novembre 2026',t:'Nikita Concept',hook:'Une agence, pour quoi faire ?',type:'Film d’animation explicatif',sect:'Communication',client:'Nikita Concept',agence:'En direct',tc:'90 s',fmt:'21:9',fps:'30 i/s',lang:'Français',tags:['marque'],v:false,
+    defi:'Une agence de communication qui devait expliquer à quoi elle sert, quand tout le monde produit des images avec l’IA. Toute l’équipe joue son propre rôle, dans ses propres bureaux.'},
   vocli:{year:'2026',date:'Septembre 2026',t:'Mint Dentistes',hook:'Le dentiste noyé sous la paperasse',type:'Film d’animation explicatif',sect:'Santé',client:'Mint Dentistes · Vocli Dental',agence:'En direct',tc:'90 s',fmt:'16:9 · 1920×1080',fps:'60 i/s',lang:'Français',brief:'30 jours',tools:['Midjourney','GPT Image','ElevenLabs','Epidemic Sound','Seedance','Adobe Premiere','Adobe After Effects'],tags:['marque'],v:false,
     defi:'Ce film ne cherche pas à plaire à tout le monde. Il cherche à convaincre une seule personne, dans une seule réunion, au moment où elle décide.'},
   supercan:{year:'2026',t:'Supercan',hook:'La canette qui rêvait d’être plus grande',type:'Publicité narrative · démo',sect:'Boisson',client:'Aucun · film de démonstration',agence:'—',tc:'38 s',fmt:'16:9 · 3840×2160',fps:'24 i/s',tags:['pub'],v:false,demo:true,
@@ -1317,13 +1319,13 @@ const FILMS={
   reveal:{year:'2026',t:'Sayki reveal',hook:'Notre logo, à l’encre',type:'R&D',sect:'Motion design',client:'Sayki Studio',tc:'13 s',fmt:'16:9 · 1280×720',fps:'24 i/s',tags:['labo','rd'],v:false,
     defi:'Un test d’animation pour le reveal de notre logo. Oui, on se fait aussi des films à nous-mêmes.'}
 };
-const ORDER=['vocli','supercan','elba','delforge','laforge','fid', 'arkoesp','smits','arkopharma','baudouin','rall','sorcery', 'loophole','sayki','sayki2','disney','ikari','ascension','iam','reveal'];
+const ORDER=['nikita','supercan','elba','delforge','vocli','fid', 'arkoesp','smits','arkopharma','baudouin','rall','sorcery', 'loophole','sayki','sayki2','disney','ikari','ascension','iam','reveal'];
 const PAGE=7;
 /* films complets sur Bunny Stream (lecteur maison) */
-const BUNNY={supercan:'9f40759b-2b2f-491e-acb7-b52d4a1ee48a',sorcery:'2175faba-81f3-42e3-bd90-bb06fdeedf87',reveal:'d1a5cd7d-084b-495f-990a-02579e3331e5',disney:'d919dd2e-72e5-442d-97ae-a22193ac32ec',arkoesp:'d269fd23-a063-442b-b91a-8db04e9b5917',ascension:'ebf6c5fc-2afb-4d24-80fa-a3ca22b374d8',delforge:'ec49f7c6-3fb7-4d34-bee4-1fedd0047bfb',sayki:'f92ac12d-9dd5-4013-a06c-d7c53e54298d',sayki2:'ec1474a6-2e23-4feb-a4f5-7bde1477282f',ikari:'dbc5637b-13ae-4292-a130-6e8e8081f4c8',iam:'66162f40-6222-4e4a-b07c-f6be09b8f4e3',baudouin:'f7470fba-d26b-4198-84ae-75980fce39e3',laforge:'1e305081-951a-4175-8fe2-0e6ef90df8df',rall:'226a094a-6416-4505-a4a1-248d3ea1ac82',fid:'37e87960-049a-4df0-9ad4-e79759337e30',elba:'e36ffa3f-dbd9-4067-842f-6e3b3a161359',arkopharma:'82f063a6-0ec2-46ed-844b-498faf2ad51c',vocli:'6b06c60f-0321-4702-9ba7-c2982a9e3181',bwplus:'f05d871b-2a08-4b34-b772-ed1eed9d90ad',smits:'559c809b-78c2-4a31-ab45-28ac6ec1e816',loophole:'e04e0292-f37e-4def-9baa-48c687562732'};
+const BUNNY={nikita:'bce189bc-aa35-471b-b491-77621ee6530f',supercan:'9f40759b-2b2f-491e-acb7-b52d4a1ee48a',sorcery:'2175faba-81f3-42e3-bd90-bb06fdeedf87',reveal:'d1a5cd7d-084b-495f-990a-02579e3331e5',disney:'d919dd2e-72e5-442d-97ae-a22193ac32ec',arkoesp:'d269fd23-a063-442b-b91a-8db04e9b5917',ascension:'ebf6c5fc-2afb-4d24-80fa-a3ca22b374d8',delforge:'ec49f7c6-3fb7-4d34-bee4-1fedd0047bfb',sayki:'f92ac12d-9dd5-4013-a06c-d7c53e54298d',sayki2:'ec1474a6-2e23-4feb-a4f5-7bde1477282f',ikari:'dbc5637b-13ae-4292-a130-6e8e8081f4c8',iam:'66162f40-6222-4e4a-b07c-f6be09b8f4e3',baudouin:'f7470fba-d26b-4198-84ae-75980fce39e3',laforge:'1e305081-951a-4175-8fe2-0e6ef90df8df',rall:'226a094a-6416-4505-a4a1-248d3ea1ac82',fid:'37e87960-049a-4df0-9ad4-e79759337e30',elba:'e36ffa3f-dbd9-4067-842f-6e3b3a161359',arkopharma:'82f063a6-0ec2-46ed-844b-498faf2ad51c',vocli:'6b06c60f-0321-4702-9ba7-c2982a9e3181',bwplus:'f05d871b-2a08-4b34-b772-ed1eed9d90ad',smits:'559c809b-78c2-4a31-ab45-28ac6ec1e816',loophole:'e04e0292-f37e-4def-9baa-48c687562732'};
 for(const k in BUNNY) if(FILMS[k]) FILMS[k].bunny='788157/'+BUNNY[k];
 /* vignettes : les films verticaux ont une version horizontale sur mobile */
-const SLUG={supercan:'supercan',aurobindo:'aurobindo',vocli:'mint-dentistes',bwplus:'bw-plus',elba:'elba',delforge:'guy-delforge',laforge:'la-forge',fid:'fid-manager',arkoesp:'arkopharma-espagne',smits:'pharmacie-smits',arkopharma:'arkopharma-le-pharmacien',baudouin:'invitation-privee',rall:'rall',sorcery:'sorcery-systems',loophole:'the-loop-hole-project',sayki:'sayki-serie',sayki2:'sayki-clip',disney:'disney-a-la-maison',ikari:'ikari',ascension:'l-ascension',iam:'iam',reveal:'sayki-reveal'};
+const SLUG={nikita:'nikita-concept',supercan:'supercan',aurobindo:'aurobindo',vocli:'mint-dentistes',bwplus:'bw-plus',elba:'elba',delforge:'guy-delforge',laforge:'la-forge',fid:'fid-manager',arkoesp:'arkopharma-espagne',smits:'pharmacie-smits',arkopharma:'arkopharma-le-pharmacien',baudouin:'invitation-privee',rall:'rall',sorcery:'sorcery-systems',loophole:'the-loop-hole-project',sayki:'sayki-serie',sayki2:'sayki-clip',disney:'disney-a-la-maison',ikari:'ikari',ascension:'l-ascension',iam:'iam',reveal:'sayki-reveal'};
 const BYSLUG=Object.fromEntries(Object.entries(SLUG).map(([k,v])=>[v,k]));
 const MOB=matchMedia('(max-width:899px)').matches;
 const th=id=>id+(FILMS[id].v&&!FILMS[id].ht&&MOB?'-h':'');
