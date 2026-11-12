@@ -1022,10 +1022,16 @@ html,body{overflow-x:clip}
   .hero-g{gap:24px;margin-top:20px}
   .hero-sub{font-size:16px}
   .hero-k{display:none}
+  .hero .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero .facts div:nth-child(3){display:none}
+  .hero{padding-bottom:44px}
+  .hd.dark,.hd.sc-on.dark{border-color:transparent}
+  .hd-in{height:72px}
+  .hd-logo{width:72px}
   .hero .h1{font-size:clamp(26px,7.7vw,36px);line-height:1.04}
   .hero .h1 em{white-space:nowrap}
   .hero .h1-a{font-size:1em}
-  .hero{padding-top:calc(60px + 28px)}
+  .hero{padding-top:calc(72px + 30px)}
 }
 </style>
 </head>
@@ -1072,7 +1078,7 @@ html,body{overflow-x:clip}
       </div>
       <dl class="facts">
         <div><dt class="mono">Prix</dt><dd>Dès 3 400 € HTVA</dd></div>
-        <div><dt class="mono">Délai</dt><dd>30 jours après le call stratégique</dd></div>
+        <div><dt class="mono">Délai</dt><dd>30 jours<span class="t-lg"> après le call stratégique</span></dd></div>
         <div><dt class="mono">Garantie</dt><dd><a href="#garantie-comprise">Comprise, ou refaite</a></dd></div>
       </dl>
     </div>
