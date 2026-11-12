@@ -270,16 +270,23 @@ function s5(){
   /* une interface simple : une image en cours de génération, sa barre de progression */
   const gc=document.createElement('canvas'); gc.width=640; gc.height=280; const gx=gc.getContext('2d');
   gx.fillStyle='#EFE7FC'; gx.fillRect(0,0,640,280); gx.fillStyle='#E2D3FA'; gx.beginPath(); gx.moveTo(0,280); gx.lineTo(210,120); gx.lineTo(330,210); gx.lineTo(450,100); gx.lineTo(640,250); gx.lineTo(640,280); gx.fill();
-  gx.fillStyle='#fff'; gx.beginPath(); gx.arc(320,124,46,0,7); gx.fill(); gx.fillStyle='#9E37FF'; gx.beginPath(); gx.moveTo(306,100); gx.lineTo(344,124); gx.lineTo(306,148); gx.fill();
-  gx.fillStyle='#fff'; gx.fillRect(32,236,576,10); gx.fillStyle='#9E37FF'; gx.fillRect(32,236,250,10); gx.fillRect(278,228,6,26);
   const gt=new THREE.CanvasTexture(gc); gt.colorSpace=THREE.SRGBColorSpace; gt.anisotropy=4;
   const im=new THREE.Mesh(new THREE.PlaneGeometry(W-.08,H-.36),new THREE.MeshBasicMaterial({map:gt})); im.rotation.x=-Math.PI/2; im.position.set(0,.027,-.14); l0.add(im);
+  /* lecture : n'arrive qu'au montage final */
+  const flat=(geo,c,x,y,z)=>{ const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:c})); m.rotation.x=-Math.PI/2; m.position.set(x,y,z); return m; };
+  const play=new THREE.Group(); play.position.set(0,.03,-.2); l0.add(play);
+  play.add(flat(new THREE.CircleGeometry(.18,40),C.white,0,0,0));
+  const tri=new THREE.Shape(); tri.moveTo(-.055,-.085); tri.lineTo(.09,0); tri.lineTo(-.055,.085); tri.closePath();
+  const tm=flat(new THREE.ShapeGeometry(tri),C.vio,0,.002,0); tm.rotation.z=0; play.add(tm);
+  const BL=W-.36, track=flat(new THREE.PlaneGeometry(BL,.04),C.white,0,.03,.26); l0.add(track);
+  const fg=new THREE.PlaneGeometry(BL,.04); fg.translate(BL/2,0,0); const fill=flat(fg,C.vio,-BL/2,.032,.26); l0.add(fill);
+  const ph=flat(new THREE.PlaneGeometry(.022,.1),C.vio,-BL/2,.034,.26); l0.add(ph);
   /* 2. motion design : quelques formes sur un verre */
-  const l1=box(W,.03,H,C.mid,{transparent:true,opacity:.28,roughness:.15}); l1.castShadow=false;
+  const l1=box(W,.03,H,C.mid,{transparent:true,opacity:.28,roughness:.15,depthWrite:false}); l1.castShadow=false;
   const fm=(geo,c,x,z)=>{ const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:c,transparent:true})); m.rotation.x=-Math.PI/2; m.position.set(x,.018,z); l1.add(m); return m; };
-  const shapes=[fm(new THREE.CircleGeometry(.2,40),C.vio,.8,-.25),fm(new THREE.PlaneGeometry(1.05,.13),C.pink,-.55,.33),fm(new THREE.PlaneGeometry(.7,.08),C.white,-.72,.5)];
+  const shapes=[fm(new THREE.CircleGeometry(.2,40),C.vio,.8,-.35),fm(new THREE.PlaneGeometry(1.05,.13),C.pink,-.68,-.5),fm(new THREE.PlaneGeometry(.7,.08),C.white,-.85,-.34)];
   /* 3. musique et sound design : une onde */
-  const l2=box(W,.03,H,C.white,{transparent:true,opacity:.35,roughness:.15}); l2.castShadow=false; const bars=[];
+  const l2=box(W,.03,H,C.white,{transparent:true,opacity:.35,roughness:.15,depthWrite:false}); l2.castShadow=false; const bars=[];
   for(let i=0;i<22;i++){ const b=box(.034,.02,.24,C.vio,{emissive:C.vio,emissiveIntensity:.35}); b.castShadow=false; b.position.set(-W/2+.3+i*.095,.02,-.05); l2.add(b); bars.push(b); }
   const labs=[['génération vidéo',l0,.06],['motion design',l1,.03],['musique et sound design',l2,.03]].map(([n,l,y])=>{ const m=label(B,n,.15,{color:GREY}); m.position.set(-W/2+.12,y,H/2-.16); l.add(m); return m; });
   [l0,l1,l2].forEach(l=>{ B.scene.add(l); mk.push(l); });
@@ -296,6 +303,9 @@ function s5(){
     const sw=seg(t,5.3,6.3); sweep.visible=sw>0&&sw<1; sweep.position.set(-W/2+W*io3(sw),.05+2*.035+.05,0);
     pl.position.set(-W/2+W*io3(sw),.004,0); pl.material.opacity=.4*Math.sin(Math.PI*sw);
     fin.material.opacity=eo(seg(t,6.2,6.8))*fo;
+    const pa=back(seg(t,6.3,6.9)); play.scale.setScalar(nz(pa)); play.visible=pa>.01;
+    const tv=eo(seg(t,6.5,6.9)), pr=seg(t,6.9,9.5); track.visible=fill.visible=ph.visible=tv>.01; track.scale.set(nz(tv),1,1);
+    fill.scale.set(nz(pr),1,1); ph.position.x=-BL/2+BL*pr;
     const o=back(seg(t,6.4,7))*fo; ok.scale.setScalar(nz(o)); ok.position.set(W/2-.08,.28+.03*Math.sin(t*2),-H/2+.08);
   };
   return B;
