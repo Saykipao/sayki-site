@@ -2,7 +2,6 @@
 // On peut faire glisser la tête de lecture ; chaque temps s'explique en deux puces.
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
-import {RectAreaLightUniformsLib} from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
 const root=document.documentElement, hero=document.querySelector('.hero'), cv=hero&&hero.querySelector('.hx-cv'), fig=hero&&hero.querySelector('.hx-f'), note=hero&&hero.querySelector('.hx-note');
 if(!cv||!fig) throw new Error('hero');
@@ -25,7 +24,6 @@ let R; try{ R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true}); }c
 R.setClearColor(0,0); R.outputColorSpace=THREE.SRGBColorSpace; R.shadowMap.enabled=true; R.shadowMap.type=THREE.PCFSoftShadowMap;
 
 const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,100);
-RectAreaLightUniformsLib.init();
 scene.add(new THREE.HemisphereLight(0xA77BFF,0x1A0D2E,.7));
 const sun=new THREE.DirectionalLight(0xffffff,0); sun.position.set(-3.5,10,-1.2); sun.castShadow=false; sun.shadow.mapSize.set(1024,1024);
 Object.assign(sun.shadow.camera,{left:-7,right:7,top:7,bottom:-7,near:1,far:40}); sun.shadow.bias=-.0005; sun.shadow.normalBias=.02; sun.shadow.radius=6; sun.shadow.mapSize.set(2048,2048); sun.position.set(-4,12,4); scene.add(sun);
@@ -57,20 +55,20 @@ const pScene=new THREE.Scene(), pCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1)
 const blurMat=last=>new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:THREE.NoBlending,
   uniforms:{tex:{value:null},dir:{value:new THREE.Vector2()},c:{value:new THREE.Vector2(.5,.5)},r:{value:new THREE.Vector2(.3,.3)},mx:{value:6},aoT:{value:null},aoK:{value:0},blT:{value:null},blK:{value:0}},
   vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-  fragmentShader:`uniform sampler2D tex,aoT,blT;uniform vec2 dir,c,r;uniform float mx,aoK,blK;varying vec2 vUv;
+  fragmentShader:`uniform sampler2D tex,aoT,blT;uniform vec2 dir,c,r;uniform float mx,aoK,blK;varying vec2 vUv;vec4 sf(vec4 v){ bvec4 n=bvec4(!(v.x>=-1e4&&v.x<=1e4),!(v.y>=-1e4&&v.y<=1e4),!(v.z>=-1e4&&v.z<=1e4),!(v.w>=-1e4&&v.w<=1e4)); return any(n)?vec4(0.):clamp(v,0.,32.); }
     void main(){ float b=smoothstep(1.,1.75,length((vUv-c)/r))*mx; vec4 acc=vec4(0.); float ws=0.;
-      for(int i=-4;i<=4;i++){ float w=exp(-float(i*i)/8.); acc+=texture2D(tex,vUv+dir*float(i)*b*.25)*w; ws+=w; } acc/=ws;
-      ${last?'acc.rgb+=texture2D(blT,vUv).rgb*blK; acc.a=max(acc.a,min(1.,dot(texture2D(blT,vUv).rgb,vec3(.33))*blK));':''}
+      for(int i=-4;i<=4;i++){ float w=exp(-float(i*i)/8.); acc+=sf(texture2D(tex,vUv+dir*float(i)*b*.25))*w; ws+=w; } acc/=ws;
+      ${last?'vec3 bl=sf(texture2D(blT,vUv)).rgb; acc.rgb+=bl*blK; acc.a=max(acc.a,min(1.,dot(bl,vec3(.33))*blK));':''}
       ${last?'vec3 col=acc.a>.0001?acc.rgb/acc.a:vec3(0.); vec4 o=linearToOutputTexel(vec4(col,1.)); gl_FragColor=vec4(o.rgb*acc.a,acc.a);':'gl_FragColor=acc;'} }`});
 const bH=blurMat(false), bV=blurMat(true);
 /* bloom : on extrait ce qui brille (l'écran), on le floute large à 1/4 de la taille, on le rajoute à la fin */
 const rtQ1=new THREE.WebGLRenderTarget(2,2,{type:HF?THREE.HalfFloatType:THREE.UnsignedByteType}), rtQ2=rtQ1.clone();
 const brMat=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:THREE.NoBlending,uniforms:{tex:{value:null},thr:{value:.82}},
   vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-  fragmentShader:`uniform sampler2D tex;uniform float thr;varying vec2 vUv; void main(){ vec4 t=texture2D(tex,vUv); float l=dot(t.rgb,vec3(.2126,.7152,.0722)); gl_FragColor=vec4(t.rgb*smoothstep(thr,thr+.45,l),1.); }`});
+  fragmentShader:`uniform sampler2D tex;uniform float thr;varying vec2 vUv; vec4 sf(vec4 v){ bvec4 n=bvec4(!(v.x>=-1e4&&v.x<=1e4),!(v.y>=-1e4&&v.y<=1e4),!(v.z>=-1e4&&v.z<=1e4),!(v.w>=-1e4&&v.w<=1e4)); return any(n)?vec4(0.):clamp(v,0.,32.); } void main(){ vec4 t=sf(texture2D(tex,vUv)); float l=dot(t.rgb,vec3(.2126,.7152,.0722)); gl_FragColor=vec4(t.rgb*smoothstep(thr,thr+.45,l),1.); }`});
 const gbMat=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:THREE.NoBlending,uniforms:{tex:{value:null},dir:{value:new THREE.Vector2()}},
   vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-  fragmentShader:`uniform sampler2D tex;uniform vec2 dir;varying vec2 vUv; void main(){ vec3 a=vec3(0.); float ws=0.; for(int i=-7;i<=7;i++){ float w=exp(-float(i*i)/24.); a+=texture2D(tex,vUv+dir*float(i)*1.6).rgb*w; ws+=w; } gl_FragColor=vec4(a/ws,1.); }`});
+  fragmentShader:`uniform sampler2D tex;uniform vec2 dir;varying vec2 vUv; vec4 sf(vec4 v){ bvec4 n=bvec4(!(v.x>=-1e4&&v.x<=1e4),!(v.y>=-1e4&&v.y<=1e4),!(v.z>=-1e4&&v.z<=1e4),!(v.w>=-1e4&&v.w<=1e4)); return any(n)?vec4(0.):clamp(v,0.,32.); } void main(){ vec3 a=vec3(0.); float ws=0.; for(int i=-7;i<=7;i++){ float w=exp(-float(i*i)/24.); a+=sf(texture2D(tex,vUv+dir*float(i)*3.2)).rgb*w; ws+=w; } gl_FragColor=vec4(a/ws,1.); }`});
 let gtao=null, fx=true, slowN=0, lastT=0;
 
 /* ---------- la scène ---------- */
@@ -159,7 +157,7 @@ plant.position.set(RW/2+1.05,0,-RD/2-.7); room.add(plant);
 /* le sol de la salle : une tache claire, très douce */
 const rug=new THREE.Object3D();
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
-const tvA=new THREE.RectAreaLight(0xffffff,2.2,SW*.95,SH*.95); tvA.position.set(0,SY,SZ+.25); tvA.lookAt(0,SY,SZ+5); scene.add(tvA);
+const tvA=new THREE.PointLight(0xffffff,5,16,1.4); tvA.position.set(0,SY-.1,SZ+.9); scene.add(tvA);
 const tvS=new THREE.SpotLight(0xffffff,17,26,1.25,.75,1.3); tvS.position.set(0,SY+.2,SZ+.35); tvS.target.position.set(0,0,SZ+TZ+.5); tvS.castShadow=true; floor.position.set(0,0,SZ+TZ+.6);
 tvS.shadow.mapSize.set(2048,2048); tvS.shadow.bias=-.002; tvS.shadow.normalBias=.04; tvS.shadow.radius=6; scene.add(tvS,tvS.target);
 const AV=document.createElement('canvas'); AV.width=8; AV.height=4; const AX=AV.getContext('2d',{willReadFrequently:true}); const tvC=new THREE.Color(0xB8A8E0), tvT=new THREE.Color(); let avN=0;
@@ -215,15 +213,15 @@ vid.addEventListener('seeked',()=>{ if(dragS!==null&&Math.abs(vid.currentTime-dr
 function frameFn(now){
   raf=0; if(!vis) return;
   const r0=hero.getBoundingClientRect(), rc=cv.getBoundingClientRect(), rf=fig.getBoundingClientRect(), mob=r0.width<900, dpr=Math.min(mob?1.5:1.75,devicePixelRatio||1);
-  const W=Math.round(rc.width), H=Math.round(rc.height); if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ R.setPixelRatio(dpr); R.setSize(W,H,false); rtA.setSize(cv.width,cv.height); rtB.setSize(cv.width,cv.height); rtQ1.setSize(cv.width>>2,cv.height>>2); rtQ2.setSize(cv.width>>2,cv.height>>2); }
+  const W=Math.round(rc.width), H=Math.round(rc.height); if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ R.setPixelRatio(dpr); R.setSize(W,H,false); rtA.setSize(cv.width,cv.height); rtB.setSize(cv.width,cv.height); rtQ1.setSize(cv.width>>1,cv.height>>1); rtQ2.setSize(cv.width>>1,cv.height>>1); }
   /* échelle : l'illustration est plus grande que le cadre, elle déborde vers le haut */
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
   /* scène : la frise posée au sol, pile devant le centre de l'écran (même axe x) ; la caméra cadre l'ensemble */
   tl.scale.set(TSc,TSc*.62,TSc); tl.position.set(0,TH-TY*TSc*.62+.004,SZ+TZ); PL.constant=-TH; tl.updateMatrixWorld(true);
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  const k=mob?1.05*W/(xr-xl):Math.min(.68*W/(xr-xl),.98*(r0.height-60)/(yt-yb));
-  const cxp=mob?W*.55:W*.7, by=mob?rf.bottom-rc.top-6:r0.height-30;
+  const k=mob?1.05*W/(xr-xl):Math.min(.62*W/(xr-xl),1.02*(r0.height-60)/(yt-yb));
+  const cxp=mob?W*.55:W*.68, by=mob?rf.bottom-rc.top-6:r0.height-30;
   const left=(xl+xr)/2-cxp/k, top=yb+by/k;
   Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
   /* état de lecture */
