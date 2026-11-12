@@ -26,7 +26,8 @@ R.setClearColor(0,0); R.outputColorSpace=THREE.SRGBColorSpace; R.shadowMap.enabl
 const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,100);
 scene.add(new THREE.HemisphereLight(0xffffff,0xE6E3EA,2.1));
 const sun=new THREE.DirectionalLight(0xffffff,1.5); sun.position.set(-3.5,10,-1.2); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024);
-Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:1,far:30}); sun.shadow.bias=-.0005; sun.shadow.normalBias=.02; sun.shadow.radius=5;
+Object.assign(sun.shadow.camera,{left:-7,right:7,top:7,bottom:-7,near:1,far:40}); sun.shadow.bias=-.0005; sun.shadow.normalBias=.02; sun.shadow.radius=6; sun.shadow.mapSize.set(2048,2048); sun.position.set(-4,12,4); scene.add(sun);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.ShadowMaterial({opacity:.08,color:0x24212C})); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
 
 
 const box=(w,h,d,color,o={})=>{ const m=new THREE.Mesh(new RoundedBoxGeometry(w,h,d,3,Math.min(.03,h/2.4,w/2.4,d/2.4)),new THREE.MeshStandardMaterial({color,roughness:.5,...o})); m.castShadow=m.receiveShadow=true; return m; };
@@ -47,9 +48,9 @@ function check(s){ const c=document.createElement('canvas'); c.width=c.height=12
 /* ---------- la scène ---------- */
 const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
 const VT=new THREE.VideoTexture(vid); VT.colorSpace=THREE.SRGBColorSpace;
-const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=6.2, SH=SW*274/640, SZ=-3.2, SY=.42+SH/2, TY=.07;
+const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=6.2, SH=SW*274/640, SZ=-3.2, SY=1.05+SH/2, TY=.07;
 /* la frise : posée devant le bas de l'écran, côté droit, à l'écart du texte */
-const TS=.82, tl=new THREE.Group(); tl.scale.setScalar(TS); scene.add(tl); tl.add(sun,sun.target);   // la lumière suit la frise
+const TS=.82, tl=new THREE.Group(); tl.scale.setScalar(TS); scene.add(tl);
 const YF=SY+SH/2+.6;   // la frise flotte devant l'écran (en iso, rien ne le trahit)
 const track=box(L+.3,TY,1.3,C.white); track.position.y=TY/2; tl.add(track);
 /* le cinéma : un écran 21:9 courbe, net ; sa lumière se diffuse autour de lui (halo flou de l'image) */
@@ -102,14 +103,41 @@ const knob=box(.12,.05,.12,C.vio,{emissive:C.vio,emissiveIntensity:.6}); knob.ca
 tl.add(sh); const pl=pool(1.3,1.4); tl.add(pl);
 const ok=check(.24); tl.add(ok);
 
+/* ---------- la salle de réunion : une table, des chaises, un café ; même matière que le reste ---------- */
+const TSc=SW*.78/L, TZ=2.1, TH=.74, RW=L*TSc+.7, RD=1.3*TSc+.5;
+const room=new THREE.Group(); room.position.set(0,0,SZ+TZ); scene.add(room);
+const CLAY=0xF2F1F4, CLAY2=0xE3E1E8;
+const top=box(RW,.07,RD,0xffffff); top.position.y=TH-.035; room.add(top);
+[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>{ const l=box(.07,TH-.07,.07,CLAY2); l.position.set(a*(RW/2-.3),(TH-.07)/2,b*(RD/2-.25)); room.add(l); });
+function chair(){ const g=new THREE.Group(); const seat=box(.5,.07,.48,CLAY); seat.position.y=.46; g.add(seat);
+  const back=box(.5,.46,.06,CLAY); back.position.set(0,.74,-.22); back.rotation.x=-.08; g.add(back);
+  const leg=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.42,12),new THREE.MeshStandardMaterial({color:CLAY2,roughness:.5})); leg.position.y=.22; leg.castShadow=true; g.add(leg);
+  const foot=new THREE.Mesh(new THREE.CylinderGeometry(.22,.24,.03,24),new THREE.MeshStandardMaterial({color:CLAY2,roughness:.5})); foot.position.y=.015; foot.castShadow=foot.receiveShadow=true; g.add(foot); return g; }
+[-1.9,0,1.9].forEach(x=>{ const c=chair(); c.position.set(x*TSc*.62,0,-RD/2-.32); room.add(c); });          // côté écran, face à la table
+[-1,1].forEach(a=>{ const c=chair(); c.position.set(a*(RW/2+.42),0,0); c.rotation.y=-a*Math.PI/2; room.add(c); }); // les deux bouts
+/* un café et un carnet, aux coins de la table */
+const mug=new THREE.Group(); const mb=new THREE.Mesh(new THREE.CylinderGeometry(.07,.065,.15,20),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.35})); mb.position.y=.075; mb.castShadow=true; mug.add(mb);
+const mh=new THREE.Mesh(new THREE.TorusGeometry(.04,.012,8,16,Math.PI),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.35})); mh.position.set(.075,.08,0); mh.rotation.z=-Math.PI/2; mug.add(mh);
+const cof=new THREE.Mesh(new THREE.CircleGeometry(.06,20),new THREE.MeshBasicMaterial({color:0x6B4A3A})); cof.rotation.x=-Math.PI/2; cof.position.y=.14; mug.add(cof);
+mug.position.set(-RW/2+.32,TH,RD/2-.22); room.add(mug);
+const nb=box(.42,.025,.3,0xffffff); nb.position.set(RW/2-.42,TH+.012,RD/2-.24); nb.rotation.y=.18; room.add(nb);
+const pen=box(.26,.014,.014,C.vio,{emissive:C.vio,emissiveIntensity:.3}); pen.position.set(RW/2-.4,TH+.032,RD/2-.2); pen.rotation.y=.5; room.add(pen);
+/* une plante, côté gauche */
+const plant=new THREE.Group(); const pot=new THREE.Mesh(new THREE.CylinderGeometry(.2,.16,.42,24),new THREE.MeshStandardMaterial({color:CLAY,roughness:.6})); pot.position.y=.21; pot.castShadow=true; plant.add(pot);
+[[0,.62,0,.2],[.1,.82,.05,.15],[-.09,.74,-.04,.16],[.03,.95,-.05,.12]].forEach(([x,y,z,r])=>{ const f=new THREE.Mesh(new THREE.IcosahedronGeometry(r,1),new THREE.MeshStandardMaterial({color:0xD9CCF2,roughness:.7,flatShading:true})); f.position.set(x,y,z); f.castShadow=true; plant.add(f); });
+plant.position.set(RW/2+1.05,0,-RD/2-.7); room.add(plant);
+/* le sol de la salle : une tache claire, très douce */
+const rug=pool(RW+3.4,RD+3.2,0xE9E6EE,.55); rug.position.set(0,.002,-.4); room.add(rug);
+room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
+
 /* ---------- la note : ce que fait chaque temps ---------- */
 let cur=-1;
 const setNote=i=>{ if(i===cur||!note) return; cur=i; const A=ACTS[i]; note.classList.remove('on');
   setTimeout(()=>{ if(cur!==i) return; note.innerHTML=`<p class="mono hx-k">0${i+1} · ${A.n} · ${mm(A.a)}–${mm(A.b)}</p><p class="hx-t">${A.t}</p><ul>${A.l.map(x=>`<li>${x}</li>`).join('')}</ul>`; note.classList.add('on'); },180); };
 
 /* ---------- cadrage : l'illustration part du cadre de l'ancienne vidéo, et peut déborder ---------- */
-const RV=new THREE.Vector3(), TSc=SW*.8/L, TZ=1.9;
-const EXT=[[-CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[-CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[0,SY,SZ],[-L*TSc/2-.2,0,SZ+TZ+.7*TSc],[L*TSc/2+.2,0,SZ+TZ+.7*TSc]].map(a=>new THREE.Vector3(...a));
+const RV=new THREE.Vector3();
+const EXT=[[-CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[-CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[0,SY,SZ],[-RW/2-.9,0,SZ+TZ+RD/2+.2],[RW/2+.9,0,SZ+TZ+RD/2+.2]].map(a=>new THREE.Vector3(...a));
 const TG=new THREE.Vector3(0,.95,-.1), ISO=new THREE.Vector3(5.5,7.5,12), UP=new THREE.Vector3(0,1,0), off=new THREE.Vector3(), V3=new THREE.Vector3();
 let mxT=0,myT=0,mx=0,my=0;
 addEventListener('pointermove',e=>{ mxT=e.clientX/innerWidth-.5; myT=e.clientY/innerHeight-.5; },{passive:true});
@@ -141,10 +169,10 @@ function frameFn(now){
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
   /* scène : la frise posée au sol, pile devant le centre de l'écran (même axe x) ; la caméra cadre l'ensemble */
-  tl.scale.setScalar(TSc); tl.position.set(0,0,SZ+TZ); PL.constant=-TY*TSc; tl.updateMatrixWorld(true);
+  tl.scale.set(TSc,TSc*.62,TSc); tl.position.set(0,TH,SZ+TZ); PL.constant=-(TH+TY*TSc*.62); tl.updateMatrixWorld(true);
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  const k=mob?1.15*W/(xr-xl):Math.min(.8*W/(xr-xl),1.12*(r0.height-84)/(yt-yb));
-  const cxp=mob?W*.6:W*.76, by=mob?rf.bottom-rc.top-6:r0.height-30;
+  const k=mob?1.05*W/(xr-xl):Math.min(.68*W/(xr-xl),.98*(r0.height-60)/(yt-yb));
+  const cxp=mob?W*.55:W*.7, by=mob?rf.bottom-rc.top-6:r0.height-30;
   const left=(xl+xr)/2-cxp/k, top=yb+by/k;
   Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
   /* état de lecture */
