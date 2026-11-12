@@ -2,6 +2,7 @@
 // On peut faire glisser la tête de lecture ; chaque temps s'explique en deux puces.
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {RectAreaLightUniformsLib} from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
 const root=document.documentElement, hero=document.querySelector('.hero'), cv=hero&&hero.querySelector('.hx-cv'), fig=hero&&hero.querySelector('.hx-f'), note=hero&&hero.querySelector('.hx-note');
@@ -55,13 +56,23 @@ const HF=R.extensions.has('EXT_color_buffer_float')||R.extensions.has('EXT_color
 const rtA=new THREE.WebGLRenderTarget(2,2,{type:HF?THREE.HalfFloatType:THREE.UnsignedByteType,samples:4}), rtB=new THREE.WebGLRenderTarget(2,2,{type:HF?THREE.HalfFloatType:THREE.UnsignedByteType});
 const pScene=new THREE.Scene(), pCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1), quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2)); quad.frustumCulled=false; pScene.add(quad);
 const blurMat=last=>new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:THREE.NoBlending,
-  uniforms:{tex:{value:null},dir:{value:new THREE.Vector2()},c:{value:new THREE.Vector2(.5,.5)},r:{value:new THREE.Vector2(.3,.3)},mx:{value:6}},
+  uniforms:{tex:{value:null},dir:{value:new THREE.Vector2()},c:{value:new THREE.Vector2(.5,.5)},r:{value:new THREE.Vector2(.3,.3)},mx:{value:6},aoT:{value:null},aoK:{value:0},blT:{value:null},blK:{value:0}},
   vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-  fragmentShader:`uniform sampler2D tex;uniform vec2 dir,c,r;uniform float mx;varying vec2 vUv;
+  fragmentShader:`uniform sampler2D tex,aoT,blT;uniform vec2 dir,c,r;uniform float mx,aoK,blK;varying vec2 vUv;
     void main(){ float b=smoothstep(1.,1.75,length((vUv-c)/r))*mx; vec4 acc=vec4(0.); float ws=0.;
       for(int i=-4;i<=4;i++){ float w=exp(-float(i*i)/8.); acc+=texture2D(tex,vUv+dir*float(i)*b*.25)*w; ws+=w; } acc/=ws;
+      ${last?'acc.rgb+=texture2D(blT,vUv).rgb*blK; acc.a=max(acc.a,min(1.,dot(texture2D(blT,vUv).rgb,vec3(.33))*blK));':'acc.rgb*=mix(1.,texture2D(aoT,vUv).r,aoK);'}
       ${last?'vec3 col=acc.a>.0001?acc.rgb/acc.a:vec3(0.); vec4 o=linearToOutputTexel(vec4(col,1.)); gl_FragColor=vec4(o.rgb*acc.a,acc.a);':'gl_FragColor=acc;'} }`});
 const bH=blurMat(false), bV=blurMat(true);
+/* bloom : on extrait ce qui brille (l'écran), on le floute large à 1/4 de la taille, on le rajoute à la fin */
+const rtQ1=new THREE.WebGLRenderTarget(2,2,{type:HF?THREE.HalfFloatType:THREE.UnsignedByteType}), rtQ2=rtQ1.clone();
+const brMat=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:THREE.NoBlending,uniforms:{tex:{value:null},thr:{value:.82}},
+  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader:`uniform sampler2D tex;uniform float thr;varying vec2 vUv; void main(){ vec4 t=texture2D(tex,vUv); float l=dot(t.rgb,vec3(.2126,.7152,.0722)); gl_FragColor=vec4(t.rgb*smoothstep(thr,thr+.45,l),1.); }`});
+const gbMat=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:THREE.NoBlending,uniforms:{tex:{value:null},dir:{value:new THREE.Vector2()}},
+  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader:`uniform sampler2D tex;uniform vec2 dir;varying vec2 vUv; void main(){ vec3 a=vec3(0.); float ws=0.; for(int i=-7;i<=7;i++){ float w=exp(-float(i*i)/24.); a+=texture2D(tex,vUv+dir*float(i)*1.6).rgb*w; ws+=w; } gl_FragColor=vec4(a/ws,1.); }`});
+let gtao=null, fx=true, slowN=0, lastT=0;
 
 /* ---------- la scène ---------- */
 const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
@@ -160,12 +171,12 @@ const reflMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blendi
   fragmentShader:`uniform sampler2D map;uniform float sx;varying vec2 vUv;
     void main(){ float d=1.-vUv.y; vec2 u=vec2(.5+(vUv.x-.5)*sx,clamp(d*.85,.0,1.)); float r=.004+d*.035;
       vec3 c=vec3(0.); for(int i=0;i<10;i++){ float a=float(i)*.628; c+=texture2D(map,clamp(u+vec2(cos(a),sin(a))*r,.0,1.)).rgb; } c/=10.;
-      float a=.55*pow(1.-d,1.3)*(1.-pow(abs(vUv.x-.5)*2.,4.));
+      float a=.26*pow(1.-d,1.3)*(1.-pow(abs(vUv.x-.5)*2.,4.));
       gl_FragColor=vec4(c,a);
       #include <colorspace_fragment>
     }`}); SPILL.push(reflMat);
 const refl=new THREE.Mesh(new THREE.PlaneGeometry(RW-.06,RD-.06),reflMat); refl.rotation.x=-Math.PI/2; refl.position.y=TH+.003; refl.renderOrder=2; room.add(refl);
-top.material.roughness=.32; top.material.metalness=0; top.material.color.set(0xE9E6EF);
+top.material.roughness=.55; top.material.metalness=0; top.material.color.set(0xE9E6EF);
 
 /* ---------- la note : ce que fait chaque temps ---------- */
 let cur=-1;
@@ -203,7 +214,11 @@ vid.addEventListener('seeked',()=>{ if(dragS!==null&&Math.abs(vid.currentTime-dr
 function frameFn(now){
   raf=0; if(!vis) return;
   const r0=hero.getBoundingClientRect(), rc=cv.getBoundingClientRect(), rf=fig.getBoundingClientRect(), mob=r0.width<900, dpr=Math.min(mob?1.5:1.75,devicePixelRatio||1);
-  const W=Math.round(rc.width), H=Math.round(rc.height); if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ R.setPixelRatio(dpr); R.setSize(W,H,false); rtA.setSize(cv.width,cv.height); rtB.setSize(cv.width,cv.height); }
+  const W=Math.round(rc.width), H=Math.round(rc.height); if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ R.setPixelRatio(dpr); R.setSize(W,H,false); rtA.setSize(cv.width,cv.height); rtB.setSize(cv.width,cv.height); rtQ1.setSize(cv.width>>2,cv.height>>2); rtQ2.setSize(cv.width>>2,cv.height>>2);
+    if(!mob){ const aw=Math.round(cv.width/2), ah=Math.round(cv.height/2);
+      if(!gtao){ gtao=new GTAOPass(scene,cam,aw,ah,undefined,{radius:1.1,distanceExponent:1.6,thickness:2.5,scale:2.2,samples:16});
+        [gtao.gtaoMaterial,gtao.pdMaterial,gtao.depthRenderMaterial].forEach(m=>{ if(m.defines&&'PERSPECTIVE_CAMERA' in m.defines){ m.defines.PERSPECTIVE_CAMERA=0; m.needsUpdate=true; } });
+        gtao.output=GTAOPass.OUTPUT.Denoise; } else gtao.setSize(aw,ah); } }
   /* échelle : l'illustration est plus grande que le cadre, elle déborde vers le haut */
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
@@ -229,7 +244,16 @@ function frameFn(now){
     const pj=(x,y,z)=>{ V3.set(x,y,z).project(cam); return [(V3.x+1)/2,(V3.y+1)/2]; };
     const cA=pj(0,(TH+SY)/2,SZ+TZ*.45), eX=pj(RW*.5,TH,SZ+TZ), eY=pj(0,SY+SH*.5,SZ);
     [bH,bV].forEach(m=>{ m.uniforms.c.value.set(cA[0],cA[1]); m.uniforms.r.value.set(Math.abs(eX[0]-cA[0])+.02,Math.abs(eY[1]-cA[1])); m.uniforms.mx.value=5.5*dpr; });
+    if(lastT){ const dt=now-lastT; slowN=dt>30?slowN+1:Math.max(0,slowN-1); if(slowN>45&&fx){ fx=false; } } lastT=now;
     R.setRenderTarget(rtA); R.clear(); R.render(scene,cam);
+    let aoK=0;
+    if(fx&&gtao){ const hid=[]; scene.traverse(o=>{ if(o.isMesh&&o.visible&&o.material.transparent&&o!==floor){ o.visible=false; hid.push(o); } }); scr.visible=false; halo.visible=false;
+      gtao.render(R,rtB,rtA); hid.forEach(o=>o.visible=true); scr.visible=true; halo.visible=true; aoK=.85; }
+    bH.uniforms.aoT.value=gtao?gtao.pdRenderTarget.texture:null; bH.uniforms.aoK.value=aoK;
+    let blK=0; if(fx){ quad.material=brMat; brMat.uniforms.tex.value=rtA.texture; R.setRenderTarget(rtQ1); R.render(pScene,pCam);
+      quad.material=gbMat; gbMat.uniforms.tex.value=rtQ1.texture; gbMat.uniforms.dir.value.set(1/rtQ1.width,0); R.setRenderTarget(rtQ2); R.render(pScene,pCam);
+      gbMat.uniforms.tex.value=rtQ2.texture; gbMat.uniforms.dir.value.set(0,1/rtQ1.height); R.setRenderTarget(rtQ1); R.render(pScene,pCam); blK=.5; }
+    bV.uniforms.blT.value=rtQ1.texture; bV.uniforms.blK.value=blK;
     quad.material=bH; bH.uniforms.tex.value=rtA.texture; bH.uniforms.dir.value.set(1/cv.width,0); R.setRenderTarget(rtB); R.clear(); R.render(pScene,pCam);
     quad.material=bV; bV.uniforms.tex.value=rtB.texture; bV.uniforms.dir.value.set(0,1/cv.height); R.setRenderTarget(null); R.clear(); R.render(pScene,pCam);
   }
