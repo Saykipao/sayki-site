@@ -1092,6 +1092,13 @@ html,body{overflow-x:clip}
 @media (max-width:760px){ .xg .xt{display:none} }
 .pl-free{display:none}
 @media (max-width:760px){ .pl-free{display:block;margin:20px 0 0;color:rgba(243,238,249,.78);font-size:14.5px;line-height:1.5} }
+/* en-tête : bouton blanc vers l’accueil du studio */
+.hd .hd-studio{background:#fff;color:var(--ink);border:1px solid var(--line-2)}
+.hd.dark .hd-studio{border-color:#fff}
+.hd .hd-studio:hover{background:var(--ink);border-color:var(--ink);color:#fff}
+.hd.dark .hd-studio:hover{background:#C08BFF;border-color:#C08BFF;color:var(--ink)}
+@media (max-width:860px){.hd .hd-studio{display:none}}
+.menu a.menu-studio{align-self:flex-start;margin-top:24px;font:500 16px/1 var(--f-body);letter-spacing:0;min-height:52px;padding:16px 24px}
 </style>
 </head>
 <body>
@@ -1106,7 +1113,7 @@ html,body{overflow-x:clip}
       <a class="roll" href="#prix">Prix</a>
       <a class="roll" href="#questions">Questions</a>
     </nav>
-    <a class="hd-ph" href="tel:+32475226124">+32 475 22 61 24</a>
+    <a class="btn sm hd-studio" href="/">Mon studio</a>
     <a class="btn sm book mag" href="#rendez-vous" data-book>Réserver un appel</a>
     <div class="hd-m">
       <a class="btn sm line" href="tel:+32475226124" aria-label="Appeler Ludovic au +32 475 22 61 24">Appeler</a>
@@ -1117,6 +1124,7 @@ html,body{overflow-x:clip}
 <div class="menu" id="menu" hidden>
   <button class="btn sm line menu-close" id="menuClose" type="button">Fermer</button>
   <a href="#exemples">Exemples</a><a href="#methode">Méthode</a><a href="#prix">Prix</a><a href="#questions">Questions</a>
+  <a class="btn line menu-studio" href="/">Mon studio <span aria-hidden="true">→</span></a>
 </div>
 
 <main id="main">
