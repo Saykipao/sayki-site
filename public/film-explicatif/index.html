@@ -122,6 +122,15 @@ img,video{display:block;max-width:100%}
 .facts dd{margin:0;font-size:15px;text-align:right}
 .facts a{border-bottom:1px solid var(--line-2)}
 .reel{margin:0}
+/* hero WebGL : la scène couvre tout le haut de page, passe derrière le texte, l'illustration se place dans le cadre de la vidéo */
+.hero{position:relative}
+.hero>*:not(.hx-cv){position:relative;z-index:1}
+.hx-cv{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
+html.hero-gl .hx-cv{opacity:1}
+.reel-f.hx-f{background:transparent;overflow:visible}
+.reel-f.hx-f video{opacity:0}
+html.no-hero-gl .reel-f.hx-f{background:#1d1230;overflow:hidden}html.no-hero-gl .reel-f.hx-f video{opacity:1}
+html:not(.no-hero-gl) .hero-g{pointer-events:none}html:not(.no-hero-gl) .hero-l,html:not(.no-hero-gl) .reel figcaption{pointer-events:auto}
 .reel-f{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#1d1230}
 .reel-f video{width:100%;height:100%;object-fit:cover}
 .reel figcaption{display:flex;justify-content:space-between;gap:16px;margin-top:12px;color:var(--mute)}
@@ -964,6 +973,9 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 
 <!-- Héros -->
 <section class="hero wrap" id="haut" aria-labelledby="t-hero">
+  <canvas class="hx-cv" aria-hidden="true"></canvas>
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+  <script type="module" src="/assets/hero-3d.js"></script>
   <p class="mono hero-k fade">« Et concrètement, vous faites quoi ? »</p>
   <h1 class="h h1" id="t-hero"><span class="ln"><span style="--d:0">Ce que vous faites,</span></span><span class="ln"><span style="--d:1"><em>compris en 90 secondes.</em></span></span></h1>
   <div class="hero-g fade">
@@ -980,8 +992,8 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       </dl>
     </div>
     <figure class="reel">
-      <div class="reel-f"><video id="reel" poster="/assets/intro.jpg" autoplay muted loop playsinline preload="auto"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_1080p.mp4" type="video/mp4" media="(min-width: 900px)"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_720p.mp4" type="video/mp4"><source src="/assets/intro.mp4" type="video/mp4"></video></div>
-      <figcaption class="mono"><span>Bande démo du studio</span><span>La vidéo de cette page arrive</span></figcaption>
+      <div class="reel-f hx-f"><video id="reel" poster="/assets/intro.jpg" muted loop playsinline preload="none"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_1080p.mp4" type="video/mp4" media="(min-width: 900px)"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_720p.mp4" type="video/mp4"><source src="/assets/intro.mp4" type="video/mp4"></video></div>
+      <figcaption class="mono"><span>Un film, quatre temps</span><span>Cliquez sur un temps pour y aller</span></figcaption>
     </figure>
   </div>
 </section>
@@ -1026,7 +1038,6 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 </section>
 
 <!-- La méthode -->
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <section class="sec wrap" id="methode" aria-labelledby="t-me">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <linearGradient id="gDot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9E37FF"/><stop offset="1" stop-color="#DE50D2"/></linearGradient>
@@ -1589,7 +1600,9 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('is-in'))
   $$('.mc').forEach(c=>{ const s=$('svg',c); if(s&&s.pauseAnimations) s.pauseAnimations(); if(RM&&s) s.pauseAnimations(); io.observe(c); }); })();
 
 /* ---------- vidéos d'ambiance : seulement quand on les voit ---------- */
-$$('#reel,[data-lazyplay]').forEach(v=>{ if(RM){ v.removeAttribute('autoplay'); v.pause(); return; }
+/* hero : si la scène WebGL ne démarre pas, on retombe sur la bande démo */
+setTimeout(()=>{ if(!root.classList.contains('hero-gl')){ root.classList.add('no-hero-gl'); const v=$('#reel'); if(v&&!RM){ v.preload='auto'; v.play().catch(()=>{}); } } },4000);
+$$('[data-lazyplay]').forEach(v=>{ if(RM){ v.removeAttribute('autoplay'); v.pause(); return; }
   new IntersectionObserver(es=>{ if(es[0].isIntersecting){ v.play().catch(()=>{}); } else v.pause(); },{threshold:.15}).observe(v); });
 
 /* ---------- curseur, boutons aimantés, image au survol de la méthode ---------- */
