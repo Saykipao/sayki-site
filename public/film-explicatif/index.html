@@ -127,7 +127,7 @@ img,video{display:block;max-width:100%}
 .hero::before{content:"";position:absolute;top:0;bottom:calc(-1 * var(--rh,0px));left:50%;width:100vw;margin-left:-50vw;z-index:0;pointer-events:none;
   background:radial-gradient(50% 55% at 74% 58%,#FFFFFF 0%,rgba(255,255,255,0) 72%),radial-gradient(70% 60% at 10% 100%,rgba(21,10,38,.035),transparent 70%),linear-gradient(180deg,#F8F7F5 0%,#F0EEF2 100%)}
 .hero>*:not(.hx-cv):not(.hx-note){position:relative;z-index:1}
-.hx-cv{position:absolute;top:0;left:50%;width:100vw;margin-left:-50vw;height:calc(100% + var(--rh,0px));z-index:2;display:block;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
+.hx-cv{position:absolute;top:0;left:50%;width:100vw;margin-left:-50vw;height:calc(100% + var(--rh,0px));z-index:0;display:block;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
 .hx-note{position:absolute;z-index:3;left:0;top:0;width:min(290px,72vw);pointer-events:none;opacity:0;transition:opacity .45s ease}
 html.hero-gl .hx-note.on{opacity:1}
 .hx-note .hx-k{margin:0 0 8px;color:#8A2BE8;font-size:11px;letter-spacing:.08em;text-transform:uppercase}

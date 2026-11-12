@@ -14,10 +14,10 @@ const mm=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 /* les quatre temps du film (en secondes) et ce qu'ils font */
 const DUR=90.6;
 const ACTS=[
-  {a:0,b:14,n:'accroche',h:.18,c:C.vio,t:'La question qui fait lever la tête.',l:['Quelques secondes, avant qu’on décroche.','Une question que votre client se pose déjà.']},
-  {a:14,b:35,n:'problème',h:.32,c:C.lav,t:'Le quotidien de votre client, tel quel.',l:['Il s’y reconnaît, alors il reste.','On parle de lui avant de parler de vous.']},
-  {a:35,b:72,n:'solution',h:.5,c:C.mid,t:'Votre service entre en scène.',l:['Ce que vous faites, montré, pas récité.','Une étape à la fois, sans jargon.']},
-  {a:72,b:DUR,n:'expertise',h:.7,c:C.white,t:'Pourquoi vous, et pas un autre.',l:['Vos preuves : années, clients, méthode.','Et la suite : on vous appelle.']}];
+  {a:0,b:14,n:'accroche',h:.14,c:C.vio,t:'La question qui fait lever la tête.',l:['Quelques secondes, avant qu’on décroche.','Une question que votre client se pose déjà.']},
+  {a:14,b:35,n:'problème',h:.24,c:C.lav,t:'Le quotidien de votre client, tel quel.',l:['Il s’y reconnaît, alors il reste.','On parle de lui avant de parler de vous.']},
+  {a:35,b:72,n:'solution',h:.36,c:C.mid,t:'Votre service entre en scène.',l:['Ce que vous faites, montré, pas récité.','Une étape à la fois, sans jargon.']},
+  {a:72,b:DUR,n:'expertise',h:.5,c:C.white,t:'Pourquoi vous, et pas un autre.',l:['Vos preuves : années, clients, méthode.','Et la suite : on vous appelle.']}];
 
 try{ await document.fonts.load('500 40px "Geist Mono"'); }catch(e){}
 let R; try{ R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true}); }catch(e){ root.classList.add('no-hero-gl'); throw e; }
@@ -26,8 +26,8 @@ R.setClearColor(0,0); R.outputColorSpace=THREE.SRGBColorSpace; R.shadowMap.enabl
 const scene=new THREE.Scene(), cam=new THREE.OrthographicCamera(-1,1,1,-1,.1,100);
 scene.add(new THREE.HemisphereLight(0xffffff,0xE6E3EA,2.1));
 const sun=new THREE.DirectionalLight(0xffffff,1.5); sun.position.set(-3.5,10,-1.2); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024);
-Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:1,far:30}); sun.shadow.bias=-.0005; sun.shadow.normalBias=.02; sun.shadow.radius=5; scene.add(sun);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.ShadowMaterial({opacity:.07,color:0x24212C})); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:1,far:30}); sun.shadow.bias=-.0005; sun.shadow.normalBias=.02; sun.shadow.radius=5;
+
 
 const box=(w,h,d,color,o={})=>{ const m=new THREE.Mesh(new RoundedBoxGeometry(w,h,d,3,Math.min(.03,h/2.4,w/2.4,d/2.4)),new THREE.MeshStandardMaterial({color,roughness:.5,...o})); m.castShadow=m.receiveShadow=true; return m; };
 function textTex(txt,{size=96,color='#150A26'}={}){
@@ -45,26 +45,49 @@ function check(s){ const c=document.createElement('canvas'); c.width=c.height=12
   const gr=new THREE.Group(), b=box(s,s*.42,s,C.vio,{emissive:C.vio,emissiveIntensity:.3}); b.castShadow=false; gr.add(b); const top=new THREE.Mesh(new THREE.PlaneGeometry(s*.84,s*.84),new THREE.MeshBasicMaterial({map:t})); top.rotation.x=-Math.PI/2; top.position.y=s*.21+.002; gr.add(top); return gr; }
 
 /* ---------- la scène ---------- */
-const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.src='/assets/hero-nikita.mp4';
+const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
 const VT=new THREE.VideoTexture(vid); VT.colorSpace=THREE.SRGBColorSpace;
-const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=3.05, SH=SW*274/640, SZ=-.42, SY=.98+SH/2, TY=.07;
-const track=box(L+.3,TY,1.3,C.white); track.position.y=TY/2; scene.add(track);
-/* l'écran : une image fine, qui flotte, sans gros cadre */
-const scr=new THREE.Group(); scr.position.set(0,SY,SZ); scene.add(scr);
-const edge0=box(SW+.03,SH+.03,.02,C.white); edge0.castShadow=false; scr.add(edge0);
+const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=6.2, SH=SW*274/640, SZ=-3.2, SY=.42+SH/2, TY=.07;
+/* la frise : posée devant le bas de l'écran, côté droit, à l'écart du texte */
+const TS=.82, tl=new THREE.Group(); tl.scale.setScalar(TS); scene.add(tl); tl.add(sun,sun.target);   // la lumière suit la frise
+const YF=SY+SH/2+.6;   // la frise flotte devant l'écran (en iso, rien ne le trahit)
+const track=box(L+.3,TY,1.3,C.white); track.position.y=TY/2; tl.add(track);
+/* le cinéma : un immense écran 21:9 dont l'image se diffuse dans la page (bords qui s'effilochent, lavis clair pour garder le texte lisible) */
 const poster=new THREE.TextureLoader().load('/assets/hero-nikita.jpg'); poster.colorSpace=THREE.SRGBColorSpace;
-const img=new THREE.Mesh(new THREE.PlaneGeometry(SW,SH),new THREE.MeshBasicMaterial({map:poster})); img.position.z=.011; scr.add(img);
-const bar=new THREE.Mesh((()=>{ const g=new THREE.PlaneGeometry(SW,.03); g.translate(SW/2,0,0); return g; })(),new THREE.MeshBasicMaterial({color:C.vio})); bar.position.set(-SW/2,-SH/2-.05,.011); scr.add(bar);
-const sp=pool(SW*1.05,1.1,0x2A2238,.08); sp.position.set(0,TY+.002,SZ+.05); scene.add(sp);   // ombre douce sous l'écran
-/* timecode */
-const tc=document.createElement('canvas'); tc.width=300; tc.height=64; const tg=tc.getContext('2d'), tt=new THREE.CanvasTexture(tc); tt.colorSpace=THREE.SRGBColorSpace; tt.anisotropy=4; let tk=-1;
-const tcSet=s=>{ const k=Math.floor(s); if(k===tk) return; tk=k; tg.fillStyle='#150A26'; tg.fillRect(0,0,300,64); tg.fillStyle='#fff'; tg.font='500 30px "Geist Mono", ui-monospace, monospace'; tg.textBaseline='middle'; tg.fillText(mm(s)+' / '+mm(DUR),18,34); tt.needsUpdate=true; };
-tcSet(0); const tcm=new THREE.Mesh(new THREE.PlaneGeometry(.52,.11),new THREE.MeshBasicMaterial({map:tt})); tcm.position.set(-SW/2+.3,SH/2-.09,.013); scr.add(tcm);
+const PX=1.34, PY=1.6;   // le plan déborde de l'image : c'est là que la vidéo se diffuse
+const scrMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},t:{value:0},bg:{value:new THREE.Color(0xF6F5F4)}},
+  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader:`uniform sampler2D map;uniform float t;uniform vec3 bg;varying vec2 vUv;
+    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+    float fbm(vec2 p){float v=0.,a=.5;for(int k=0;k<5;k++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+    void main(){
+      vec2 vu=(vUv-.5)*vec2(${PX.toFixed(2)},${PY.toFixed(2)})+.5;
+      float w=fbm(vUv*vec2(3.,2.)+vec2(t*.04,-t*.03));
+      vec2 wu=vu+(vec2(fbm(vUv*4.+t*.05),fbm(vUv*4.+7.3-t*.05))-.5)*.06*smoothstep(.0,.25,max(abs(vu.x-.5),abs(vu.y-.5))-.25);
+      vec2 cu=clamp(wu,.002,.998);
+      float d=length(max(abs(wu-.5)-.5,0.)*vec2(1.,.9));
+      float r=.002+d*.09;
+      vec3 c=texture2D(map,cu).rgb*.28;
+      c+=(texture2D(map,clamp(cu+vec2(r,0.),.0,1.)).rgb+texture2D(map,clamp(cu-vec2(r,0.),.0,1.)).rgb+texture2D(map,clamp(cu+vec2(0.,r),.0,1.)).rgb+texture2D(map,clamp(cu-vec2(0.,r),.0,1.)).rgb)*.12;
+      c+=(texture2D(map,clamp(cu+vec2(r,r)*.7,.0,1.)).rgb+texture2D(map,clamp(cu-vec2(r,r)*.7,.0,1.)).rgb+texture2D(map,clamp(cu+vec2(r,-r)*.7,.0,1.)).rgb+texture2D(map,clamp(cu+vec2(-r,r)*.7,.0,1.)).rgb)*.06;
+      float l=dot(c,vec3(.299,.587,.114)); c=mix(vec3(l),c,.9);
+      /* lavis : plus clair en haut à gauche, là où passe le grand titre */
+      float wash=.2+.45*(1.-smoothstep(.0,.5,vu.x))+.25*smoothstep(.0,.3,d);
+      c=mix(c,bg,clamp(wash,0.,.85));
+      /* bords qui se diffusent, irréguliers et vivants */
+      float a=1.-smoothstep(.0,.07+.16*w,d-.015*(w-.5));
+      a*=smoothstep(-.12,.3,vu.x+(w-.5)*.35);
+      gl_FragColor=vec4(c,a);
+      #include <colorspace_fragment>
+    }`});
+const scr=new THREE.Mesh(new THREE.PlaneGeometry(SW*PX,SH*PY),scrMat); scr.position.set(0,SY,SZ); scr.renderOrder=0; scene.add(scr);
+const tcSet=()=>{};
 /* les quatre temps */
 const blocks=ACTS.map((A,i)=>{ const w=X(A.b)-X(A.a)-.04, m=box(w,A.h,.5,A.c,A.c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
-  m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); scene.add(m);
-  const l=label(A.n,.12,{color:i===0?VIO:GREY}); l.position.set(X(A.a)+.02,TY+.002,.43); scene.add(l);
-  const n=label('0'+(i+1)+' · '+mm(A.a),.075,{color:GREY}); n.position.set(X(A.a)+.02,TY+.002,.56); scene.add(n); return m; });
+  m.userData={i,x:(X(A.a)+X(A.b))/2,st:X(A.a),h:A.h,base:A.c===C.vio?.25:0}; m.position.set(m.userData.x,0,.1); tl.add(m);
+  const l=label(A.n,.12,{color:i===0?VIO:GREY}); l.position.set(X(A.a)+.02,TY+.002,.43); tl.add(l);
+  const n=label('0'+(i+1)+' · '+mm(A.a),.075,{color:GREY}); n.position.set(X(A.a)+.02,TY+.002,.56); tl.add(n); return m; });
 /* tête de lecture */
 const sh=new THREE.Group();
 const veil=new THREE.Mesh(new THREE.PlaneGeometry(.72,1),new THREE.MeshBasicMaterial({color:0xB47CFF,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
@@ -72,8 +95,8 @@ veil.rotation.y=Math.PI/2; veil.geometry.translate(0,.5,0); veil.position.z=.1; 
 const edge=box(.024,.024,.74,C.vio,{emissive:C.vio,emissiveIntensity:1.3}); edge.castShadow=false; edge.position.z=.1; sh.add(edge);
 const foot=box(.028,.016,1.24,C.vio,{emissive:C.vio,emissiveIntensity:1.3}); foot.castShadow=false; sh.add(foot);
 const knob=box(.12,.05,.12,C.vio,{emissive:C.vio,emissiveIntensity:.6}); knob.castShadow=false; knob.position.set(0,.03,.62); sh.add(knob);   // la poignée à attraper
-scene.add(sh); const pl=pool(1.3,1.4); scene.add(pl);
-const ok=check(.24); scene.add(ok);
+tl.add(sh); const pl=pool(1.3,1.4); tl.add(pl);
+const ok=check(.24); tl.add(ok);
 
 /* ---------- la note : ce que fait chaque temps ---------- */
 let cur=-1;
@@ -81,17 +104,18 @@ const setNote=i=>{ if(i===cur||!note) return; cur=i; const A=ACTS[i]; note.class
   setTimeout(()=>{ if(cur!==i) return; note.innerHTML=`<p class="mono hx-k">0${i+1} · ${A.n} · ${mm(A.a)}–${mm(A.b)}</p><p class="hx-t">${A.t}</p><ul>${A.l.map(x=>`<li>${x}</li>`).join('')}</ul>`; note.classList.add('on'); },180); };
 
 /* ---------- cadrage : l'illustration part du cadre de l'ancienne vidéo, et peut déborder ---------- */
-const EXT=[[-L/2-.15,0,.65],[L/2+.15,0,.65],[L/2+.15,0,-.65],[-L/2-.15,0,-.65],[-SW/2,SY+SH/2,SZ],[SW/2,SY+SH/2,SZ],[-SW/2,SY-SH/2,SZ],[SW/2,SY-SH/2,SZ]].map(a=>new THREE.Vector3(...a));
+const EXT=[[-SW/2,SY+SH/2,SZ],[SW/2,SY+SH/2,SZ],[-SW/2,SY-SH/2,SZ],[SW/2,SY-SH/2,SZ]].map(a=>new THREE.Vector3(...a));
 const TG=new THREE.Vector3(0,.95,-.1), ISO=new THREE.Vector3(10,10,10), UP=new THREE.Vector3(0,1,0), off=new THREE.Vector3(), V3=new THREE.Vector3();
 let mxT=0,myT=0,mx=0,my=0;
 addEventListener('pointermove',e=>{ mxT=e.clientX/innerWidth-.5; myT=e.clientY/innerHeight-.5; },{passive:true});
 
 /* ---------- glisser sur la frise pour voyager dans le film ---------- */
-const ray=new THREE.Raycaster(), pv=new THREE.Vector2(), PL=new THREE.Plane(new THREE.Vector3(0,1,0),-TY), hit=new THREE.Vector3();
+const ray2=new THREE.Raycaster(), pv2=new THREE.Vector2(), hit2=new THREE.Vector3(), FLOOR=new THREE.Plane(new THREE.Vector3(0,1,0),-YF);
+const ray=new THREE.Raycaster(), pv=new THREE.Vector2(), PL=new THREE.Plane(new THREE.Vector3(0,1,0),-TY*TS), hit=new THREE.Vector3();
 let drag=false, dragS=null, hov=false;
 const aim=e=>{ const r=cv.getBoundingClientRect(); pv.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(pv,cam); };
-const onTrack=e=>{ aim(e); if(ray.intersectObjects([track,knob,...blocks],false).length) return true; if(!ray.ray.intersectPlane(PL,hit)) return false; return Math.abs(hit.x)<L/2+.2&&Math.abs(hit.z)<.75; };
-const timeAt=e=>{ aim(e); return ray.ray.intersectPlane(PL,hit)?clamp((hit.x-x0)/L)*DUR:null; };
+const onTrack=e=>{ aim(e); if(ray.intersectObjects([track,knob,...blocks],false).length) return true; if(!ray.ray.intersectPlane(PL,hit)) return false; tl.worldToLocal(hit); return Math.abs(hit.x)<L/2+.2&&Math.abs(hit.z)<.75; };
+const timeAt=e=>{ aim(e); if(!ray.ray.intersectPlane(PL,hit)) return null; tl.worldToLocal(hit); return clamp((hit.x-x0)/L)*DUR; };
 const busy=e=>e.target.closest('a,button,input,label,.facts,.hero-sub,h1,.hero-k');
 hero.addEventListener('pointerdown',e=>{ if(busy(e)||!onTrack(e)) return; drag=true; hero.classList.add('hx-drag'); try{ hero.setPointerCapture(e.pointerId); }catch(er){}
   const s=timeAt(e); if(s!==null){ dragS=s; vid.currentTime=s; } vid.pause(); e.preventDefault(); });
@@ -102,7 +126,7 @@ hero.addEventListener('pointerup',end); hero.addEventListener('pointercancel',en
 
 let vis=true, raf=0, started=false; const FT=new URLSearchParams(location.search).get('t3d');
 new IntersectionObserver(es=>{ vis=es[0].isIntersecting; if(vis){ if(!RM&&!drag) vid.play().catch(()=>{}); if(!raf) raf=requestAnimationFrame(frameFn); } else vid.pause(); }).observe(hero);
-const useVid=()=>{ if(img.material.map!==VT&&vid.readyState>=2){ img.material.map=VT; img.material.needsUpdate=true; } };
+let onVid=false; const useVid=()=>{ if(!onVid&&vid.readyState>=2){ onVid=true; scrMat.uniforms.map.value=VT; } };
 vid.addEventListener('playing',useVid); vid.addEventListener('seeked',useVid);
 function frameFn(now){
   raf=0; if(!vis) return;
@@ -111,15 +135,20 @@ function frameFn(now){
   /* échelle : l'illustration est plus grande que le cadre, elle déborde vers le haut */
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
-  /* étendue de la scène vue par la caméra (en unités) : on l'ajuste au cadre, sans dépasser le haut de page */
+  /* cadrage : l'écran couvre une grande partie du haut de page et peut en sortir */
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  const top0=mob?rf.top-rc.top:Math.max(84,r0.top<0?84:84)-(rc.top-r0.top), bot=rf.bottom-rc.top-(mob?0:10);
-  const k=Math.min((rf.width*(mob?1:1.06))/(xr-xl),(bot-top0)/(yt-yb));
-  const cxp=rf.left-rc.left+rf.width*(mob?.5:.56), left=(xl+xr)/2-cxp/k, bottom=yb-(H-bot)/k;
-  Object.assign(cam,{left,right:left+W/k,bottom,top:bottom+H/k}); cam.updateProjectionMatrix();
+  /* le coin bas-gauche de l'écran se cale en haut à gauche, son bord bas file en diagonale vers le coin bas-droit */
+  const k=(mob?1.5:1.02)*W/(xr-xl); V3.copy(EXT[2]).applyMatrix4(cam.matrixWorldInverse);
+  const ax=mob?W*-.05:W*.13, ay=mob?rf.top-rc.top+rf.height*.15:H*.1;
+  const left=V3.x-ax/k, top=V3.y+ay/k;
+  Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
+  /* la frise se pose sous le texte, au premier plan devant l'écran */
+  const TSc=(mob?.7:.3)*W/(L*.72*k); tl.scale.setScalar(TSc); PL.constant=-(YF+TY*TSc);
+  pv2.set((mob?.52:.66)*2-1,-((mob?(rf.bottom-rc.top-rf.height*.26)/H:.7))*2+1); ray2.setFromCamera(pv2,cam); if(ray2.ray.intersectPlane(FLOOR,hit2)) tl.position.copy(hit2);
+  tl.updateMatrixWorld(true);
   /* état de lecture */
   const s=FT!==null?+FT:dragS!==null?dragS:RM?DUR*.6:(vid.currentTime||0), xs=X(s), ap=eo(seg(now/1000,.2,1.2));
-  tcSet(s); bar.scale.x=nz(s/DUR);
+  scrMat.uniforms.t.value=now/1000;
   let ci=0; ACTS.forEach((A,i)=>{ if(s>=A.a) ci=i; });
   blocks.forEach((m,i)=>{ const u=m.userData, kk=back(clamp((xs-u.st)/.25)), sy=nz(kk*ap); m.scale.set(1,sy,1); m.position.y=TY+u.h*sy/2;
     const on=i===ci; m.material.emissive.setHex(on||u.base?C.vio:0); m.material.emissiveIntensity=u.base?u.base:on?.12:0; });
