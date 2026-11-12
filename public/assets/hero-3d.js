@@ -162,7 +162,7 @@ function laptop(){ const g=new THREE.Group(); const b=box(.48,.022,.33,DK2); b.p
   const lid=new THREE.Group(); lid.position.set(0,.022,.16); const l=box(.48,.32,.016,DK2); l.position.y=.16; lid.add(l);
   const scr=new THREE.Mesh(new THREE.PlaneGeometry(.44,.28),new THREE.MeshBasicMaterial({color:0x7E5BC4})); scr.position.set(0,.16,-.009); scr.rotation.y=Math.PI; lid.add(scr);
   const dot=new THREE.Mesh(new THREE.CircleGeometry(.025,20),new THREE.MeshBasicMaterial({color:C.vio})); dot.position.set(0,.17,.009); lid.add(dot);
-  lid.rotation.x=-.32; g.add(lid); return g; }
+  lid.rotation.x=.32; g.add(lid); return g; }
 function cup(){ const g=new THREE.Group(); const b=new THREE.Mesh(new THREE.CylinderGeometry(.055,.048,.12,20),new THREE.MeshStandardMaterial({color:0xF2EEF8,roughness:.4})); b.position.y=.06; g.add(b);
   const h=new THREE.Mesh(new THREE.TorusGeometry(.032,.01,8,16,Math.PI),new THREE.MeshStandardMaterial({color:0xF2EEF8,roughness:.4})); h.position.set(.058,.065,0); h.rotation.z=-Math.PI/2; g.add(h);
   const c=new THREE.Mesh(new THREE.CircleGeometry(.047,20),new THREE.MeshBasicMaterial({color:0x4A3226})); c.rotation.x=-Math.PI/2; c.position.y=.112; g.add(c); return g; }
@@ -171,9 +171,9 @@ function notebook(){ const g=new THREE.Group(); const n=box(.3,.02,.38,0xD9D2E6)
 function phone(){ const g=new THREE.Group(); const p=box(.09,.012,.18,0x1A1128); p.position.y=.006; g.add(p);
   const s=new THREE.Mesh(new THREE.PlaneGeometry(.075,.16),new THREE.MeshBasicMaterial({color:0x5B3E8E})); s.rotation.x=-Math.PI/2; s.position.y=.013; g.add(s); return g; }
 const BZ=-RD/2+.42, SX=[-1.9*TSc*.62,0,1.9*TSc*.62], put=(o,x,z,r=0)=>{ o.position.set(x,TH,z); o.rotation.y=r; room.add(o); };
-put(laptop(),SX[0],BZ,Math.PI+.12); put(cup(),SX[0]+.42,BZ+.08);
+put(laptop(),SX[0],BZ,.12); put(cup(),SX[0]+.42,BZ+.08);
 put(notebook(),SX[1]-.08,BZ,.25); put(cup(),SX[1]+.32,BZ-.06); put(phone(),SX[1]-.42,BZ+.05,-.3);
-put(laptop(),SX[2],BZ,Math.PI-.1); put(phone(),SX[2]-.42,BZ+.02,.2);
+put(laptop(),SX[2],BZ,-.1); put(phone(),SX[2]-.42,BZ+.02,.2);
 
 room.traverse(o=>{ if(o.isMesh&&o!==rug){ o.castShadow=true; o.receiveShadow=true; } });
 const tvA=new THREE.PointLight(0xffffff,5,16,1.4); tvA.position.set(0,SY-.1,SZ+.9); scene.add(tvA);
