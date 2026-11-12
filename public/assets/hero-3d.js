@@ -11,7 +11,7 @@ const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const C={ink:0x150A26,vio:0x9E37FF,lav:0xEFE7FC,mid:0xD6C1F8,white:0xffffff};
 const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), seg=(t,a,b)=>clamp((t-a)/(b-a)), nz=x=>Math.max(.001,x);
 const eo=t=>1-Math.pow(1-t,3), back=t=>{ const c1=1.25,c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); };
-const GREY='#77727F', VIO='#8A2BE8';
+const GREY='#B8AEC9', VIO='#B266FF';
 const mm=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 /* les quatre temps du film (en secondes) et ce qu'ils font */
 const DUR=90.6;
@@ -75,13 +75,14 @@ const gbMat=new THREE.ShaderMaterial({depthTest:false,depthWrite:false,blending:
 let gtao=null, fx=true, slowN=0, lastT=0;
 
 /* ---------- la scène ---------- */
-const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
+const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.setAttribute('playsinline',''); vid.setAttribute('aria-hidden','true');
+Object.assign(vid.style,{position:'fixed',left:'0',bottom:'0',width:'4px',height:'2px',opacity:'.01',pointerEvents:'none',zIndex:'-1'}); document.body.appendChild(vid); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
 const VC=document.createElement('canvas'); VC.width=innerWidth<900?640:1280; VC.height=Math.round(VC.width*274/640); const VX=VC.getContext('2d'); const VT=new THREE.CanvasTexture(VC); VT.colorSpace=THREE.SRGBColorSpace; VT.generateMipmaps=false; VT.minFilter=THREE.LinearFilter; let vLast=-1, vOn=false;
 const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=6.2, SH=SW*274/640, SZ=-3.2, SY=1.05+SH/2, TY=.07;
 /* la frise : posée devant le bas de l'écran, côté droit, à l'écart du texte */
 const TS=.82, tl=new THREE.Group(); tl.scale.setScalar(TS); scene.add(tl);
 const YF=SY+SH/2+.6;   // la frise flotte devant l'écran (en iso, rien ne le trahit)
-const track=box(L+.3,TY,1.3,C.white); track.position.y=TY/2; tl.add(track);
+const track=box(L+.3,TY,1.3,C.white); track.position.y=TY/2; track.material.visible=false; track.castShadow=track.receiveShadow=false; tl.add(track);   // invisible : sert seulement à attraper la frise
 /* le cinéma : un écran 21:9 courbe, net ; sa lumière se diffuse autour de lui (halo flou de l'image) */
 const poster=new THREE.TextureLoader().load('/assets/hero-nikita.jpg'); poster.colorSpace=THREE.SRGBColorSpace;
 const CR=7.5, ARC=SW/CR;   // rayon de courbure
@@ -136,7 +137,7 @@ const ok=check(.24); tl.add(ok);
 /* ---------- la salle de réunion : une table, des chaises, un café ; même matière que le reste ---------- */
 const TSc=SW*.78/L, TZ=2.1, TH=.74, RW=L*TSc+.7, RD=1.3*TSc+.5;
 const room=new THREE.Group(); room.position.set(0,0,SZ+TZ); scene.add(room);
-const CLAY=0xF2F1F4, CLAY2=0xE3E1E8;
+const CLAY=0x3A2858, CLAY2=0x2E1F48;
 const top=box(RW,.07,RD,0xffffff); top.position.y=TH-.035; room.add(top);
 [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>{ const l=box(.07,TH-.07,.07,CLAY2); l.position.set(a*(RW/2-.3),(TH-.07)/2,b*(RD/2-.25)); room.add(l); });
 function chair(){ const g=new THREE.Group(); const seat=box(.5,.07,.48,CLAY); seat.position.y=.46; g.add(seat);
@@ -176,7 +177,7 @@ const reflMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blendi
       #include <colorspace_fragment>
     }`}); SPILL.push(reflMat);
 const refl=new THREE.Mesh(new THREE.PlaneGeometry(RW-.06,RD-.06),reflMat); refl.rotation.x=-Math.PI/2; refl.position.y=TH+.003; refl.renderOrder=2; room.add(refl);
-top.material.roughness=.55; top.material.metalness=0; top.material.color.set(0xE9E6EF);
+top.material.roughness=.45; top.material.metalness=0; top.material.color.set(0x3B2A5A);
 
 /* ---------- la note : ce que fait chaque temps ---------- */
 let cur=-1;
@@ -210,6 +211,7 @@ new IntersectionObserver(es=>{ vis=es[0].isIntersecting; if(vis){ if(!RM&&!drag)
 /* chaque image du film est copiée dans un canvas : marche en lecture, en pause et pendant le glisser */
 const grab=()=>{ if(vid.readyState<2||vid.seeking) return; const t=vid.currentTime; if(t===vLast&&vOn) return; vLast=t;
   try{ VX.drawImage(vid,0,0,VC.width,VC.height); VT.needsUpdate=true; if(!vOn){ vOn=true; SPILL.forEach(m=>m.uniforms.map.value=VT); scrMat.uniforms.map.value=VT; haloMat.uniforms.map.value=VT; } }catch(e){} };
+if('requestVideoFrameCallback' in vid){ const vf=()=>{ vLast=-1; grab(); vid.requestVideoFrameCallback(vf); }; vid.requestVideoFrameCallback(vf); }
 vid.addEventListener('seeked',()=>{ if(dragS!==null&&Math.abs(vid.currentTime-dragS)>.08) vid.currentTime=dragS; vLast=-1; grab(); });
 function frameFn(now){
   raf=0; if(!vis) return;
@@ -223,7 +225,7 @@ function frameFn(now){
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
   /* scène : la frise posée au sol, pile devant le centre de l'écran (même axe x) ; la caméra cadre l'ensemble */
-  tl.scale.set(TSc,TSc*.62,TSc); tl.position.set(0,TH,SZ+TZ); PL.constant=-(TH+TY*TSc*.62); tl.updateMatrixWorld(true);
+  tl.scale.set(TSc,TSc*.62,TSc); tl.position.set(0,TH-TY*TSc*.62+.004,SZ+TZ); PL.constant=-TH; tl.updateMatrixWorld(true);
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
   const k=mob?1.05*W/(xr-xl):Math.min(.68*W/(xr-xl),.98*(r0.height-60)/(yt-yb));
   const cxp=mob?W*.55:W*.7, by=mob?rf.bottom-rc.top-6:r0.height-30;
