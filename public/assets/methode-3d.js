@@ -199,7 +199,7 @@ function bottle(cb,cc){ const P=[[0,0],[.15,0],[.16,.03],[.16,.42],[.13,.52],[.0
 function refShot(obj,y,hs=.5){
   const rt=new THREE.WebGLRenderTarget(320,240,{samples:4}); const sc=new THREE.Scene(); lights(sc,false);
   sc.background=new THREE.Color(0xF1EBFB); const fl=new THREE.Mesh(new THREE.PlaneGeometry(20,20),mat(0xEDE5FA)); fl.rotation.x=-Math.PI/2; sc.add(fl, obj);
-  const cam=new THREE.OrthographicCamera(-hs*4/3,hs*4/3,hs,-hs,.1,50); cam.position.set(1.7,y+.9,2.6); cam.lookAt(0,y,0);
+  const cam=new THREE.OrthographicCamera(-hs*4/3,hs*4/3,hs,-hs,.1,50); cam.position.set(4,y+4,4); cam.lookAt(0,y,0);
   R.setRenderTarget(rt); R.render(sc,cam); R.setRenderTarget(null); return rt.texture;
 }
 function s4(){
@@ -231,12 +231,12 @@ function s4(){
   const face=new THREE.Mesh(new THREE.PlaneGeometry(1.44,.945),new THREE.MeshBasicMaterial({map:ptx})); face.rotation.y=Math.PI/2; face.position.x=.037; panel.add(face);
   panel.position.set(PX,.72,0); B.scene.add(panel); const ppl=pool(0xA45BFF,2.2); ppl.position.set(PX+.4,.004,0); B.scene.add(ppl);
   /* les images de référence */
-  const RP=[[.8,1.75],[1.6,.95],[2.4,.15]];
+  const RP=[[1,1.3],[2.12,1.3],[3.24,1.3]];
   const cards=refs.map(r=>{ const g=new THREE.Group(); const c=box(1,.76,.035,C.white); c.position.y=.38; g.add(c);
-    const s=new THREE.Mesh(new THREE.PlaneGeometry(.92,.69),new THREE.MeshBasicMaterial({map:r})); s.position.set(0,.38,.019); g.add(s); g.rotation.y=Math.PI/4; B.scene.add(g); return g; });
+    const s=new THREE.Mesh(new THREE.PlaneGeometry(.92,.69),new THREE.MeshBasicMaterial({map:r})); s.position.set(0,.38,.019); g.add(s); B.scene.add(g); return g; });
   const lp=label(B,'photos',.16,{color:GREY}); lp.position.set(OX-.3,.002,1.55); B.scene.add(lp);
-  const li=label(B,'IA',.16,{color:VIO}); li.position.set(PX-.1,.002,1.05); B.scene.add(li);
-  const lr=label(B,'images de référence',.16,{color:VIO}); lr.position.set(.55,.002,2.35); B.scene.add(lr);
+  const li=label(B,'IA',.16,{color:VIO}); li.position.set(PX+.25,.002,-1.05); B.scene.add(li);
+  const lr=label(B,'images de référence',.16,{color:VIO}); lr.position.set(.5,.002,1.8); B.scene.add(lr);
   const SH=[1.9,3.0,4.1];
   B.update=t=>{
     const fo=1-seg(t,10.3,10.9);
@@ -267,7 +267,13 @@ function s5(){
   const W=2.6,H=1.4625, mk=[];
   /* 1. génération vidéo */
   const l0=box(W,.05,H,C.white); l0.receiveShadow=false;
-  const im=new THREE.Mesh(new THREE.PlaneGeometry(W-.08,H-.36),new THREE.MeshBasicMaterial({map:tex('/assets/mx-7.jpg')})); im.rotation.x=-Math.PI/2; im.position.set(0,.027,-.14); l0.add(im);
+  /* une interface simple : une image en cours de génération, sa barre de progression */
+  const gc=document.createElement('canvas'); gc.width=640; gc.height=280; const gx=gc.getContext('2d');
+  gx.fillStyle='#EFE7FC'; gx.fillRect(0,0,640,280); gx.fillStyle='#E2D3FA'; gx.beginPath(); gx.moveTo(0,280); gx.lineTo(210,120); gx.lineTo(330,210); gx.lineTo(450,100); gx.lineTo(640,250); gx.lineTo(640,280); gx.fill();
+  gx.fillStyle='#fff'; gx.beginPath(); gx.arc(320,124,46,0,7); gx.fill(); gx.fillStyle='#9E37FF'; gx.beginPath(); gx.moveTo(306,100); gx.lineTo(344,124); gx.lineTo(306,148); gx.fill();
+  gx.fillStyle='#fff'; gx.fillRect(32,236,576,10); gx.fillStyle='#9E37FF'; gx.fillRect(32,236,250,10); gx.fillRect(278,228,6,26);
+  const gt=new THREE.CanvasTexture(gc); gt.colorSpace=THREE.SRGBColorSpace; gt.anisotropy=4;
+  const im=new THREE.Mesh(new THREE.PlaneGeometry(W-.08,H-.36),new THREE.MeshBasicMaterial({map:gt})); im.rotation.x=-Math.PI/2; im.position.set(0,.027,-.14); l0.add(im);
   /* 2. motion design : quelques formes sur un verre */
   const l1=box(W,.03,H,C.mid,{transparent:true,opacity:.28,roughness:.15}); l1.castShadow=false;
   const fm=(geo,c,x,z)=>{ const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:c,transparent:true})); m.rotation.x=-Math.PI/2; m.position.set(x,.018,z); l1.add(m); return m; };
