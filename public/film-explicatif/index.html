@@ -177,12 +177,13 @@ html:not(.no-hero-gl) .hero-g{pointer-events:none}html:not(.no-hero-gl) .hero-l,
 @media (max-width:900px){
   .hero-g{grid-template-columns:minmax(0,1fr);gap:30px}
   .hero-l{display:contents}
-  .hero-sub{order:2}.hero-btns{order:3}.reel{order:1}.facts{order:4}
+  .hero-sub{order:1}.hero-btns{order:2}.facts{order:3}
+  .hero .reel,.hx-cv{display:none!important}   /* mobile : on priorise le contenu */
 }
 @media (max-width:640px){
   .hero{padding-top:calc(60px + 26px)}
   .hero-k{margin-bottom:12px;font-size:10px}
-  .hero-g{margin-top:6px;gap:22px}
+  .hero-g{margin-top:22px;gap:24px}
   .hero-btns .btn{flex:1 1 100%}
   .reel figcaption span:last-child{display:none}
 }
@@ -449,7 +450,8 @@ html:not(.no-hero-gl) .hero-g{pointer-events:none}html:not(.no-hero-gl) .hero-l,
 .fine{margin:28px 0 0;font-size:12.5px;color:rgba(243,238,249,.5)}
 @media (max-width:760px){.gar{grid-template-columns:minmax(0,1fr)}}
 .bar{position:fixed;left:0;right:0;bottom:0;z-index:35;display:none;align-items:center;justify-content:space-between;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .4s var(--ease-out)}
-.bar.on{transform:none}
+.bar{visibility:hidden;transition:transform .4s var(--ease-out),visibility 0s .4s}
+.bar.on{transform:none;visibility:visible;transition:transform .4s var(--ease-out),visibility 0s}
 .bar .t{font-family:var(--f-head);font-size:24px;letter-spacing:-.04em;min-height:44px}
 @media (max-width:980px){.bar{display:flex}}
 
@@ -1037,7 +1039,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <section class="hero wrap" id="haut" aria-labelledby="t-hero" data-dark>
   <canvas class="hx-cv" aria-hidden="true"></canvas>
   <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
-  <script type="module" src="/assets/hero-3d.js"></script>
+  <script type="module">if(innerWidth>=900) import('/assets/hero-3d.js');</script>
   <p class="mono hero-k fade">« Et concrètement, vous faites quoi ? »</p>
   <h1 class="h h1" id="t-hero"><span class="ln"><span style="--d:0" class="h1-a">Ce que vous faites,</span></span><span class="ln"><span style="--d:1"><em>compris en<span class="br-d"> </span>90 secondes.</em></span></span></h1>
   <div class="hero-g fade">
@@ -1662,7 +1664,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('is-in'))
 
 /* ---------- vidéos d'ambiance : seulement quand on les voit ---------- */
 /* hero : si la scène WebGL ne démarre pas, on retombe sur la bande démo */
-setTimeout(()=>{ if(!root.classList.contains('hero-gl')){ root.classList.add('no-hero-gl'); const v=$('#reel'); if(v&&!RM){ v.preload='auto'; v.play().catch(()=>{}); } } },4000);
+setTimeout(()=>{ if(innerWidth>=900&&!root.classList.contains('hero-gl')){ root.classList.add('no-hero-gl'); const v=$('#reel'); if(v&&!RM){ v.preload='auto'; v.play().catch(()=>{}); } } },4000);
 $$('[data-lazyplay]').forEach(v=>{ if(RM){ v.removeAttribute('autoplay'); v.pause(); return; }
   new IntersectionObserver(es=>{ if(es[0].isIntersecting){ v.play().catch(()=>{}); } else v.pause(); },{threshold:.15}).observe(v); });
 
