@@ -221,7 +221,7 @@ hero.addEventListener('pointerdown',e=>{ if(busy(e)||!onTrack(e)) return; drag=t
   const s=timeAt(e); vid.pause(); wantPlay=false; if(s!==null){ dragS=s; seekTo(s,false); } e.preventDefault(); });
 hero.addEventListener('pointermove',e=>{ if(drag){ const s=timeAt(e); if(s!==null){ dragS=s; seekTo(s,false); } return; }
   hov=!busy(e)&&onTrack(e); hero.style.cursor=hov?'grab':''; },{passive:true});
-const end=()=>{ if(!drag) return; drag=false; hero.classList.remove('hx-drag'); wantPlay=!RM; if(dragS!==null){ seekTo(dragS,true); } else if(wantPlay){ wantPlay=false; vid.play().catch(()=>{}); } };
+const end=()=>{ if(!drag) return; drag=false; hero.classList.remove('hx-drag'); wantPlay=!RM; if(dragS!==null){ seekTo(dragS,true); setTimeout(()=>{ if(!drag) dragS=null; },1500); } else if(wantPlay){ wantPlay=false; vid.play().catch(()=>{}); } };
 hero.addEventListener('pointerup',end); hero.addEventListener('pointercancel',end);
 
 let vis=true, raf=0, started=false; const FT=new URLSearchParams(location.search).get('t3d');
@@ -232,11 +232,12 @@ const grab=()=>{ if(vid.readyState<2||(drag&&vid.seeking)) return; const t=vid.c
 const RVF='requestVideoFrameCallback' in vid; let vfId=0, vfT=0;
 const vf=()=>{ vfT=performance.now(); vLast=-1; grab(); vfId=vid.requestVideoFrameCallback(vf); };
 const arm=()=>{ if(!RVF) return; try{ if(vfId) vid.cancelVideoFrameCallback(vfId); }catch(e){} vfId=vid.requestVideoFrameCallback(vf); };
-arm(); vid.addEventListener('play',arm); vid.addEventListener('playing',()=>{ arm(); vLast=-1; });
+arm(); vid.addEventListener('play',arm); vid.addEventListener('playing',()=>{ arm(); vLast=-1; if(!drag) dragS=null; });
 /* filet de sécurité : si la vidéo joue mais qu'aucune image n'arrive depuis 0,6 s, on la relance au même endroit */
 setInterval(()=>{ if(!RVF||!vis||drag||vid.paused||vid.seeking||document.hidden) return; if(performance.now()-vfT>600){ arm(); seekTo(vid.currentTime,true); } },700);
 vid.addEventListener('seeked',()=>{ seekBusy=false; vLast=-1; grab(); vfT=performance.now();
   if(drag&&dragS!==null&&Math.abs(vid.currentTime-dragS)>.2){ seekTo(dragS,false); return; }
+  if(!drag) dragS=null;
   if(wantPlay){ wantPlay=false; vid.play().catch(()=>{}); } });
 let lastR=0;
 function frameFn(now){
