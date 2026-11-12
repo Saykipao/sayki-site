@@ -108,8 +108,9 @@ const setNote=i=>{ if(i===cur||!note) return; cur=i; const A=ACTS[i]; note.class
   setTimeout(()=>{ if(cur!==i) return; note.innerHTML=`<p class="mono hx-k">0${i+1} · ${A.n} · ${mm(A.a)}–${mm(A.b)}</p><p class="hx-t">${A.t}</p><ul>${A.l.map(x=>`<li>${x}</li>`).join('')}</ul>`; note.classList.add('on'); },180); };
 
 /* ---------- cadrage : l'illustration part du cadre de l'ancienne vidéo, et peut déborder ---------- */
-const EXT=[[-CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[-CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[0,SY,SZ]].map(a=>new THREE.Vector3(...a));
-const TG=new THREE.Vector3(0,.95,-.1), ISO=new THREE.Vector3(10,10,10), UP=new THREE.Vector3(0,1,0), off=new THREE.Vector3(), V3=new THREE.Vector3();
+const RV=new THREE.Vector3(), TSc=SW*.8/L, TZ=1.9;
+const EXT=[[-CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[-CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[0,SY,SZ],[-L*TSc/2-.2,0,SZ+TZ+.7*TSc],[L*TSc/2+.2,0,SZ+TZ+.7*TSc]].map(a=>new THREE.Vector3(...a));
+const TG=new THREE.Vector3(0,.95,-.1), ISO=new THREE.Vector3(5.5,7.5,12), UP=new THREE.Vector3(0,1,0), off=new THREE.Vector3(), V3=new THREE.Vector3();
 let mxT=0,myT=0,mx=0,my=0;
 addEventListener('pointermove',e=>{ mxT=e.clientX/innerWidth-.5; myT=e.clientY/innerHeight-.5; },{passive:true});
 
@@ -131,7 +132,7 @@ hero.addEventListener('pointerup',end); hero.addEventListener('pointercancel',en
 let vis=true, raf=0, started=false; const FT=new URLSearchParams(location.search).get('t3d');
 new IntersectionObserver(es=>{ vis=es[0].isIntersecting; if(vis){ if(!RM&&!drag) vid.play().catch(()=>{}); if(!raf) raf=requestAnimationFrame(frameFn); } else vid.pause(); }).observe(hero);
 let onVid=false; const useVid=()=>{ if(!onVid&&vid.readyState>=2){ onVid=true; scrMat.uniforms.map.value=VT; haloMat.uniforms.map.value=VT; } };
-vid.addEventListener('playing',useVid); vid.addEventListener('seeked',useVid);
+vid.addEventListener('playing',useVid); vid.addEventListener('seeked',()=>{ useVid(); VT.needsUpdate=true; }); vid.addEventListener('timeupdate',()=>{ if(vid.paused) VT.needsUpdate=true; });
 function frameFn(now){
   raf=0; if(!vis) return;
   const r0=hero.getBoundingClientRect(), rc=cv.getBoundingClientRect(), rf=fig.getBoundingClientRect(), dpr=Math.min(1.5,devicePixelRatio||1), mob=r0.width<900;
@@ -139,19 +140,16 @@ function frameFn(now){
   /* échelle : l'illustration est plus grande que le cadre, elle déborde vers le haut */
   mx+=(mxT-mx)*.05; my+=(myT-my)*.05;
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
-  /* cadrage : l'écran couvre une grande partie du haut de page et peut en sortir */
+  /* scène : la frise posée au sol, pile devant le centre de l'écran (même axe x) ; la caméra cadre l'ensemble */
+  tl.scale.setScalar(TSc); tl.position.set(0,0,SZ+TZ); PL.constant=-TY*TSc; tl.updateMatrixWorld(true);
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  /* l'écran entier reste visible, grand, à droite du texte */
-  const k=mob?.9*W/(xr-xl):Math.min(.5*W/(xr-xl),.8*r0.height/(yt-yb)), cxp=mob?W*.5:W*.7, cyp=mob?rf.top-rc.top+rf.height*.42:84+.4*r0.height-30;
-  const left=(xl+xr)/2-cxp/k, top=(yt+yb)/2+cyp/k;
+  const k=mob?1.15*W/(xr-xl):Math.min(.8*W/(xr-xl),1.12*(r0.height-84)/(yt-yb));
+  const cxp=mob?W*.6:W*.76, by=mob?rf.bottom-rc.top-6:r0.height-30;
+  const left=(xl+xr)/2-cxp/k, top=yb+by/k;
   Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
-  /* la frise se pose sous le texte, au premier plan devant l'écran */
-  const TSc=(mob?.62:.26)*W/(L*.72*k); tl.scale.setScalar(TSc); PL.constant=-(YF+TY*TSc);
-  pv2.set((mob?.52:.7)*2-1,-((mob?(rf.bottom-rc.top-rf.height*.12)/H:.8))*2+1); ray2.setFromCamera(pv2,cam); if(ray2.ray.intersectPlane(FLOOR,hit2)) tl.position.copy(hit2);
-  tl.updateMatrixWorld(true);
   /* état de lecture */
   const s=FT!==null?+FT:dragS!==null?dragS:RM?DUR*.6:(vid.currentTime||0), xs=X(s), ap=eo(seg(now/1000,.2,1.2));
-  haloMat.uniforms.t.value=now/1000;
+  haloMat.uniforms.t.value=now/1000; if(drag&&vid.readyState>=2) VT.needsUpdate=true;
   let ci=0; ACTS.forEach((A,i)=>{ if(s>=A.a) ci=i; });
   blocks.forEach((m,i)=>{ const u=m.userData, kk=back(clamp((xs-u.st)/.25)), sy=nz(kk*ap); m.scale.set(1,sy,1); m.position.y=TY+u.h*sy/2;
     const on=i===ci; m.material.emissive.setHex(on||u.base?C.vio:0); m.material.emissiveIntensity=u.base?u.base:on?.12:0; });
