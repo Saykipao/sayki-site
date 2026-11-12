@@ -177,8 +177,7 @@ html:not(.no-hero-gl) .hero-g{pointer-events:none}html:not(.no-hero-gl) .hero-l,
 @media (max-width:900px){
   .hero-g{grid-template-columns:minmax(0,1fr);gap:30px}
   .hero-l{display:contents}
-  .hero-sub{order:1}.hero-btns{order:2}.facts{order:3}
-  .hero .reel,.hx-cv{display:none!important}   /* mobile : on priorise le contenu */
+  .hero-sub{order:1}.hero-btns{order:2}.reel{order:3}.facts{order:4}
 }
 @media (max-width:640px){
   .hero{padding-top:calc(60px + 26px)}
@@ -1039,7 +1038,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 <section class="hero wrap" id="haut" aria-labelledby="t-hero" data-dark>
   <canvas class="hx-cv" aria-hidden="true"></canvas>
   <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
-  <script type="module">if(innerWidth>=900) import('/assets/hero-3d.js');</script>
+  <script type="module" src="/assets/hero-3d.js"></script>
   <p class="mono hero-k fade">« Et concrètement, vous faites quoi ? »</p>
   <h1 class="h h1" id="t-hero"><span class="ln"><span style="--d:0" class="h1-a">Ce que vous faites,</span></span><span class="ln"><span style="--d:1"><em>compris en<span class="br-d"> </span>90 secondes.</em></span></span></h1>
   <div class="hero-g fade">
@@ -1664,7 +1663,7 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('is-in'))
 
 /* ---------- vidéos d'ambiance : seulement quand on les voit ---------- */
 /* hero : si la scène WebGL ne démarre pas, on retombe sur la bande démo */
-setTimeout(()=>{ if(innerWidth>=900&&!root.classList.contains('hero-gl')){ root.classList.add('no-hero-gl'); const v=$('#reel'); if(v&&!RM){ v.preload='auto'; v.play().catch(()=>{}); } } },4000);
+setTimeout(()=>{ if(!root.classList.contains('hero-gl')){ root.classList.add('no-hero-gl'); const v=$('#reel'); if(v&&!RM){ v.preload='auto'; v.play().catch(()=>{}); } } },4000);
 $$('[data-lazyplay]').forEach(v=>{ if(RM){ v.removeAttribute('autoplay'); v.pause(); return; }
   new IntersectionObserver(es=>{ if(es[0].isIntersecting){ v.play().catch(()=>{}); } else v.pause(); },{threshold:.15}).observe(v); });
 
