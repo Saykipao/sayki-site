@@ -52,36 +52,40 @@ const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=6.2, SH=SW*274/640, SZ=-3.2, SY=.42+SH
 const TS=.82, tl=new THREE.Group(); tl.scale.setScalar(TS); scene.add(tl); tl.add(sun,sun.target);   // la lumière suit la frise
 const YF=SY+SH/2+.6;   // la frise flotte devant l'écran (en iso, rien ne le trahit)
 const track=box(L+.3,TY,1.3,C.white); track.position.y=TY/2; tl.add(track);
-/* le cinéma : un immense écran 21:9 dont l'image se diffuse dans la page (bords qui s'effilochent, lavis clair pour garder le texte lisible) */
+/* le cinéma : un écran 21:9 courbe, net ; sa lumière se diffuse autour de lui (halo flou de l'image) */
 const poster=new THREE.TextureLoader().load('/assets/hero-nikita.jpg'); poster.colorSpace=THREE.SRGBColorSpace;
-const PX=1.34, PY=1.6;   // le plan déborde de l'image : c'est là que la vidéo se diffuse
-const scrMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},t:{value:0},bg:{value:new THREE.Color(0xF6F5F4)}},
-  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-  fragmentShader:`uniform sampler2D map;uniform float t;uniform vec3 bg;varying vec2 vUv;
-    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-    float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-    float fbm(vec2 p){float v=0.,a=.5;for(int k=0;k<5;k++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
-    void main(){
-      vec2 vu=(vUv-.5)*vec2(${PX.toFixed(2)},${PY.toFixed(2)})+.5;
-      float w=fbm(vUv*vec2(3.,2.)+vec2(t*.04,-t*.03));
-      vec2 wu=vu+(vec2(fbm(vUv*4.+t*.05),fbm(vUv*4.+7.3-t*.05))-.5)*.06*smoothstep(.0,.25,max(abs(vu.x-.5),abs(vu.y-.5))-.25);
-      vec2 cu=clamp(wu,.002,.998);
-      float d=length(max(abs(wu-.5)-.5,0.)*vec2(1.,.9));
-      float r=.002+d*.09;
-      vec3 c=texture2D(map,cu).rgb*.28;
-      c+=(texture2D(map,clamp(cu+vec2(r,0.),.0,1.)).rgb+texture2D(map,clamp(cu-vec2(r,0.),.0,1.)).rgb+texture2D(map,clamp(cu+vec2(0.,r),.0,1.)).rgb+texture2D(map,clamp(cu-vec2(0.,r),.0,1.)).rgb)*.12;
-      c+=(texture2D(map,clamp(cu+vec2(r,r)*.7,.0,1.)).rgb+texture2D(map,clamp(cu-vec2(r,r)*.7,.0,1.)).rgb+texture2D(map,clamp(cu+vec2(r,-r)*.7,.0,1.)).rgb+texture2D(map,clamp(cu+vec2(-r,r)*.7,.0,1.)).rgb)*.06;
-      float l=dot(c,vec3(.299,.587,.114)); c=mix(vec3(l),c,.9);
-      /* lavis : plus clair en haut à gauche, là où passe le grand titre */
-      float wash=.2+.45*(1.-smoothstep(.0,.5,vu.x))+.25*smoothstep(.0,.3,d);
-      c=mix(c,bg,clamp(wash,0.,.85));
-      /* bords qui se diffusent, irréguliers et vivants */
-      float a=1.-smoothstep(.0,.07+.16*w,d-.015*(w-.5));
-      a*=smoothstep(-.12,.3,vu.x+(w-.5)*.35);
-      gl_FragColor=vec4(c,a);
+const CR=7.5, ARC=SW/CR;   // rayon de courbure
+const bend=(g,r)=>{ const p=g.attributes.position; for(let i=0;i<p.count;i++){ const x=p.getX(i), a=x/r; p.setX(i,r*Math.sin(a)); p.setZ(i,r*(1-Math.cos(a))); } p.needsUpdate=true; g.computeVertexNormals(); return g; };
+const NOI=`float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+  float fbm(vec2 p){float v=0.,a=.5;for(int k=0;k<4;k++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}`;
+const VS='varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}';
+const scrMat=new THREE.ShaderMaterial({uniforms:{map:{value:poster},bg:{value:new THREE.Color(0xF6F5F4)}},vertexShader:VS,
+  fragmentShader:`uniform sampler2D map;uniform vec3 bg;varying vec2 vUv;
+    void main(){ vec3 c=texture2D(map,vUv).rgb;
+      /* un voile clair, plus fort à gauche, là où passe le titre */
+      float w=.1+.38*(1.-smoothstep(.0,.45,vUv.x));
+      c=mix(c,bg,w);
+      gl_FragColor=vec4(c,1.);
       #include <colorspace_fragment>
     }`});
-const scr=new THREE.Mesh(new THREE.PlaneGeometry(SW*PX,SH*PY),scrMat); scr.position.set(0,SY,SZ); scr.renderOrder=0; scene.add(scr);
+const scr=new THREE.Mesh(bend(new THREE.PlaneGeometry(SW,SH,64,1),CR),scrMat); scr.position.set(0,SY,SZ); scene.add(scr);
+const rim=new THREE.Mesh(bend(new THREE.PlaneGeometry(SW+.05,SH+.05,64,1),CR),new THREE.MeshBasicMaterial({color:0xffffff})); rim.position.set(0,SY,SZ-.012); scene.add(rim);
+/* halo : l'image, très floue, déborde et se diffuse dans la page */
+const HX=1.45, HY=1.9;
+const haloMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:poster},t:{value:0}},vertexShader:VS,
+  fragmentShader:`uniform sampler2D map;uniform float t;varying vec2 vUv;${NOI}
+    void main(){ vec2 vu=(vUv-.5)*vec2(${HX.toFixed(2)},${HY.toFixed(2)})+.5;
+      float w=fbm(vUv*vec2(3.,2.)+vec2(t*.05,-t*.04));
+      vec2 cu=clamp(vu,.01,.99); float r=.05;
+      vec3 c=vec3(0.); for(int i=0;i<12;i++){ float a=float(i)*.5236; c+=texture2D(map,clamp(cu+vec2(cos(a),sin(a)*1.8)*r,.0,1.)).rgb; } c/=12.;
+      float d=length(max(abs(vu-.5)-.5,0.)*vec2(1.,.8));
+      float a=(1.-smoothstep(.0,.16+.14*w,d))*.75;
+      gl_FragColor=vec4(mix(c,vec3(1.),.08),a);
+      #include <colorspace_fragment>
+    }`});
+const halo=new THREE.Mesh(bend(new THREE.PlaneGeometry(SW*HX,SH*HY,64,1),CR*HX),haloMat); halo.position.set(0,SY,SZ-.2); halo.renderOrder=-1; scene.add(halo);
+const PX=1, PY=1;
 const tcSet=()=>{};
 /* les quatre temps */
 const blocks=ACTS.map((A,i)=>{ const w=X(A.b)-X(A.a)-.04, m=box(w,A.h,.5,A.c,A.c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
@@ -104,7 +108,7 @@ const setNote=i=>{ if(i===cur||!note) return; cur=i; const A=ACTS[i]; note.class
   setTimeout(()=>{ if(cur!==i) return; note.innerHTML=`<p class="mono hx-k">0${i+1} · ${A.n} · ${mm(A.a)}–${mm(A.b)}</p><p class="hx-t">${A.t}</p><ul>${A.l.map(x=>`<li>${x}</li>`).join('')}</ul>`; note.classList.add('on'); },180); };
 
 /* ---------- cadrage : l'illustration part du cadre de l'ancienne vidéo, et peut déborder ---------- */
-const EXT=[[-SW/2,SY+SH/2,SZ],[SW/2,SY+SH/2,SZ],[-SW/2,SY-SH/2,SZ],[SW/2,SY-SH/2,SZ]].map(a=>new THREE.Vector3(...a));
+const EXT=[[-CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY+SH/2,SZ+CR*(1-Math.cos(ARC/2))],[-CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[CR*Math.sin(ARC/2),SY-SH/2,SZ+CR*(1-Math.cos(ARC/2))],[0,SY,SZ]].map(a=>new THREE.Vector3(...a));
 const TG=new THREE.Vector3(0,.95,-.1), ISO=new THREE.Vector3(10,10,10), UP=new THREE.Vector3(0,1,0), off=new THREE.Vector3(), V3=new THREE.Vector3();
 let mxT=0,myT=0,mx=0,my=0;
 addEventListener('pointermove',e=>{ mxT=e.clientX/innerWidth-.5; myT=e.clientY/innerHeight-.5; },{passive:true});
@@ -126,7 +130,7 @@ hero.addEventListener('pointerup',end); hero.addEventListener('pointercancel',en
 
 let vis=true, raf=0, started=false; const FT=new URLSearchParams(location.search).get('t3d');
 new IntersectionObserver(es=>{ vis=es[0].isIntersecting; if(vis){ if(!RM&&!drag) vid.play().catch(()=>{}); if(!raf) raf=requestAnimationFrame(frameFn); } else vid.pause(); }).observe(hero);
-let onVid=false; const useVid=()=>{ if(!onVid&&vid.readyState>=2){ onVid=true; scrMat.uniforms.map.value=VT; } };
+let onVid=false; const useVid=()=>{ if(!onVid&&vid.readyState>=2){ onVid=true; scrMat.uniforms.map.value=VT; haloMat.uniforms.map.value=VT; } };
 vid.addEventListener('playing',useVid); vid.addEventListener('seeked',useVid);
 function frameFn(now){
   raf=0; if(!vis) return;
@@ -137,18 +141,17 @@ function frameFn(now){
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
   /* cadrage : l'écran couvre une grande partie du haut de page et peut en sortir */
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  /* le coin bas-gauche de l'écran se cale en haut à gauche, son bord bas file en diagonale vers le coin bas-droit */
-  const k=(mob?1.5:1.02)*W/(xr-xl); V3.copy(EXT[2]).applyMatrix4(cam.matrixWorldInverse);
-  const ax=mob?W*-.05:W*.13, ay=mob?rf.top-rc.top+rf.height*.15:H*.1;
-  const left=V3.x-ax/k, top=V3.y+ay/k;
+  /* l'écran entier reste visible, grand, à droite du texte */
+  const k=mob?.9*W/(xr-xl):Math.min(.5*W/(xr-xl),.8*r0.height/(yt-yb)), cxp=mob?W*.5:W*.7, cyp=mob?rf.top-rc.top+rf.height*.42:84+.4*r0.height-30;
+  const left=(xl+xr)/2-cxp/k, top=(yt+yb)/2+cyp/k;
   Object.assign(cam,{left,right:left+W/k,top,bottom:top-H/k}); cam.updateProjectionMatrix();
   /* la frise se pose sous le texte, au premier plan devant l'écran */
-  const TSc=(mob?.7:.3)*W/(L*.72*k); tl.scale.setScalar(TSc); PL.constant=-(YF+TY*TSc);
-  pv2.set((mob?.52:.66)*2-1,-((mob?(rf.bottom-rc.top-rf.height*.26)/H:.7))*2+1); ray2.setFromCamera(pv2,cam); if(ray2.ray.intersectPlane(FLOOR,hit2)) tl.position.copy(hit2);
+  const TSc=(mob?.62:.26)*W/(L*.72*k); tl.scale.setScalar(TSc); PL.constant=-(YF+TY*TSc);
+  pv2.set((mob?.52:.7)*2-1,-((mob?(rf.bottom-rc.top-rf.height*.12)/H:.8))*2+1); ray2.setFromCamera(pv2,cam); if(ray2.ray.intersectPlane(FLOOR,hit2)) tl.position.copy(hit2);
   tl.updateMatrixWorld(true);
   /* état de lecture */
   const s=FT!==null?+FT:dragS!==null?dragS:RM?DUR*.6:(vid.currentTime||0), xs=X(s), ap=eo(seg(now/1000,.2,1.2));
-  scrMat.uniforms.t.value=now/1000;
+  haloMat.uniforms.t.value=now/1000;
   let ci=0; ACTS.forEach((A,i)=>{ if(s>=A.a) ci=i; });
   blocks.forEach((m,i)=>{ const u=m.userData, kk=back(clamp((xs-u.st)/.25)), sy=nz(kk*ap); m.scale.set(1,sy,1); m.position.y=TY+u.h*sy/2;
     const on=i===ci; m.material.emissive.setHex(on||u.base?C.vio:0); m.material.emissiveIntensity=u.base?u.base:on?.12:0; });
