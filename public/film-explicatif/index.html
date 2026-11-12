@@ -140,9 +140,10 @@ html.hero-gl .hx-note.on{opacity:1}
 @media (min-width:901px){
   .hero{--rh:calc(90px + 2vw);min-height:calc(100svh - var(--rh));display:flex;flex-direction:column;padding-top:calc(68px + clamp(40px,6vh,90px));padding-bottom:clamp(20px,3vh,36px)}
   .hero .h1{font-size:min(clamp(46px,7.4vw,124px),12.5vh)}
-  .hero-g{margin-top:clamp(28px,5vh,76px);flex:1 1 auto}
+  .hero-g{margin-top:clamp(28px,5vh,76px);flex:1 1 auto;align-items:start}
+  .hero-g .reel{align-self:stretch}
   .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;border-top:1px solid var(--line)}
-  .facts div{flex-direction:column;align-items:flex-start;gap:4px;border-bottom:0;padding:12px 0 0}
+  .facts div{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:4px;border-bottom:0;padding:12px 0 0}
   .facts dd{text-align:left}
   div.refs{padding-top:0;position:relative;z-index:3}
 }
