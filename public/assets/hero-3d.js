@@ -113,7 +113,7 @@ function frameFn(now){
   off.copy(ISO).applyAxisAngle(UP,mx*.1); off.y+=my*-1; cam.position.copy(TG).add(off); cam.lookAt(TG); cam.updateMatrixWorld();
   /* étendue de la scène vue par la caméra (en unités) : on l'ajuste au cadre, sans dépasser le haut de page */
   let xl=1e9,xr=-1e9,yt=-1e9,yb=1e9; EXT.forEach(p=>{ V3.copy(p).applyMatrix4(cam.matrixWorldInverse); xl=Math.min(xl,V3.x); xr=Math.max(xr,V3.x); yt=Math.max(yt,V3.y); yb=Math.min(yb,V3.y); });
-  const top0=mob?rf.top-rc.top:Math.max(84,r0.top<0?84:84)-(rc.top-r0.top), bot=rf.bottom-rc.top-(mob?0:34);
+  const top0=mob?rf.top-rc.top:Math.max(84,r0.top<0?84:84)-(rc.top-r0.top), bot=rf.bottom-rc.top-(mob?0:10);
   const k=Math.min((rf.width*(mob?1:1.06))/(xr-xl),(bot-top0)/(yt-yb));
   const cxp=rf.left-rc.left+rf.width*(mob?.5:.56), left=(xl+xr)/2-cxp/k, bottom=yb-(H-bot)/k;
   Object.assign(cam,{left,right:left+W/k,bottom,top:bottom+H/k}); cam.updateProjectionMatrix();

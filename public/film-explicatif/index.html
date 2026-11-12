@@ -140,7 +140,7 @@ html.hero-gl .hx-note.on{opacity:1}
 @media (min-width:901px){
   .hero{--rh:calc(90px + 2vw);min-height:calc(100svh - var(--rh));display:flex;flex-direction:column;padding-top:calc(68px + clamp(40px,6vh,90px));padding-bottom:clamp(20px,3vh,36px)}
   .hero .h1{font-size:min(clamp(46px,7.4vw,124px),12.5vh)}
-  .hero-g{margin-top:auto;padding-top:clamp(24px,4vh,56px)}
+  .hero-g{margin-top:clamp(28px,5vh,76px);flex:1 1 auto}
   .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;border-top:1px solid var(--line)}
   .facts div{flex-direction:column;align-items:flex-start;gap:4px;border-bottom:0;padding:12px 0 0}
   .facts dd{text-align:left}
@@ -156,7 +156,7 @@ html.hero-gl .hx-note.on{opacity:1}
   .hero .h1{font-size:min(clamp(46px,7.4vw,124px),11vh)}
   .hero-k{margin-bottom:14px}
   .hero-l{gap:16px}
-  .hero-g{padding-top:16px}
+  .hero-g{margin-top:20px}
 }
 html.hero-gl .hx-cv{opacity:1}
 .reel-f.hx-f{background:transparent;overflow:visible}
@@ -1012,7 +1012,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
   <h1 class="h h1" id="t-hero"><span class="ln"><span style="--d:0">Ce que vous faites,</span></span><span class="ln"><span style="--d:1"><em>compris en 90 secondes.</em></span></span></h1>
   <div class="hero-g fade">
     <div class="hero-l">
-      <p class="hero-sub">Une vidéo d’animation 3D qui explique ce que vous faites à quelqu’un qui n’y connaît rien.</p>
+      <p class="hero-sub">Un film d’animation qui explique ce que vous faites à quelqu’un qui n’y connaît rien.</p>
       <div class="hero-btns">
         <a class="btn mag" href="#rendez-vous" data-book>Réserver un appel <span class="ar">→</span></a>
         <button class="btn line" type="button" data-idea="1">Recevoir une idée gratuite</button>
@@ -1025,7 +1025,6 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
     </div>
     <figure class="reel">
       <div class="reel-f hx-f"><video id="reel" poster="/assets/intro.jpg" muted loop playsinline preload="none"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_1080p.mp4" type="video/mp4" media="(min-width: 900px)"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_720p.mp4" type="video/mp4"><source src="/assets/intro.mp4" type="video/mp4"></video></div>
-      <figcaption class="mono"><span>Un film, quatre temps</span><span>Cliquez sur un temps pour y aller</span></figcaption>
     </figure>
   </div>
 </section>
