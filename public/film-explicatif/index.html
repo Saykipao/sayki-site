@@ -925,6 +925,14 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 .scene .a-vid{opacity:0}
 .scene.rs [data-t],.scene.rs .x-tiles i{opacity:0!important;transition:opacity .45s!important}
 .scene.nt,.scene.nt *{transition:none!important;animation-name:none!important}
+
+/* ===== Méthode, DA « isométrie WebGL » (nov. 2026) — scènes dans assets/methode-3d.js.
+   Versions précédentes : methode-ligne-1600/, methode-scene-nuit/, methode-interface/, methode-motion-ui/ ===== */
+.g3{position:relative;display:block;width:100%;max-width:none!important;margin:0!important;overflow:hidden;
+  background:radial-gradient(70% 60% at 92% 0%,rgba(158,55,255,.10),transparent 70%),radial-gradient(60% 55% at 0% 100%,rgba(222,80,210,.06),transparent 70%),linear-gradient(180deg,#FBF9FD,#F3EFF8)}
+.g3.w{aspect-ratio:640/400}.g3.n{aspect-ratio:460/420}
+.g3 canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .8s ease}
+.g3.ready canvas{opacity:1}
 </style>
 </head>
 <body>
@@ -1018,6 +1026,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 </section>
 
 <!-- La méthode -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <section class="sec wrap" id="methode" aria-labelledby="t-me">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <linearGradient id="gDot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9E37FF"/><stop offset="1" stop-color="#DE50D2"/></linearGradient>
@@ -1032,102 +1041,32 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
     <article class="mc n s1">
       <p class="mc-h mono"><span><i></i>Étape 1</span><span>Le point de départ</span></p>
       <div class="mc-t"><h3>Le call stratégique</h3><p>Une heure pour trouver ce qui coince quand vous expliquez votre métier, et le bon angle pour le raconter. Rien à préparer. <b>Les 30 jours commencent ici.</b></p><p class="mc-you"><b>Vous :</b> une heure de conversation.</p></div>
-      <div class="ill scene n" data-dur="10.5" aria-hidden="true">
-  <div class="x-card x-call a-up" data-t="0" style="left:calc(var(--u)*20);top:calc(var(--u)*20);width:calc(var(--u)*420);height:calc(var(--u)*56);">
-    <span class="x-av ink">LP</span><span class="x-av lav">MC</span>
-    <span class="x-eq"><i></i><i></i><i></i><i></i><i></i></span>
-    <span class="x-ttl">Call stratégique</span><span class="x-k x-rec">● 00:42</span>
-  </div>
-  <div class="x-card a-up" data-t="0.15" style="left:calc(var(--u)*20);top:calc(var(--u)*90);width:calc(var(--u)*420);height:calc(var(--u)*176);">
-    <span class="x-k" style="left:calc(var(--u)*18);top:calc(var(--u)*14);">Transcription</span><div class="x-row" style="top:calc(var(--u)*40)"><span class="x-who">MC</span><p class="a-type" data-t="0.5">On vend un service que <span class="hl">personne ne voit</span>.</p><span class="x-tag a-pop" data-t="1.7">ce qui coince</span></div><div class="x-row" style="top:calc(var(--u)*84)"><span class="x-who">MC</span><p class="a-type" data-t="2.2">Nos clients, ce sont des <span class="hl">dentistes indépendants</span>.</p><span class="x-tag a-pop" data-t="3.4">vos clients</span></div><div class="x-row" style="top:calc(var(--u)*128)"><span class="x-who">MC</span><p class="a-type" data-t="3.9">On s’occupe de <span class="hl">tout, sauf soigner</span>.</p><span class="x-tag a-pop" data-t="5.1">votre offre</span></div>
-  </div>
-  <div class="x-card x-out a-up" data-t="5.4" style="left:calc(var(--u)*20);top:calc(var(--u)*280);width:calc(var(--u)*420);height:calc(var(--u)*140);">
-    <span class="x-k v" style="left:calc(var(--u)*18);top:calc(var(--u)*16);">Le bon angle</span>
-    <div class="x-chips" style="left:calc(var(--u)*18);top:calc(var(--u)*40);"><span class="x-tag on-v a-fly" data-t="5.7">ce qui coince</span><span class="x-tag on-v a-fly" data-t="5.85">vos clients</span><span class="x-tag on-v a-fly" data-t="6">votre offre</span></div>
-    <p class="x-big a-blur" data-t="6.6" style="left:calc(var(--u)*18);top:calc(var(--u)*74);width:calc(var(--u)*390);">Le dentiste noyé sous la paperasse.</p>
-  </div>
-</div>
+      <div class="ill g3 n" data-s="1" aria-hidden="true"><canvas></canvas></div>
     </article>
     <article class="mc w s2">
       <p class="mc-h mono"><span><i></i>Étape 2</span><span>L’idée</span></p>
       <div class="mc-t"><h3>Le concept</h3><p>Une histoire en quatre temps : l’accroche, le problème de votre client, votre solution, votre expertise. On retient mieux une histoire qu’une explication : les chercheurs l’ont mesuré, votre grand-mère le savait. <b>Rien n’est produit sans votre feu vert.</b><span class="src">Mar et al., méta-analyse portant sur plus de 33 000 participants, <a href="https://pubmed.ncbi.nlm.nih.gov/33410100/" target="_blank" rel="noopener">Psychonomic Bulletin &amp; Review, 2021</a>.</span></p><p class="mc-you"><b>Vous :</b> vous validez.</p></div>
-      <div class="ill scene w" data-dur="11" aria-hidden="true">
-  <div class="x-card a-up" data-t="0" style="left:calc(var(--u)*24);top:calc(var(--u)*24);width:calc(var(--u)*300);height:calc(var(--u)*236);">
-    <span class="x-k" style="left:calc(var(--u)*18);top:calc(var(--u)*16);">Script · 90 secondes</span><div class="x-beat" style="top:calc(var(--u)*44)"><span class="x-k">00:00</span><b>Accroche</b><span class="x-d">5 s</span><em>La question qui fait lever la tête.</em></div><div class="x-beat" style="top:calc(var(--u)*90)"><span class="x-k">00:05</span><b>Problème</b><span class="x-d">25 s</span><em>Le quotidien de votre client, tel quel.</em></div><div class="x-beat" style="top:calc(var(--u)*136)"><span class="x-k">00:30</span><b>Solution</b><span class="x-d">45 s</span><em>Votre service entre en scène.</em></div><div class="x-beat" style="top:calc(var(--u)*182)"><span class="x-k">01:15</span><b>Expertise</b><span class="x-d">15 s</span><em>Pourquoi vous, et pas un autre.</em></div>
-    <span class="x-sel a-key" data-t="0.9" style="left:calc(var(--u)*0);top:calc(var(--u)*44);width:calc(var(--u)*3);height:calc(var(--u)*46);"></span>
-  </div>
-  <div class="x-card a-up" data-t="0.15" style="left:calc(var(--u)*340);top:calc(var(--u)*24);width:calc(var(--u)*276);height:calc(var(--u)*236);">
-    <span class="x-k" style="left:calc(var(--u)*18);top:calc(var(--u)*16);">Compréhension</span>
-    <span class="x-num a-count" data-t="0.9" data-count="100" data-dur="7" data-suf="%" style="left:calc(var(--u)*16);top:calc(var(--u)*36);">0</span>
-    <svg class="x-spark" viewBox="0 0 240 90" preserveAspectRatio="none" style="left:calc(var(--u)*18);top:calc(var(--u)*120);width:calc(var(--u)*240);height:calc(var(--u)*90);"><path class="x-grid" d="M0 89.5H240M0 45H240M0 .5H240"/><path class="x-line a-draw" data-t="0.9" pathLength="1" d="M0 86C14 84 20 80 30 79S70 70 92 66C130 58 150 24 186 14S226 8 240 8"/></svg>
-    <span class="x-badge a-pop" data-t="8.2" style="left:calc(var(--u)*168);top:calc(var(--u)*10);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>Compris</span>
-  </div>
-  <div class="x-card a-up" data-t="0.3" style="left:calc(var(--u)*24);top:calc(var(--u)*276);width:calc(var(--u)*592);height:calc(var(--u)*100);">
-    <div class="x-ruler" style="left:calc(var(--u)*20);top:calc(var(--u)*16);width:calc(var(--u)*552);height:calc(var(--u)*14);"><span>00:00</span><span>00:30</span><span>01:00</span><span>01:30</span></div>
-    <div class="x-segs" style="left:calc(var(--u)*20);top:calc(var(--u)*40);width:calc(var(--u)*552);height:calc(var(--u)*26);"><i class="c1" style="left:calc(var(--u)*0.0);width:calc(var(--u)*28.7)"></i><i class="c2" style="left:calc(var(--u)*30.7);width:calc(var(--u)*151.3)"></i><i class="c3" style="left:calc(var(--u)*184.0);width:calc(var(--u)*274.0)"></i><i class="c4" style="left:calc(var(--u)*460.0);width:calc(var(--u)*90.0)"></i></div>
-    <div class="x-segl" style="left:calc(var(--u)*20);top:calc(var(--u)*72);width:calc(var(--u)*552);height:calc(var(--u)*14);"><span style="left:calc(var(--u)*37)">problème</span><span style="left:calc(var(--u)*190)">solution</span><span style="left:calc(var(--u)*466)">expertise</span></div>
-    <span class="x-ph a-play" data-t="0.9" style="left:calc(var(--u)*20);top:calc(var(--u)*10);width:calc(var(--u)*2);height:calc(var(--u)*62);;--to:calc(var(--u)*552)"></span>
-  </div>
-</div>
+      <div class="ill g3 w" data-s="2" aria-hidden="true"><canvas></canvas></div>
     </article>
     <article class="mc w s3">
       <p class="mc-h mono"><span><i></i>Étape 3</span><span>Le découpage</span></p>
       <div class="mc-t"><h3>Le storyboard</h3><p>Chaque plan est dessiné, avec sa phrase de voix off. Vous voyez la vidéo avant qu’elle existe. <b>On change tout tant que ça ne coûte rien.</b></p><p class="mc-you"><b>Vous :</b> vous validez le storyboard et la voix.</p></div>
-      <div class="ill scene w" data-dur="11" aria-hidden="true">
-  <span class="x-k" style="left:calc(var(--u)*24);top:calc(var(--u)*24);">Storyboard · 6 plans · voix off</span>
-  <span class="x-k v a-up" data-t="7.7" style="left:calc(var(--u)*450);top:calc(var(--u)*24);">6/6 validés</span>
-  <div class="x-card x-frame a-up" data-t="0.30" style="left:calc(var(--u)*24);top:calc(var(--u)*60);width:calc(var(--u)*188);height:calc(var(--u)*150);"><img src="/assets/mx-1.jpg" alt="" loading="lazy" decoding="async"><span class="x-k" style="left:calc(var(--u)*10);top:calc(var(--u)*116);">P.01 · 2 s</span><span class="x-int" style="left:calc(var(--u)*10);top:calc(var(--u)*130);width:calc(var(--u)*170);">poser la question</span><span class="x-ok a-pop" data-t="2.90"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span></div><div class="x-card x-frame a-up" data-t="0.48" style="left:calc(var(--u)*228);top:calc(var(--u)*60);width:calc(var(--u)*188);height:calc(var(--u)*150);"><img src="/assets/mx-2.jpg" alt="" loading="lazy" decoding="async"><span class="x-k" style="left:calc(var(--u)*10);top:calc(var(--u)*116);">P.02 · 3 s</span><span class="x-int" style="left:calc(var(--u)*10);top:calc(var(--u)*130);width:calc(var(--u)*170);">montrer la chute</span><span class="x-ok a-pop" data-t="3.65"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span></div><div class="x-card x-frame a-up" data-t="0.66" style="left:calc(var(--u)*432);top:calc(var(--u)*60);width:calc(var(--u)*188);height:calc(var(--u)*150);"><img src="/assets/mx-3.jpg" alt="" loading="lazy" decoding="async"><span class="x-k" style="left:calc(var(--u)*10);top:calc(var(--u)*116);">P.03 · 2 s</span><span class="x-int" style="left:calc(var(--u)*10);top:calc(var(--u)*130);width:calc(var(--u)*170);">le doute s’installe</span><span class="x-ok a-pop" data-t="4.40"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span></div><div class="x-card x-frame a-up" data-t="0.84" style="left:calc(var(--u)*24);top:calc(var(--u)*224);width:calc(var(--u)*188);height:calc(var(--u)*150);"><img src="/assets/mx-4.jpg" alt="" loading="lazy" decoding="async"><span class="x-k" style="left:calc(var(--u)*10);top:calc(var(--u)*116);">P.04 · 3 s</span><span class="x-int" style="left:calc(var(--u)*10);top:calc(var(--u)*130);width:calc(var(--u)*170);">l’idée arrive</span><span class="x-ok a-pop" data-t="5.15"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span></div><div class="x-card x-frame a-up" data-t="1.02" style="left:calc(var(--u)*228);top:calc(var(--u)*224);width:calc(var(--u)*188);height:calc(var(--u)*150);"><img src="/assets/mx-6.jpg" alt="" loading="lazy" decoding="async"><span class="x-k" style="left:calc(var(--u)*10);top:calc(var(--u)*116);">P.05 · 2 s</span><span class="x-int" style="left:calc(var(--u)*10);top:calc(var(--u)*130);width:calc(var(--u)*170);">le produit trouve sa place</span><span class="x-ok a-pop" data-t="5.90"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span></div><div class="x-card x-frame a-up" data-t="1.20" style="left:calc(var(--u)*432);top:calc(var(--u)*224);width:calc(var(--u)*188);height:calc(var(--u)*150);"><img src="/assets/mx-8.jpg" alt="" loading="lazy" decoding="async"><span class="x-k" style="left:calc(var(--u)*10);top:calc(var(--u)*116);">P.06 · 2 s</span><span class="x-int" style="left:calc(var(--u)*10);top:calc(var(--u)*130);width:calc(var(--u)*170);">la chute</span><span class="x-ok a-pop" data-t="6.65"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span></div>
-  <svg class="x-cursor a-path" data-t="2" viewBox="0 0 24 24" style="left:calc(var(--u)*0);top:calc(var(--u)*0);width:calc(var(--u)*22);height:calc(var(--u)*22);"><path d="M5 3l14 8.5-6.2 1.4L9.6 19z"/></svg>
-</div>
+      <div class="ill g3 w" data-s="3" aria-hidden="true"><canvas></canvas></div>
     </article>
     <article class="mc n s4">
       <p class="mc-h mono"><span><i></i>Étape 4</span><span>Le terrain</span></p>
-      <div class="mc-t"><h3>Le shooting et la préparation</h3><p>Une demi-journée chez vous pour photographier vos lieux, vos produits et votre équipe, reconstruits ensuite en 3D. <b>Vos clients reconnaîtront tout, peut-être même votre comptable.</b></p><p class="mc-you"><b>Vous :</b> m’ouvrir la porte.</p></div>
-      <div class="ill scene n" data-dur="10.5" aria-hidden="true">
-  <div class="x-card x-vp a-up" data-t="0" style="left:calc(var(--u)*20);top:calc(var(--u)*20);width:calc(var(--u)*420);height:calc(var(--u)*250);">
-    <canvas class="x-3d" data-t="3.4"></canvas>
-    <span class="x-k" style="left:calc(var(--u)*16);top:calc(var(--u)*14);">Viewport 3D</span><span class="x-k v a-up" data-t="7.2" style="left:calc(var(--u)*330);top:calc(var(--u)*14);">plante.obj</span>
-    <span class="x-gz" style="left:calc(var(--u)*16);top:calc(var(--u)*206);"><i class="gx"></i><i class="gy"></i><b>x</b><b class="y">y</b></span>
-  </div>
-  <div class="x-card a-up" data-t="0.15" style="left:calc(var(--u)*20);top:calc(var(--u)*284);width:calc(var(--u)*420);height:calc(var(--u)*136);">
-    <span class="x-k" style="left:calc(var(--u)*18);top:calc(var(--u)*16);">Photos</span><span class="x-k x-cnt a-count" data-t="0.6" data-count="24" data-dur="2.6" data-pad="2" data-suf=" / 24" style="left:calc(var(--u)*78);top:calc(var(--u)*16);">0</span>
-    <div class="x-tiles" style="left:calc(var(--u)*18);top:calc(var(--u)*38);width:calc(var(--u)*384);height:calc(var(--u)*40);"><i class="a-flash" data-t="0.60"></i><i class="a-flash" data-t="0.82"></i><i class="a-flash" data-t="1.04"></i><i class="a-flash" data-t="1.26"></i><i class="a-flash" data-t="1.48"></i><i class="a-flash" data-t="1.70"></i><i class="a-flash" data-t="1.92"></i><i class="a-flash" data-t="2.14"></i><i class="a-flash" data-t="2.36"></i><i class="a-flash" data-t="2.58"></i><i class="a-flash" data-t="2.80"></i><i class="a-flash" data-t="3.02"></i></div>
-    <span class="x-k" style="left:calc(var(--u)*18);top:calc(var(--u)*96);">Reconstruction</span><span class="x-k x-pct a-count" data-t="3.4" data-count="100" data-dur="3.8" data-suf=" %" style="left:calc(var(--u)*360);top:calc(var(--u)*96);width:calc(var(--u)*42);">0</span>
-    <span class="x-bar" style="left:calc(var(--u)*18);top:calc(var(--u)*112);width:calc(var(--u)*384);height:calc(var(--u)*6);"><i class="a-bar" data-t="3.4" style="--d:3.8s"></i></span>
-  </div>
-</div>
+      <div class="mc-t"><h3>Le shooting et la préparation</h3><p>Une demi-journée chez vous pour photographier vos lieux, vos produits et votre équipe. L’IA en tire des images de référence pour la vidéo. <b>Vos clients reconnaîtront tout, peut-être même votre comptable.</b></p><p class="mc-you"><b>Vous :</b> m’ouvrir la porte.</p></div>
+      <div class="ill g3 n" data-s="4" aria-hidden="true"><canvas></canvas></div>
     </article>
     <article class="mc n s5">
       <p class="mc-h mono"><span><i></i>Étape 5</span><span>La fabrication</span></p>
       <div class="mc-t"><h3>La génération et la production</h3><p>L’IA fabrique les images, je choisis chacune. Puis l’animation, la voix, la musique et le montage. <b>Pour que personne ne se dise « tiens, c’est fait avec l’IA ».</b></p><p class="mc-you"><b>Vous :</b> rien. C’est le bon moment pour les vacances.</p></div>
-      <div class="ill scene n x-stage5" data-dur="11" aria-hidden="true">
-  <div class="x-iso a-flat" data-t="5.6">
-    <div class="x-ly ly3" data-t="0.2"><span class="x-k">Voix · son</span><div class="x-wave"><i style="--h:0.3"></i><i style="--h:0.6"></i><i style="--h:0.9"></i><i style="--h:0.5"></i><i style="--h:0.7"></i><i style="--h:1"></i><i style="--h:0.4"></i><i style="--h:0.8"></i><i style="--h:0.55"></i><i style="--h:0.9"></i><i style="--h:0.35"></i><i style="--h:0.7"></i><i style="--h:0.5"></i><i style="--h:0.85"></i><i style="--h:0.4"></i><i style="--h:0.65"></i><i style="--h:0.9"></i><i style="--h:0.45"></i><i style="--h:0.75"></i><i style="--h:0.3"></i><i style="--h:0.6"></i><i style="--h:0.8"></i><i style="--h:0.5"></i><i style="--h:0.95"></i><i style="--h:0.4"></i><i style="--h:0.7"></i></div></div>
-    <div class="x-ly ly2" data-t="0.7"><img src="/assets/mx-7.jpg" alt=""><span class="x-k">Image IA</span></div>
-    <div class="x-ly ly1" data-t="1.2"><p>Une agence ?<br>Pour quoi faire.</p><span class="x-k">Motion design</span></div>
-    <video class="x-final a-vid" data-t="6.6" muted loop playsinline preload="none" data-src="/assets/fe-histoire.mp4" poster="/assets/mx-1.jpg"></video>
-  </div>
-  <span class="x-tag a-up" data-t="2.2" style="left:calc(var(--u)*24);top:calc(var(--u)*384);">3 calques</span>
-  <span class="x-badge a-pop" data-t="7.2" style="left:calc(var(--u)*318);top:calc(var(--u)*380);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>Rendu final</span>
-</div>
+      <div class="ill g3 n" data-s="5" aria-hidden="true"><canvas></canvas></div>
     </article>
     <article class="mc w s6">
       <p class="mc-h mono"><span><i></i>Étape 6</span><span>Le rendu</span></p>
       <div class="mc-t"><h3>La livraison et les ajustements</h3><p>Votre vidéo, prête pour votre site, vos rendez-vous et vos réseaux. Vous demandez, je corrige. <b>Et si elle ne se comprend pas, je la refais.</b></p><p class="mc-you"><b>Vous :</b> vous la montrez. Partout.</p></div>
-      <div class="ill scene w" data-dur="11" aria-hidden="true">
-  <div class="x-card" style="left:calc(var(--u)*24);top:calc(var(--u)*24);width:calc(var(--u)*330);height:calc(var(--u)*352);">
-    <span class="x-k" style="left:calc(var(--u)*18);top:calc(var(--u)*16);">Retours · v2</span>
-    <div class="x-msg l a-up" data-t="0.5" style="left:calc(var(--u)*18);top:calc(var(--u)*46);width:calc(var(--u)*230);">On adore. Le logo peut être un peu plus grand ?</div>
-    <div class="x-msg r a-up" data-t="1.7" style="left:calc(var(--u)*110);top:calc(var(--u)*112);width:calc(var(--u)*202);">C’est fait. Voici la v2.</div>
-    <div class="x-vcard a-up" data-t="2.4" style="left:calc(var(--u)*110);top:calc(var(--u)*152);width:calc(var(--u)*202);height:calc(var(--u)*64);"><img src="/assets/mx-7.jpg" alt=""><span><b>v2</b><span class="x-k">01:30 · 16:9</span></span></div>
-    <div class="x-typing a-up" data-t="3.3" style="left:calc(var(--u)*18);top:calc(var(--u)*232);"><i></i><i></i><i></i></div>
-    <div class="x-msg l a-up" data-t="4.3" style="left:calc(var(--u)*18);top:calc(var(--u)*232);width:calc(var(--u)*190);">Parfait, on valide !</div>
-    <span class="x-badge a-pop" data-t="5.2" style="left:calc(var(--u)*18);top:calc(var(--u)*300);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>Vidéo validée</span>
-  </div>
-  <div class="x-fmt f169 x-card a-fan" data-t="5.9" style="left:calc(var(--u)*372);top:calc(var(--u)*40);width:calc(var(--u)*232);height:calc(var(--u)*131);"><img src="/assets/mx-6.jpg" alt=""><span class="x-k">16:9 · site, présentations</span></div>
-  <div class="x-fmt f11 x-card a-fan" data-t="6.2" style="left:calc(var(--u)*372);top:calc(var(--u)*196);width:calc(var(--u)*130);height:calc(var(--u)*130);"><img src="/assets/mx-c.jpg" alt=""><span class="x-k">1:1</span></div>
-  <div class="x-fmt f916 x-card a-fan" data-t="6.5" style="left:calc(var(--u)*518);top:calc(var(--u)*196);width:calc(var(--u)*86);height:calc(var(--u)*153);"><img src="/assets/mx-v.jpg" alt=""><span class="x-k">9:16</span></div>
-</div>
+      <div class="ill g3 w" data-s="6" aria-hidden="true"><canvas></canvas></div>
     </article>
   </div>
 </section>
@@ -1793,6 +1732,10 @@ function toCal(){ st.cal=true; calSync(); calLoad(); history.replaceState(null,'
   });
 })();
 
+/* ---------- méthode : scènes 3D chargées à l'approche ---------- */
+(function(){ const m=$('#methode'); if(!m||!$('.g3')) return; let go=false;
+  const load=()=>{ if(go) return; go=true; import('/assets/methode-3d.js').catch(()=>document.documentElement.classList.add('no-gl')); };
+  if('IntersectionObserver' in window){ const o=new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ load(); o.disconnect(); } },{rootMargin:'900px 0px'}); o.observe(m); } else load(); })();
 /* ---------- méthode : scènes animées (chaque [data-t] entre à son heure, en boucle, seulement à l'écran) ---------- */
 (function(){
   const scs=$$('.scene'); if(!scs.length) return;
