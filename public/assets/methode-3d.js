@@ -100,7 +100,7 @@ function chip(){
 
 /* ---------- 1 · le call : trois sujets → un seul angle (on dézoome pour voir le schéma) ---------- */
 function s1(){
-  const B=base(2.55,new THREE.Vector3(0,.35,0)); B.dur=10.6;
+  const B=base(2.4,new THREE.Vector3(-1.9,.3,.33)); B.dur=9.5;
   const names=['votre offre','vos clients','ce qui coince'], cols=[C.white,C.lav,C.mid];
   const W=2.05,D=1.02, step=1.04, CX=-2.35, CZ=[-1.3,0,1.3], HUB=new THREE.Vector3(-.05,.02,0), OX=2.2;
   const slabs=names.map((n,i)=>{ const m=box(W,.2,D,cols[i]); const l=label(B,n,.19); l.position.set(-W/2+.15,.102,D/2-.2); m.add(l); B.scene.add(m); return m; });
@@ -114,15 +114,15 @@ function s1(){
   const pl=pool(0xA45BFF,4,3); pl.position.set(OX,.004,0); B.scene.add(pl);
   const V=[2.55,2.4,3.3], T=[new THREE.Vector3(0,.35,0),new THREE.Vector3(-1.9,.3,.33),new THREE.Vector3(-.55,.3,.24)];
   B.update=t=>{
-    const fo=1-seg(t,9.9,10.5), c1=io3(seg(t,1.5,3.1)), c2=io3(seg(t,4.6,6.2));
+    const fo=1-seg(t,8.9,9.45), c1=1, c2=io3(seg(t,3.3,4.9));
     B.view=lerp(lerp(V[0],V[1],c1),V[2],c2); B.target.copy(T[0]).lerp(T[1],c1).lerp(T[2],c2);
-    slabs.forEach((m,i)=>{ const a=eo(seg(t,.15*i,.95+.15*i)), mv=io3(seg(t,1.5+.15*i,2.9+.15*i)), o=(i-1)*step;
+    slabs.forEach((m,i)=>{ const a=eo(seg(t,.25*i,.9+.25*i)), mv=1, o=(i-1)*step;
       m.position.set(lerp(o,CX,mv),.12+(1-a)*-.5+Math.sin(t*1.4+i*1.6)*.035,lerp(-o,CZ[i],mv));
       m.scale.setScalar(nz(a*fo)); });
-    lines.forEach((l,i)=>l.userData.set(io3(seg(t,3+.2*i,4+.2*i))*(fo>.5?1:0)));
-    const h=back(seg(t,3.9,4.4))*fo; hub.scale.setScalar(nz(h)); hub.position.set(HUB.x,.13+.03*Math.sin(t*2.4),0); hp.material.opacity=.55*clamp(h)*(.8+.2*Math.sin(t*2.4));
-    arr.userData.set(io3(seg(t,4.9,5.5))*(fo>.5?1:0)); head.visible=t>5.45&&fo>.5;
-    const o=back(seg(t,5.5,6.3))*fo; out.position.set(OX,.23+.04*Math.sin(t*1.3)*clamp(o),0); out.scale.setScalar(nz(o));
+    lines.forEach((l,i)=>l.userData.set(io3(seg(t,1.5+.2*i,2.4+.2*i))*(fo>.5?1:0)));
+    const h=back(seg(t,2.5,3))*fo; hub.scale.setScalar(nz(h)); hub.position.set(HUB.x,.13+.03*Math.sin(t*2.4),0); hp.material.opacity=.55*clamp(h)*(.8+.2*Math.sin(t*2.4));
+    arr.userData.set(io3(seg(t,3.6,4.2))*(fo>.5?1:0)); head.visible=t>4.15&&fo>.5;
+    const o=back(seg(t,4.2,5))*fo; out.position.set(OX,.23+.04*Math.sin(t*1.3)*clamp(o),0); out.scale.setScalar(nz(o));
     pl.material.opacity=.4*clamp(o)*(.9+.1*Math.sin(t*2.2));
   };
   return B;
@@ -308,13 +308,25 @@ function s5(){
   return B;
 }
 
-/* ---------- 6 · la livraison : v1, v2, v3 validée, puis tous les formats ---------- */
-function s6(video){
+/* ---------- 6 · la livraison : v1, v2, v3 validée, puis tous les formats (même image que la production) ---------- */
+function finalTex(W,H){ const c=document.createElement('canvas'); c.width=W; c.height=H; const g=c.getContext('2d'), u=Math.min(W,H)/270;
+  g.fillStyle='#EFE7FC'; g.fillRect(0,0,W,H);
+  g.fillStyle='#E2D3FA'; g.beginPath(); g.moveTo(0,H); g.lineTo(0,H*.72); g.lineTo(W*.33,H*.46); g.lineTo(W*.52,H*.66); g.lineTo(W*.72,H*.4); g.lineTo(W,H*.68); g.lineTo(W,H); g.fill();
+  g.fillStyle='#9E37FF'; g.beginPath(); g.arc(W*.8,H*.24,34*u,0,7); g.fill();
+  const ty=W>H*1.2?66*u:22*u; g.fillStyle='#DE50D2'; g.fillRect(18*u,ty,Math.min(W*.5,170*u),22*u); g.fillStyle='#fff'; g.fillRect(18*u,ty+30*u,Math.min(W*.34,110*u),12*u);
+  g.fillStyle='#fff'; g.beginPath(); g.arc(W/2,H*.52,30*u,0,7); g.fill(); g.fillStyle='#9E37FF'; g.beginPath(); g.moveTo(W/2-9*u,H*.52-15*u); g.lineTo(W/2+15*u,H*.52); g.lineTo(W/2-9*u,H*.52+15*u); g.fill();
+  g.fillStyle='#fff'; g.fillRect(16*u,H-22*u,W-32*u,6*u);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=4; return {t,u,W,H}; }
+function s6(){
   const B=base(1.98,new THREE.Vector3(.38,.8,.1)); B.dur=10.4;
-  const dev=(w,h,x,z)=>{ const g=new THREE.Group(); const b=box(w,h,.08,C.white); b.position.y=h/2; g.add(b);
-    const s=screen(video,w-.08,h-.08); s.position.set(0,h/2,.041); g.add(s); g.position.set(x,0,z); B.scene.add(g); return {g,s}; };
-  const mon=dev(2.4,1.35,-.75,0), sq=dev(.95,.95,1.15,.42), ph=dev(.56,1,2.05,.78);
-  const cp=chip(); const vb=new THREE.Mesh(new THREE.PlaneGeometry(.33,.18),new THREE.MeshBasicMaterial({map:cp.tx})); vb.position.set(-1.2+.24,1.35-.16,.043); mon.g.add(vb);
+  const dev=(w,h,x,z,cw,ch)=>{ const g=new THREE.Group(); const b=box(w,h,.08,C.white); b.position.y=h/2; g.add(b);
+    const sw=w-.08, shh=h-.08, F=finalTex(cw,ch), s=new THREE.Mesh(new THREE.PlaneGeometry(sw,shh),imgMat(F.t)); s.position.set(0,h/2,.041); g.add(s);
+    /* barre de lecture : avance une fois la version validée */
+    const bl=sw*(F.W-32*F.u)/F.W, by=h/2+shh/2-shh*(F.H-19*F.u)/F.H, fg=new THREE.PlaneGeometry(bl,shh*6*F.u/F.H); fg.translate(bl/2,0,0);
+    const fill=new THREE.Mesh(fg,new THREE.MeshBasicMaterial({color:C.vio})); fill.position.set(-sw/2+sw*16*F.u/F.W,by,.043); g.add(fill);
+    g.position.set(x,0,z); B.scene.add(g); return {g,s,fill}; };
+  const mon=dev(2.4,1.35,-.75,0,480,270), sq=dev(.95,.95,1.15,.42,300,300), ph=dev(.56,1,2.05,.78,216,384);
+  const cp=chip(); const vb=new THREE.Mesh(new THREE.PlaneGeometry(.33,.18),new THREE.MeshBasicMaterial({map:cp.tx})); vb.position.set(-1.2+.24,1.35-.16,.044); mon.g.add(vb);
   const fl=[['16:9',mon,-1.2],['1:1',sq,-.475],['9:16',ph,-.28]].map(([n,d,x])=>{ const l=label(B,n,.15,{color:GREY}); l.position.set(x,.002,.22); d.g.add(l); return l; });
   const ok=check(.32); B.scene.add(ok); const pl=pool(0xA45BFF,3.4,1.6); pl.position.set(-.75,.004,.35); B.scene.add(pl);
   B.update=t=>{
@@ -324,6 +336,7 @@ function s6(video){
     const v=t<2.1?0:t<3.5?1:2; cp.set('V'+(v+1),v===2);
     mon.s.material.uniforms.sat.value=v===0?0:v===1?.4:io3(seg(t,3.5,4));
     sq.s.material.uniforms.sat.value=ph.s.material.uniforms.sat.value=1;
+    [[mon,4.2],[sq,5.6],[ph,5.9]].forEach(([d,a])=>{ const p=seg(t,a,9.5); d.fill.scale.x=nz(p); d.fill.visible=p>0; });
     fl[0].material.opacity=seg(t,4.6,5); fl[1].material.opacity=k1; fl[2].material.opacity=k2;
     const o=back(seg(t,3.8,4.4))*fo; ok.scale.setScalar(nz(o)); ok.position.set(-.75+.95,1.35+.26+Math.sin(t*2)*.035,0);
     pl.material.opacity=.35*seg(t,3.6,4.2)*fo;
@@ -332,13 +345,10 @@ function s6(video){
 }
 
 /* ---------- moteur : une scène par carte, rendue seulement à l'écran ---------- */
-const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,crossOrigin:'anonymous',preload:'none'});
-const VT=new THREE.VideoTexture(vid); VT.colorSpace=THREE.SRGBColorSpace;
-const MAKE=[null,s1,s2,s3,s4,s5,()=>s6(VT)];
+const MAKE=[null,s1,s2,s3,s4,s5,s6];
 const items=[]; const v2=new THREE.Vector2(), off=new THREE.Vector3(), UP=new THREE.Vector3(0,1,0); const FT=new URLSearchParams(location.search).get('t3d');
-const ob=new IntersectionObserver(es=>es.forEach(e=>{ const it=items.find(i=>i.el===e.target); if(!it) return; it.vis=e.isIntersecting; if(it.vis){ it.t0=0; it.done=false; }
-  const needV=items.some(i=>i.vis&&i.video); if(needV){ if(!vid.src) vid.src='/assets/fe-histoire.mp4'; vid.play().catch(()=>{}); } else vid.pause(); }),{rootMargin:'40px 0px'});
-document.querySelectorAll('.g3').forEach(el=>{ const n=+el.dataset.s, S=MAKE[n](); Object.assign(S,{el,cv:el.querySelector('canvas'),vis:false,t0:0,video:n===6});
+const ob=new IntersectionObserver(es=>es.forEach(e=>{ const it=items.find(i=>i.el===e.target); if(!it) return; it.vis=e.isIntersecting; if(it.vis){ it.t0=0; it.done=false; } }),{rootMargin:'40px 0px'});
+document.querySelectorAll('.g3').forEach(el=>{ const n=+el.dataset.s, S=MAKE[n](); Object.assign(S,{el,cv:el.querySelector('canvas'),vis:false,t0:0});
   S.ctx=S.cv.getContext('2d'); items.push(S); ob.observe(el); el.classList.add('ready'); });
 /* qualité adaptative : on baisse la définition si les images tardent */
 let Q=Math.min(1.5,devicePixelRatio||1), last=0, slow=0;
