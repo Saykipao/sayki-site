@@ -128,16 +128,16 @@ function s1(){
   return B;
 }
 
-/* ---------- 2 · le concept : quatre temps qui montent, jusqu'à la compréhension ---------- */
+/* ---------- 2 · le concept : cinq temps qui montent, jusqu'à la compréhension ---------- */
 function s2(){
   const B=base(1.95,new THREE.Vector3(.15,.4,0)); B.dur=9.5;
   const L=5.1, x0=-L/2;
   const track=box(L+.36,.07,1.3,C.white); track.position.set(0,.035,0); B.scene.add(track);
   /* l'accroche dure 5 s, mais on lui laisse la place de son nom */
-  const segs=[[0,15,.32,C.vio,'accroche'],[15,36,.55,C.lav,'problème'],[36,75,.95,C.mid,'solution'],[75,90,1.35,C.white,'expertise']];
+  const segs=[[0,12,.3,C.vio,'hook'],[12,36,.5,C.lav,'problème'],[36,58,.74,C.mid,'solution'],[58,77,1.0,C.white,'expertise'],[77,90,1.28,C.vio,'cta']];
   const blocks=segs.map(([a,b,h,c,n])=>{ const w=L*(b-a)/90-.05, m=box(w,h,.6,c,c===C.vio?{emissive:C.vio,emissiveIntensity:.25}:{});
     m.userData={x:x0+L*(a+b)/180,h,st:x0+L*a/90}; m.position.set(m.userData.x,0,-.2); B.scene.add(m);
-    const l=label(B,n,.16,{color:n==='accroche'?VIO:GREY,fix:1}); l.position.set(m.userData.st+.03,.072,.39); B.scene.add(l);
+    const l=label(B,n,.16,{color:c===C.vio?VIO:GREY,fix:1}); l.position.set(m.userData.st+.03,.072,.39); B.scene.add(l);
     return m; });
   const sh=new THREE.Group();
   const veil=new THREE.Mesh(new THREE.PlaneGeometry(1.1,1),new THREE.MeshBasicMaterial({color:0xB47CFF,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
@@ -153,7 +153,7 @@ function s2(){
       m.scale.set(1,sy,1); m.position.y=.07+m.userData.h*sy/2; if(x>=m.userData.st) hh=m.userData.h; });
     const vh=(hh+.42)*on; sh.position.set(x,.07,-.05); sh.visible=on>.01; veil.scale.y=nz(vh); edge.position.y=vh; veil.material.opacity=.16*on;
     pl.position.set(x,.075,-.05); pl.material.opacity=.5*on;
-    const o=back(seg(t,6.2,6.8))*fo, b3=blocks[3].userData, cy=.07+b3.h+.3+Math.sin(t*2)*.035;
+    const o=back(seg(t,6.2,6.8))*fo, b3=blocks[blocks.length-1].userData, cy=.07+b3.h+.3+Math.sin(t*2)*.035;
     ok.scale.setScalar(nz(o)); ok.position.set(b3.x,cy,-.2); ok.rotation.y=(1-o)*1.2;
     const c=eo(seg(t,6.6,7.2))*fo; cap.position.set(b3.x,cy+.62+(1-c)*.12,-.2); cap.material.opacity=c;
   };

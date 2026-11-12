@@ -1032,6 +1032,40 @@ html,body{overflow-x:clip}
   .hero .h1-a{font-size:1em}
   .hero{padding-top:calc(72px + 30px)}
 }
+
+/* ===== prix sur mobile : un sélecteur 60 s / 90 s, une seule offre affichée, des options compactes ===== */
+.pl-seg,.pl-step{display:none}
+@media (max-width:760px){
+  .pl-seg{display:block;margin:0 0 14px}
+  .pl-seg p,.pl-step{margin:0 0 10px;color:rgba(243,238,249,.6);font-size:11px}
+  .pl-step{display:block;margin:22px 0 10px}
+  .pl-seg-b{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(243,238,249,.25);padding:4px;gap:4px}
+  .pl-seg-b button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px 14px;color:#F3EEF9;text-align:left;transition:background .3s,color .3s}
+  .pl-seg-b b{font-family:var(--f-head);font-weight:400;font-size:24px;letter-spacing:-.03em;line-height:1}
+  .pl-seg-b span{font-family:var(--f-mono);font-size:12px;opacity:.7}
+  .pl-seg-b button.on{background:#F3EEF9;color:var(--ink)}
+  .plans .plan:not(.on){display:none}
+  .plan.on{transform:none}
+  .plan{padding:22px 20px}
+  .plan .fmts{display:none}
+  .plan .pick{display:none}
+  .plan .spec{margin-bottom:6px}
+  .plan .amt{margin-top:14px}
+  .spec>div{grid-template-columns:110px minmax(0,1fr)!important;gap:10px!important;padding:9px 0}
+  .spec dd{text-align:right!important;font-size:13.5px}
+  .spec .ppl dd{justify-content:flex-end!important}
+  .xg{gap:10px}
+  .xo{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:14px;row-gap:4px;padding:16px 18px;align-items:center}
+  .xo.on{transform:none}
+  .xo-h{grid-column:2;grid-row:1}
+  label.xo .xo-h>span{display:none}
+  .xt ul{min-height:0}
+  .plan .amt b{font-size:44px}
+  .plan .incl{margin-top:16px}
+  .xo-t{grid-column:1;grid-row:1;margin:0;font-size:20px}
+  .xo-d{grid-column:1/-1;font-size:13px;line-height:1.45}
+  .xo-p{grid-column:1/-1;margin:0;padding-top:4px;font-size:20px}
+}
 </style>
 </head>
 <body>
@@ -1145,7 +1179,7 @@ html,body{overflow-x:clip}
     </article>
     <article class="mc w s2">
       <p class="mc-h mono"><span><i></i>Étape 2</span><span>L’idée</span></p>
-      <div class="mc-t"><h3>Le concept</h3><p>Une histoire en quatre temps : l’accroche, le problème de votre client, votre solution, votre expertise. On retient mieux une histoire qu’une explication : les chercheurs l’ont mesuré, votre grand-mère le savait. <b>Rien n’est produit sans votre feu vert.</b><span class="src">Mar et al., méta-analyse portant sur plus de 33 000 participants, <a href="https://pubmed.ncbi.nlm.nih.gov/33410100/" target="_blank" rel="noopener">Psychonomic Bulletin &amp; Review, 2021</a>.</span></p><p class="mc-you"><b>Vous :</b> vous validez.</p></div>
+      <div class="mc-t"><h3>Le concept</h3><p>Une histoire en cinq temps : le hook, le problème de votre client, votre solution, votre expertise, et le CTA qui donne envie de vous appeler. On retient mieux une histoire qu’une explication : les chercheurs l’ont mesuré, votre grand-mère le savait. <b>Rien n’est produit sans votre feu vert.</b><span class="src">Mar et al., méta-analyse portant sur plus de 33 000 participants, <a href="https://pubmed.ncbi.nlm.nih.gov/33410100/" target="_blank" rel="noopener">Psychonomic Bulletin &amp; Review, 2021</a>.</span></p><p class="mc-you"><b>Vous :</b> vous validez.</p></div>
       <div class="ill g3 w" data-s="2" aria-hidden="true"><canvas></canvas></div>
     </article>
     <article class="mc w s3">
@@ -1179,6 +1213,7 @@ html,body{overflow-x:clip}
     <p class="lab mono">Prix</p>
     <div class="sh"><h2 class="h h2 split" id="t-px">Un prix. <em>Pas une fourchette.</em></h2><p class="sh-d">Le montant affiché est celui de la facture, pas le début d’une négociation.</p></div>
     <noscript><p style="color:#F3EEF9">La vidéo 60 secondes : 3 400 € HTVA. La vidéo 90 secondes : 4 900 € HTVA. Direction artistique sur mesure : + 2 000 €. Livraison express : + 900 €. Personnage réel supplémentaire : + 300 €. Pour réserver : <a href="mailto:ludovic@sayki.studio">ludovic@sayki.studio</a>.</p></noscript>
+    <div class="pl-seg" aria-hidden="true"><p class="mono">1 · Choisissez votre vidéo</p><div class="pl-seg-b"><button type="button" data-seg="o60"><b>60 s</b><span>3 400 €</span></button><button type="button" data-seg="o90"><b>90 s</b><span>4 900 €</span></button></div></div>
     <div class="plans" role="radiogroup" aria-label="Choisir une offre">
       <article class="plan" data-offer="o60">
         <div class="fmts" aria-hidden="true"><span><i></i>16:9</span><span class="or">ou</span><span><i></i>9:16</span></div>
@@ -1190,7 +1225,7 @@ html,body{overflow-x:clip}
         <dl class="spec">
           <div><dt class="mono">Production</dt><dd>Stratégie, histoire, storyboard, images, musique, voix off, bruitages, montage</dd></div>
           <div><dt class="mono">Durée</dt><dd>60 secondes</dd></div>
-          <div><dt class="mono">Récit</dt><dd>Accroche, problème, solution</dd></div>
+          <div><dt class="mono">Récit</dt><dd>Hook, problème, solution, CTA</dd></div>
           <div><dt class="mono">Personnalisation</dt><dd>—</dd></div>
           <div><dt class="mono">Formats</dt><dd>1 · 16:9 ou 9:16</dd></div>
           <div><dt class="mono">Langues</dt><dd>1</dd></div>
@@ -1207,7 +1242,7 @@ html,body{overflow-x:clip}
         <dl class="spec">
           <div><dt class="mono">Production</dt><dd>Stratégie, histoire, storyboard, images, musique, voix off, bruitages, montage</dd></div>
           <div><dt class="mono">Durée</dt><dd><i class="dif"></i>90 secondes</dd></div>
-          <div><dt class="mono">Récit</dt><dd><i class="dif"></i>Accroche, problème, solution, expertise</dd></div>
+          <div><dt class="mono">Récit</dt><dd><i class="dif"></i>Hook, problème, solution, expertise, CTA</dd></div>
           <div><dt class="mono">Personnalisation</dt><dd><i class="dif"></i>1 lieu intérieur, 1 lieu extérieur, 2 personnages réels</dd></div>
           <div><dt class="mono">Formats</dt><dd><i class="dif"></i>3 · 16:9, 9:16, 1:1</dd></div>
           <div><dt class="mono">Langues</dt><dd><i class="dif"></i>2</dd></div>
@@ -1216,6 +1251,7 @@ html,body{overflow-x:clip}
         <button class="btn line pick" type="button" role="radio" aria-checked="false" data-pick="o90"><span class="pk-on">Offre choisie</span><span class="pk-off">Choisir 90 secondes</span></button>
       </article>
     </div>
+    <p class="pl-step mono" aria-hidden="true">2 · Ajoutez une option, si besoin</p>
     <div class="xg" id="calc">
       <label class="xo" id="option-univers"><input class="sr" type="checkbox" name="o" value="univers" disabled>
         <span class="xo-h mono"><span>Option</span><i class="sw-t" aria-hidden="true"></i></span>
@@ -1423,6 +1459,7 @@ const schedTxt=t=>{ const s=sched(t); return `${eur(s[0])} à la commande, ${eur
 function render(announce){
   const t=total(), s=sched(t);
   $$('.plan').forEach(p=>{ const on=p.dataset.offer===st.f; p.classList.toggle('on',on); $('.pick',p).setAttribute('aria-checked',on); });
+  $$('[data-seg]').forEach(b=>b.classList.toggle('on',b.dataset.seg===st.f));
   boxes.forEach(b=>{ if(b!==j15box||J15_OK) b.checked=st.o[b.value]; b.closest('.xo').classList.toggle('on',!!st.o[b.value]); });
   recLines.innerHTML=lines().map(([a,b])=>`<li><span>${a}</span><span>${b}</span></li>`).join('');
   if(recTot.textContent!==eur(t)+' HTVA'&&announce){ recTot.classList.add('bump'); setTimeout(()=>recTot.classList.remove('bump'),260); }
@@ -1433,6 +1470,7 @@ function render(announce){
   share(); calSync();
   if(announce) say(T(announce===true?`Total : ${eur(t)} HTVA.`:announce));
 }
+$$('[data-seg]').forEach(b=>b.addEventListener('click',()=>{ const pk=$(`.pick[data-pick="${b.dataset.seg}"]`); if(pk) pk.click(); }));
 $$('.pick').forEach(b=>b.addEventListener('click',()=>{ st.f=b.dataset.pick; if(st.f!=='o90') st.ppl=0; render(`${OFF[st.f].t} choisie. Total : ${eur(total())} HTVA.`); track('calc_modifie',{element:'offre',etat:st.f,total:total()}); }));
 $$('.plan').forEach(p=>p.addEventListener('click',e=>{ if(e.target.closest('button,a')) return; if(st.f!==p.dataset.offer) $('.pick',p).click(); }));
 if(!J15_OK){ j15box.setAttribute('aria-disabled','true'); j15Why.hidden=false; j15box.closest('.xo').classList.add('dis');
