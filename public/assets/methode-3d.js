@@ -54,7 +54,7 @@ function textTex(txt,{size=96,color='#150A26',font='"Geist Mono", ui-monospace, 
 }
 /* étiquette posée à plat, ancrée à gauche (o.c = centrée) ; o.bb = face à la caméra */
 function label(B,txt,h,o={}){
-  const {tx,asp,n}=textTex(txt,o.bb?{align:'center',...o}:o), hh=h*n, w=hh*asp, g=new THREE.PlaneGeometry(w,hh); if(!o.c&&!o.bb) g.translate(w/2,0,0);
+  const {tx,asp,n}=textTex(txt,o.bb&&o.left===undefined?{align:'center',...o}:o), hh=h*n, w=hh*asp, g=new THREE.PlaneGeometry(w,hh); if(!o.c&&!o.bb) g.translate(w/2,0,0); if(o.bb&&o.left!==undefined) g.translate(w/2-o.left,0,0);
   const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false}));
   m.userData.w=w; m.renderOrder=3;
   if(o.bb){ if(B) B.bbs.push(m); m.material.depthTest=false; m.renderOrder=5; } else m.rotation.x=-Math.PI/2;
@@ -146,7 +146,7 @@ function s2(){
   const foot=box(.035,.02,1.24,C.vio,{emissive:C.vio,emissiveIntensity:1.3}); foot.castShadow=false; foot.position.y=.08; sh.add(foot);
   B.scene.add(sh); const pl=pool(0xA45BFF,1.6,1.9); B.scene.add(pl);
   const ok=check(.34); ok.traverse(o=>o.castShadow=false); B.scene.add(ok);
-  const cap=label(B,'compréhension\npar votre client',.15,{color:VIO,bb:1}); B.scene.add(cap);
+  const cap=label(B,'compréhension\npar votre client',.15,{color:VIO,bb:1,left:.22}); B.scene.add(cap);
   B.update=t=>{
     const fo=1-seg(t,8.9,9.45), on=seg(t,.3,.7)*(1-seg(t,6,6.4)), p=io3(seg(t,.7,5.8)), x=x0+L*p;
     let hh=.3; blocks.forEach(m=>{ const k=back(clamp((x-m.userData.st)/.4))*fo, sy=nz(k);
@@ -155,7 +155,7 @@ function s2(){
     pl.position.set(x,.075,-.05); pl.material.opacity=.5*on;
     const o=back(seg(t,6.2,6.8))*fo, b3=blocks[3].userData, cy=.07+b3.h+.3+Math.sin(t*2)*.035;
     ok.scale.setScalar(nz(o)); ok.position.set(b3.x,cy,-.2); ok.rotation.y=(1-o)*1.2;
-    const c=eo(seg(t,6.6,7.2))*fo; cap.position.set(b3.x,cy+.42+(1-c)*.12,-.2); cap.material.opacity=c;
+    const c=eo(seg(t,6.6,7.2))*fo; cap.position.set(b3.x,cy+.62+(1-c)*.12,-.2); cap.material.opacity=c;
   };
   return B;
 }
@@ -184,17 +184,33 @@ function s3(){
 }
 
 /* ---------- 4 · le shooting : on photographie, l'IA en tire des images de référence ---------- */
-function person(cb,ch){ const g=new THREE.Group(); const b=new THREE.Mesh(new THREE.CapsuleGeometry(.17,.34,6,16),mat(cb)); b.position.y=.34;
-  const h=new THREE.Mesh(new THREE.SphereGeometry(.15,24,16),mat(ch)); h.position.y=.8; g.add(b,h); return shade(g); }
+function person(P){ const g=new THREE.Group(), add=(geo,c,x,y,z,o)=>{ const m=new THREE.Mesh(geo,mat(c,o)); m.position.set(x,y,z); g.add(m); return m; };
+  [-1,1].forEach(k=>{ add(new THREE.BoxGeometry(.15,.05,.09),P.shoe,.025,.025,k*.075);
+    add(new THREE.CapsuleGeometry(.055,.3,4,12),P.pants,0,.24,k*.075);
+    const a=add(new THREE.CapsuleGeometry(.045,.28,4,12),P.shirt,0,.6,k*.205); a.rotation.x=k*.12;
+    add(new THREE.SphereGeometry(.045,16,12),P.skin,.01,.42,k*.225); });
+  add(new THREE.CylinderGeometry(.13,.12,.1,24),P.pants,0,.43,0).scale.z=1.25;
+  const tor=add(new THREE.CylinderGeometry(.15,.13,.34,24),P.shirt,0,.63,0); tor.scale.set(.85,1,1.25);
+  add(new THREE.SphereGeometry(.15,24,12,0,Math.PI*2,0,Math.PI/2),P.shirt,0,.78,0).scale.set(.85,.45,1.25);
+  add(new THREE.CylinderGeometry(.045,.05,.08,16),P.skin,0,.86,0);
+  const h=add(new THREE.SphereGeometry(.12,28,20),P.skin,0,.99,0); h.scale.set(.95,1.08,.95);
+  const hair=add(new THREE.SphereGeometry(.127,28,16,0,Math.PI*2,0,Math.PI*.55),P.hair,-.01,1.0,0); hair.rotation.z=.45; hair.scale.set(.97,1.1,.97);
+  [-1,1].forEach(k=>add(new THREE.SphereGeometry(.014,10,8),P.eye,.112,.99,k*.042));
+  return shade(g); }
+const PERS={clay:{shirt:C.clay,pants:C.clay2,skin:0xF6F5F8,hair:C.clay2,shoe:C.clay2,eye:0x9A97A2},
+  ref:{shirt:C.vio,pants:0x2B2338,skin:0xF6E3DA,hair:C.ink,shoe:0xffffff,eye:C.ink}};
+function pack(c,band,logo){ const cv=document.createElement('canvas'); cv.width=256; cv.height=340; const x=cv.getContext('2d');
+  x.fillStyle=c; x.fillRect(0,0,256,340); x.fillStyle=band; x.fillRect(0,196,256,60); x.fillStyle=logo; x.beginPath(); x.arc(128,110,42,0,7); x.fill();
+  x.fillStyle=band; x.fillRect(64,280,128,10); x.fillRect(88,302,80,8);
+  const t=new THREE.CanvasTexture(cv); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=4;
+  const f=new THREE.MeshStandardMaterial({map:t,roughness:.55}), pl=mat(c);
+  const g=new THREE.Group(); const m=new THREE.Mesh(new THREE.BoxGeometry(.24,.56,.42),[f,pl,pl,pl,f,pl]); m.position.y=.28; g.add(m);
+  const lid=new THREE.Mesh(new THREE.BoxGeometry(.25,.014,.43),mat(band)); lid.position.y=.567; g.add(lid); return shade(g); }
 function building(cw,cf){ const c=document.createElement('canvas'); c.width=128; c.height=256; const x=c.getContext('2d'); x.fillStyle=cw; x.fillRect(0,0,128,256); x.fillStyle=cf;
   for(let r=0;r<6;r++) for(let k=0;k<3;k++) x.fillRect(18+k*34,22+r*38,22,24);
   x.fillRect(48,226,32,30); const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
   const side=new THREE.MeshStandardMaterial({map:t,roughness:.6}), top=mat(cw);
   const m=new THREE.Mesh(new THREE.BoxGeometry(.56,1.02,.56),[side,side,top,top,side,side]); m.position.y=.51; const g=new THREE.Group(); g.add(m); return shade(g); }
-function bottle(cb,cc){ const P=[[0,0],[.15,0],[.16,.03],[.16,.42],[.13,.52],[.07,.58],[.065,.68],[0,.68]].map(([a,b])=>new THREE.Vector2(a,b));
-  const g=new THREE.Group(); g.add(new THREE.Mesh(new THREE.LatheGeometry(P,32),mat(cb,{roughness:.3})));
-  const cap=new THREE.Mesh(new THREE.CylinderGeometry(.072,.072,.1,24),mat(cc)); cap.position.y=.72; g.add(cap);
-  const lab=new THREE.Mesh(new THREE.CylinderGeometry(.163,.163,.16,32,1,true),mat(cc,{roughness:.6})); lab.position.y=.24; g.add(lab); return shade(g); }
 /* une image par objet, rendue une fois dans une texture */
 function refShot(obj,y,hs=.5){
   const rt=new THREE.WebGLRenderTarget(320,240,{samples:4}); const sc=new THREE.Scene(); lights(sc,false);
@@ -205,9 +221,9 @@ function refShot(obj,y,hs=.5){
 function s4(){
   const B=base(2.6,new THREE.Vector3(.05,.45,.05)); B.dur=11;
   const OX=-2.05, Z=[-1,0,1], CAMX=-1.05, PX=.3, RX=1.85;
-  const objs=[building('#ECEBEF','#C9C6D0'),person(C.clay,0xF4F3F6),bottle(C.clay,C.clay2)];
+  const objs=[building('#ECEBEF','#C9C6D0'),person(PERS.clay),pack('#EEEDF1','#D3D0D9','#DCD9E1')];
   objs.forEach((o,i)=>{ o.position.set(OX,0,Z[i]); B.scene.add(o); });
-  const refs=[refShot(building('#E3D3FA','#9E37FF'),.48,.6),refShot(person(C.vio,0xF3ECFD),.5,.54),refShot(bottle(0xF3ECFD,C.pink),.4,.44)];
+  const refs=[refShot(building('#E3D3FA','#9E37FF'),.48,.6),refShot(person(PERS.ref),.55,.46),refShot(pack('#F3ECFD','#9E37FF','#DE50D2'),.3,.38)];
   /* le petit appareil photo */
   const cm=new THREE.Group(); const body=box(.2,.28,.44,C.ink,{roughness:.35}); cm.add(body);
   const lens=new THREE.Mesh(new THREE.CylinderGeometry(.09,.1,.13,24),mat(0x2B2338,{roughness:.3})); lens.rotation.z=Math.PI/2; lens.position.x=-.15; cm.add(lens);
