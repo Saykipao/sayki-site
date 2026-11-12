@@ -178,7 +178,7 @@ function s3(){
   const cards=[];
   [1,2,3,4,5,6].forEach((n,i)=>{ const g=new THREE.Group(); const b=box(1.62,.06,.94,C.white); b.position.y=.03; g.add(b);
     const lay=new THREE.Group(); const plate=box(1.62,.018,.94,C.white,{transparent:true,opacity:.35,roughness:.12,depthWrite:false}); plate.castShadow=false; plate.receiveShadow=false; lay.add(plate);
-    const d=new THREE.Mesh(new THREE.PlaneGeometry(1.53,.86),inkMat(tex(`/assets/sb2-${n}.jpg`))); d.rotation.x=-Math.PI/2; d.position.y=.011; d.renderOrder=2; lay.add(d); g.add(lay);
+    const d=new THREE.Mesh(new THREE.PlaneGeometry(1.53,.86),inkMat(tex(`/assets/sb3-${n}.jpg`))); d.rotation.x=-Math.PI/2; d.position.y=.011; d.renderOrder=2; lay.add(d); g.add(lay);
     const ck=check(.22); ck.position.set(.62,.07,-.33); g.add(ck);
     g.userData={x:-1.82+(i%3)*1.82,z:-.68+Math.floor(i/3)*1.36,lay,plate,d,ck}; B.scene.add(g); cards.push(g); });
   const pl=pool(0xA45BFF,2.4,1.7); B.scene.add(pl);
