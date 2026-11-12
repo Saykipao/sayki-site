@@ -74,7 +74,7 @@ let gtao=null, fx=true, slowN=0, lastT=0;
 
 /* ---------- la scène ---------- */
 const vid=document.createElement('video'); Object.assign(vid,{muted:true,loop:true,playsInline:true,preload:'auto'}); vid.setAttribute('muted',''); vid.setAttribute('playsinline',''); vid.setAttribute('aria-hidden','true');
-Object.assign(vid.style,{position:'fixed',left:'0',bottom:'0',width:'4px',height:'2px',opacity:'.01',pointerEvents:'none',zIndex:'-1'}); document.body.appendChild(vid); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
+Object.assign(vid.style,{position:'fixed',left:'0',bottom:'0',width:'64px',height:'28px',opacity:'.02',pointerEvents:'none',zIndex:'-1'}); document.body.appendChild(vid); vid.src=innerWidth<900?'/assets/hero-nikita.mp4':'/assets/hero-nikita-hd.mp4';
 const VC=document.createElement('canvas'); VC.width=innerWidth<900?640:1280; VC.height=Math.round(VC.width*274/640); const VX=VC.getContext('2d'); const VT=new THREE.CanvasTexture(VC); VT.colorSpace=THREE.SRGBColorSpace; VT.generateMipmaps=false; VT.minFilter=THREE.LinearFilter; let vLast=-1, vOn=false;
 const L=3.6, x0=-L/2, X=s=>x0+L*s/DUR, SW=6.2, SH=SW*274/640, SZ=-3.2, SY=1.05+SH/2, TY=.07;
 /* la frise : posée devant le bas de l'écran, côté droit, à l'écart du texte */
@@ -211,25 +211,33 @@ addEventListener('pointermove',e=>{ mxT=e.clientX/innerWidth-.5; myT=e.clientY/i
 /* ---------- glisser sur la frise pour voyager dans le film ---------- */
 const ray2=new THREE.Raycaster(), pv2=new THREE.Vector2(), hit2=new THREE.Vector3(), FLOOR=new THREE.Plane(new THREE.Vector3(0,1,0),-YF);
 const ray=new THREE.Raycaster(), pv=new THREE.Vector2(), PL=new THREE.Plane(new THREE.Vector3(0,1,0),-TY*TS), hit=new THREE.Vector3();
-let drag=false, dragS=null, hov=false;
+let drag=false, dragS=null, hov=false, seekBusy=false, wantPlay=false;
+const seekTo=(t,precise)=>{ if(seekBusy&&!precise) return; seekBusy=true; try{ if(!precise&&vid.fastSeek) vid.fastSeek(t); else vid.currentTime=t; }catch(e){ vid.currentTime=t; } };
 const aim=e=>{ const r=cv.getBoundingClientRect(); pv.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(pv,cam); };
 const onTrack=e=>{ aim(e); if(ray.intersectObjects([track,knob,...blocks],false).length) return true; if(!ray.ray.intersectPlane(PL,hit)) return false; tl.worldToLocal(hit); return Math.abs(hit.x)<L/2+.2&&Math.abs(hit.z)<.75; };
 const timeAt=e=>{ aim(e); if(!ray.ray.intersectPlane(PL,hit)) return null; tl.worldToLocal(hit); return clamp((hit.x-x0)/L)*DUR; };
 const busy=e=>e.target.closest('a,button,input,label,.facts,.hero-sub,h1,.hero-k');
 hero.addEventListener('pointerdown',e=>{ if(busy(e)||!onTrack(e)) return; drag=true; hero.classList.add('hx-drag'); try{ hero.setPointerCapture(e.pointerId); }catch(er){}
-  const s=timeAt(e); if(s!==null){ dragS=s; vid.currentTime=s; } vid.pause(); e.preventDefault(); });
-hero.addEventListener('pointermove',e=>{ if(drag){ const s=timeAt(e); if(s!==null){ dragS=s; if(!vid.seeking) vid.currentTime=s; } return; }
+  const s=timeAt(e); vid.pause(); wantPlay=false; if(s!==null){ dragS=s; seekTo(s,false); } e.preventDefault(); });
+hero.addEventListener('pointermove',e=>{ if(drag){ const s=timeAt(e); if(s!==null){ dragS=s; seekTo(s,false); } return; }
   hov=!busy(e)&&onTrack(e); hero.style.cursor=hov?'grab':''; },{passive:true});
-const end=()=>{ if(!drag) return; drag=false; hero.classList.remove('hx-drag'); if(dragS!==null) vid.currentTime=dragS; dragS=null; if(!RM) vid.play().catch(()=>{}); };
+const end=()=>{ if(!drag) return; drag=false; hero.classList.remove('hx-drag'); wantPlay=!RM; if(dragS!==null){ seekTo(dragS,true); } else if(wantPlay){ wantPlay=false; vid.play().catch(()=>{}); } };
 hero.addEventListener('pointerup',end); hero.addEventListener('pointercancel',end);
 
 let vis=true, raf=0, started=false; const FT=new URLSearchParams(location.search).get('t3d');
 new IntersectionObserver(es=>{ vis=es[0].isIntersecting; if(vis){ if(!RM&&!drag) vid.play().catch(()=>{}); if(!raf) raf=requestAnimationFrame(frameFn); } else vid.pause(); }).observe(hero);
 /* chaque image du film est copiée dans un canvas : marche en lecture, en pause et pendant le glisser */
-const grab=()=>{ if(vid.readyState<2||vid.seeking) return; const t=vid.currentTime; if(t===vLast&&vOn) return; vLast=t;
+const grab=()=>{ if(vid.readyState<2||(drag&&vid.seeking)) return; const t=vid.currentTime; if(t===vLast&&vOn) return; vLast=t;
   try{ VX.drawImage(vid,0,0,VC.width,VC.height); VT.needsUpdate=true; if(!vOn){ vOn=true; SPILL.forEach(m=>m.uniforms.map.value=VT); scrMat.uniforms.map.value=VT; haloMat.uniforms.map.value=VT; } }catch(e){} };
-if('requestVideoFrameCallback' in vid){ const vf=()=>{ vLast=-1; grab(); vid.requestVideoFrameCallback(vf); }; vid.requestVideoFrameCallback(vf); }
-vid.addEventListener('seeked',()=>{ if(dragS!==null&&Math.abs(vid.currentTime-dragS)>.08) vid.currentTime=dragS; vLast=-1; grab(); });
+const RVF='requestVideoFrameCallback' in vid; let vfId=0, vfT=0;
+const vf=()=>{ vfT=performance.now(); vLast=-1; grab(); vfId=vid.requestVideoFrameCallback(vf); };
+const arm=()=>{ if(!RVF) return; try{ if(vfId) vid.cancelVideoFrameCallback(vfId); }catch(e){} vfId=vid.requestVideoFrameCallback(vf); };
+arm(); vid.addEventListener('play',arm); vid.addEventListener('playing',()=>{ arm(); vLast=-1; });
+/* filet de sécurité : si la vidéo joue mais qu'aucune image n'arrive depuis 0,6 s, on la relance au même endroit */
+setInterval(()=>{ if(!RVF||!vis||drag||vid.paused||vid.seeking||document.hidden) return; if(performance.now()-vfT>600){ arm(); seekTo(vid.currentTime,true); } },700);
+vid.addEventListener('seeked',()=>{ seekBusy=false; vLast=-1; grab(); vfT=performance.now();
+  if(drag&&dragS!==null&&Math.abs(vid.currentTime-dragS)>.2){ seekTo(dragS,false); return; }
+  if(wantPlay){ wantPlay=false; vid.play().catch(()=>{}); } });
 let lastR=0;
 function frameFn(now){
   raf=0; if(!vis) return;
