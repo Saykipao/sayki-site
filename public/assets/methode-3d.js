@@ -160,37 +160,60 @@ function s2(){
   return B;
 }
 
-/* ---------- 3 · le storyboard : six cases au crayon, chacune validée ---------- */
+/* ---------- 3 · le storyboard : six dessins sur calques transparents, posés un à un ---------- */
+function inkMat(map){
+  return new THREE.ShaderMaterial({uniforms:{map:{value:map},op:{value:.4},blur:{value:1}},transparent:true,depthWrite:false,
+    vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader:`uniform sampler2D map;uniform float op;uniform float blur;varying vec2 vUv;
+      void main(){ vec2 d=vec2(.0045,.008)*blur; vec3 c=texture2D(map,vUv).rgb*.36;
+        c+=(texture2D(map,vUv+vec2(d.x,0.)).rgb+texture2D(map,vUv-vec2(d.x,0.)).rgb+texture2D(map,vUv+vec2(0.,d.y)).rgb+texture2D(map,vUv-vec2(0.,d.y)).rgb)*.11;
+        c+=(texture2D(map,vUv+d).rgb+texture2D(map,vUv-d).rgb+texture2D(map,vUv+vec2(d.x,-d.y)).rgb+texture2D(map,vUv+vec2(-d.x,d.y)).rgb)*.05;
+        float l=pow(dot(c,vec3(.299,.587,.114)),1./2.2); float a=smoothstep(.07,.62,1.-l)*op;
+        gl_FragColor=vec4(vec3(.16,.13,.22)*(.55+.45*l),a);
+        #include <colorspace_fragment>
+      }`});
+}
 function s3(){
-  const B=base(1.82,new THREE.Vector3(0,0,0)); B.dur=10;
+  const B=base(1.82,new THREE.Vector3(0,.15,0)); B.dur=10;
   const cards=[];
-  [1,2,3,4,5,6].forEach((n,i)=>{ const g=new THREE.Group(); const b=box(1.62,.06,.94,C.white); g.add(b);
-    /* l'image est éclairée comme le papier (produit), et part estompée */
-    const s=new THREE.Mesh(new THREE.PlaneGeometry(1.53,.86),new THREE.MeshStandardMaterial({map:tex(`/assets/sb-${n}.jpg`),roughness:.95,emissive:0xffffff,emissiveIntensity:.3}));
-    s.rotation.x=-Math.PI/2; s.position.y=.031; s.receiveShadow=true; g.add(s);
-    const ck=check(.22); ck.position.set(.62,.06,-.33); g.add(ck);
-    g.userData={x:-1.82+(i%3)*1.82,z:-.68+Math.floor(i/3)*1.36,s,ck}; B.scene.add(g); cards.push(g); });
-  const pl=pool(0xA45BFF,2.6,1.8); B.scene.add(pl);
+  [1,2,3,4,5,6].forEach((n,i)=>{ const g=new THREE.Group(); const b=box(1.62,.06,.94,C.white); b.position.y=.03; g.add(b);
+    const lay=new THREE.Group(); const plate=box(1.62,.018,.94,C.white,{transparent:true,opacity:.35,roughness:.12,depthWrite:false}); plate.castShadow=false; plate.receiveShadow=false; lay.add(plate);
+    const d=new THREE.Mesh(new THREE.PlaneGeometry(1.53,.86),inkMat(tex(`/assets/sb-${n}.jpg`))); d.rotation.x=-Math.PI/2; d.position.y=.011; d.renderOrder=2; lay.add(d); g.add(lay);
+    const ck=check(.22); ck.position.set(.62,.07,-.33); g.add(ck);
+    g.userData={x:-1.82+(i%3)*1.82,z:-.68+Math.floor(i/3)*1.36,lay,plate,d,ck}; B.scene.add(g); cards.push(g); });
+  const pl=pool(0xA45BFF,2.4,1.7); B.scene.add(pl);
   B.update=t=>{
     const fo=1-seg(t,9.2,9.75);
     let px=0,pz=0,pw=0;
-    cards.forEach((g,i)=>{ const u=g.userData, a=eo(seg(t,.12*i,.9+.12*i)), v=1.6+i*.8, lift=Math.sin(Math.PI*seg(t,v-.3,v+.45));
-      g.position.set(u.x,.03+(1-a)*-.4+lift*.3,u.z); g.rotation.z=lift*.06; g.scale.setScalar(nz(a*fo));
-      if(lift>pw){ pw=lift; px=u.x; pz=u.z; }
-      u.s.material.emissiveIntensity=.3*(1-io3(seg(t,v,v+.55))); const c=back(seg(t,v+.15,v+.55)); u.ck.scale.setScalar(nz(c)); });
-    pl.position.set(px,.004,pz); pl.material.opacity=.4*pw*fo;
+    cards.forEach((g,i)=>{ const u=g.userData, a=eo(seg(t,.12*i,.9+.12*i)), v=1.6+i*.8, dn=io3(seg(t,v-.45,v+.2)), sh=dn*(1-dn)*4;
+      g.position.set(u.x,(1-a)*-.4,u.z); g.scale.setScalar(nz(a*fo));
+      u.lay.position.y=lerp(.42+.035*Math.sin(t*1.3+i),.069,dn);
+      u.d.material.uniforms.op.value=lerp(.42,1,dn)*a; u.d.material.uniforms.blur.value=1-dn;
+      u.plate.material.opacity=.35*(1-dn)*a; u.plate.visible=dn<.98;
+      if(sh>pw){ pw=sh; px=u.x; pz=u.z; }
+      const c=back(seg(t,v+.2,v+.6)); u.ck.scale.setScalar(nz(c)); });
+    pl.position.set(px,.004,pz); pl.material.opacity=.45*pw*fo;
   };
   return B;
 }
 
 /* ---------- 4 · le shooting : on photographie, l'IA en tire des images de référence ---------- */
-/* un humain simple : une silhouette lisse et une tête */
+/* un humain aux proportions normales (≈ 7 têtes), lisse, sans détail */
 function person(P){ const g=new THREE.Group();
-  const pr=[[0,0],[.12,0],[.135,.03],[.125,.3],[.13,.48],[.15,.64],[.16,.72],[.145,.78],[.1,.82],[.05,.84],[.045,.87],[0,.87]].map(([a,b])=>new THREE.Vector2(a,b));
-  const b=new THREE.Mesh(new THREE.LatheGeometry(pr,40),mat(P.body)); b.scale.z=1.35; g.add(b);
-  const h=new THREE.Mesh(new THREE.SphereGeometry(.115,32,24),mat(P.head)); h.position.y=.98; h.scale.set(.95,1.1,.95); g.add(h);
+  const lathe=(pts,c,x,y,z,sx=1,sz=1)=>{ const m=new THREE.Mesh(new THREE.LatheGeometry(pts.map(([a,b])=>new THREE.Vector2(a,b)),28),mat(c)); m.position.set(x,y,z); m.scale.set(sx,1,sz); g.add(m); return m; };
+  const ball=(r,c,x,y,z,sx=1,sy=1,sz=1)=>{ const m=new THREE.Mesh(new THREE.SphereGeometry(r,24,16),mat(c)); m.position.set(x,y,z); m.scale.set(sx,sy,sz); g.add(m); return m; };
+  [-1,1].forEach(k=>{
+    ball(.034,P.shoe,.03,.025,k*.06,2,.75,1.05);
+    lathe([[0,0],[.028,.005],[.03,.05],[.04,.17],[.036,.27],[.05,.38],[.062,.47],[.05,.52],[0,.53]],P.legs,0,.035,k*.06);
+    const a=lathe([[0,0],[.024,.01],[.028,.12],[.032,.2],[.038,.3],[.042,.33],[0,.36]],P.top,0,.46,k*.165); a.rotation.x=-k*.06;
+    ball(.026,P.skin,.005,.44,k*.168,1,1.5,.8);
+  });
+  ball(.105,P.legs,0,.56,0,.8,.5,1.3);
+  lathe([[0,0],[.085,.0],[.08,.06],[.092,.15],[.1,.23],[.095,.27],[.06,.3],[0,.31]],P.top,0,.54,0,.95,1.55);
+  lathe([[0,0],[.03,0],[.028,.05],[0,.06]],P.skin,0,.84,0);
+  ball(.068,P.skin,.005,.95,0,.95,1.2,.9);
   return shade(g); }
-const PERS={clay:{body:C.clay,head:0xF6F5F8},ref:{body:C.vio,head:0xF6E3DA}};
+const PERS={clay:{top:C.clay,legs:0xE2E0E6,skin:0xF6F5F8,shoe:C.clay2},ref:{top:C.vio,legs:0x2B2338,skin:0xF6E3DA,shoe:0xffffff}};
 function pack(c,band,logo){ const cv=document.createElement('canvas'); cv.width=256; cv.height=340; const x=cv.getContext('2d');
   x.fillStyle=c; x.fillRect(0,0,256,340); x.fillStyle=band; x.fillRect(0,196,256,60); x.fillStyle=logo; x.beginPath(); x.arc(128,110,42,0,7); x.fill();
   x.fillStyle=band; x.fillRect(64,280,128,10); x.fillRect(88,302,80,8);
