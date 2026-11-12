@@ -188,7 +188,7 @@ function s3(){
     cards.forEach((g,i)=>{ const u=g.userData, a=eo(seg(t,.12*i,.9+.12*i)), v=1.6+i*.8, dn=io3(seg(t,v-.45,v+.2)), sh=dn*(1-dn)*4;
       g.position.set(u.x,(1-a)*-.4,u.z); g.scale.setScalar(nz(a*fo));
       u.lay.position.y=lerp(.42+.035*Math.sin(t*1.3+i),.069,dn);
-      u.d.material.uniforms.op.value=lerp(.42,1,dn)*a; u.d.material.uniforms.blur.value=1-dn;
+      u.d.material.uniforms.op.value=a; u.d.material.uniforms.blur.value=.6*(1-dn);
       u.plate.material.opacity=.35*(1-dn)*a; u.plate.visible=dn<.98;
       if(sh>pw){ pw=sh; px=u.x; pz=u.z; }
       const c=back(seg(t,v+.2,v+.6)); u.ck.scale.setScalar(nz(c)); });
