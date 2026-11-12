@@ -135,7 +135,7 @@ html.hero-gl .hx-note.on{opacity:1}
 .hx-note ul{margin:0;padding:0;list-style:none;font-size:14px;line-height:1.45;color:var(--mute)}
 .hx-note li{position:relative;padding-left:16px;margin-top:3px}.hx-note li::before{content:"";position:absolute;left:0;top:.68em;width:8px;height:1.5px;background:#9E37FF}
 .hero.hx-drag,.hero.hx-drag *{cursor:grabbing!important}
-@media (max-width:900px){html:not(.no-hero-gl) .reel-f.hx-f{aspect-ratio:4/3;margin-inline:calc(-1 * var(--pad))}html:not(.no-hero-gl) .reel figcaption{display:none}}
+@media (max-width:900px){html:not(.no-hero-gl) .reel-f.hx-f{aspect-ratio:16/11}html:not(.no-hero-gl) .reel figcaption{display:none}}
 /* le haut de page tient dans l'écran, la ligne des clients visible en bas (ordinateur) */
 @media (min-width:901px){
   .hero{--rh:calc(90px + 2vw);min-height:calc(100svh - var(--rh));display:flex;flex-direction:column;padding-top:calc(68px + clamp(40px,6vh,90px));padding-bottom:clamp(20px,3vh,36px)}
@@ -1010,6 +1010,21 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 
 
 @media (min-width:641px){.hero .t-sm{display:none}}
+
+/* mobile : rien ne déborde à droite, et tout le hero tient dans le premier écran */
+html,body{overflow-x:clip}
+.hero{overflow-x:clip}
+@media (max-width:640px){
+  .hero .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .hero .facts div{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:3px;border-bottom:0;padding:10px 0 0}
+  .hero .facts dt{font-size:10px}
+  .hero .facts dd{text-align:left;font-size:13px;line-height:1.3}
+  .hero-g{gap:18px}
+  .hero-sub{font-size:16px}
+  .hero-k{display:none}
+  .hero .h1{font-size:clamp(36px,10.4vw,44px)}
+  .hero{padding-top:calc(60px + 18px)}
+}
 </style>
 </head>
 <body>
