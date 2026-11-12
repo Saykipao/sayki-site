@@ -177,13 +177,16 @@ html:not(.no-hero-gl) .hero-g{pointer-events:none}html:not(.no-hero-gl) .hero-l,
 @media (max-width:900px){
   .hero-g{grid-template-columns:minmax(0,1fr);gap:30px}
   .hero-l{display:contents}
-  .hero-sub{order:1}.hero-btns{order:2}.reel{order:3}.facts{order:4}
+  .hero-sub{order:1}.reel{order:2}.hero-btns{order:3}.facts{order:4}
 }
 @media (max-width:640px){
   .hero{padding-top:calc(60px + 26px)}
   .hero-k{margin-bottom:12px;font-size:10px}
   .hero-g{margin-top:22px;gap:24px}
-  .hero-btns{flex-direction:column;align-items:flex-start}
+  .hero-btns{flex-wrap:nowrap;gap:8px}
+  .hero-btns .btn{padding:13px 18px;font-size:14.5px}
+  .hero .t-lg{display:none}.hero .t-sm{display:inline}
+  html:not(.no-hero-gl) .hero .reel{margin-bottom:-56px}
   .reel figcaption span:last-child{display:none}
 }
 
@@ -1005,6 +1008,8 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
 
 /* le hero seul prend toute la largeur de l'écran */
 
+
+@media (min-width:641px){.hero .t-sm{display:none}}
 </style>
 </head>
 <body>
@@ -1046,7 +1051,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <p class="hero-sub">Un film d’animation qui explique ce que vous faites à quelqu’un qui n’y connaît rien.</p>
       <div class="hero-btns">
         <a class="btn mag" href="#rendez-vous" data-book>Réserver un appel <span class="ar">→</span></a>
-        <button class="btn line" type="button" data-idea="1">Recevoir une idée gratuite</button>
+        <button class="btn line" type="button" data-idea="1"><span class="t-lg">Recevoir une idée gratuite</span><span class="t-sm" aria-hidden="true">Idée gratuite</span></button>
       </div>
       <dl class="facts">
         <div><dt class="mono">Prix</dt><dd>Dès 3 400 € HTVA</dd></div>
