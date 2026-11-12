@@ -474,18 +474,33 @@ html:not(.h-on) .track{gap:8px}
 .ag-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,120px);align-items:start}
 #mani2{margin:0;max-width:15ch}
 #mani3{margin:0;max-width:15ch}
-/* entreprises : la mise en page des agences, en miroir */
-@media (min-width:900px){
-  .ag-flip .ag-hd{text-align:right}
-  .ag-flip .ag-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
-  .ag-flip #mani3{grid-column:2;grid-row:1;justify-self:end;text-align:right}
-  .ag-flip .ag-txt{grid-column:1;grid-row:1}
-  .ag-flip .ag-band{grid-template-columns:auto minmax(0,1fr)}
-  .ag-flip .ag-btn{grid-column:1;grid-row:1;justify-self:start}
-  .ag-flip .ag-who{grid-column:2;grid-row:1;text-align:right}
-  .ag-flip .ag-who ul{justify-content:flex-end}
+/* entreprises : texte à gauche, la vidéo et ses cinq temps à droite */
+.en-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(36px,5vw,104px);align-items:start}
+.en-txt #mani3{font-size:clamp(30px,2.8vw,52px);line-height:1.04;max-width:13ch;margin:0 0 clamp(26px,2.6vw,44px)}
+.en-p{margin:0 0 16px;font-size:clamp(15px,1.15vw,18px);line-height:1.6;color:rgba(243,238,249,.84);max-width:42ch}
+.en-pills{list-style:none;margin:clamp(22px,2.2vw,34px) 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.en-pills li{padding:9px 15px;border:1px solid rgba(243,238,249,.22);border-radius:999px;font-size:14px;line-height:1;color:#fff;background:rgba(243,238,249,.04)}
+.en-btn{margin-top:clamp(26px,2.6vw,40px);display:inline-flex}
+.en-film{margin:0;padding-top:.4em}
+.en-v{position:relative;aspect-ratio:21/9;background:#120822;overflow:hidden}
+.en-v video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.en-tl{display:flex;gap:3px;margin-top:14px;cursor:pointer}
+.en-s{flex:var(--w) 1 0;min-width:0}
+.en-s b{display:block;height:4px;background:rgba(243,238,249,.14);position:relative;overflow:hidden}
+.en-s b::after{content:"";position:absolute;inset:0;background:var(--c);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+.en-s em{display:block;margin-top:10px;font-style:normal;font-size:10px;letter-spacing:.1em;color:rgba(243,238,249,.4);white-space:nowrap;overflow:hidden;text-overflow:clip;transition:color .4s}
+.en-s.on em{color:#fff}
+.en-film figcaption{margin-top:clamp(18px,2vw,28px);font-size:11px;color:var(--cendre)}
+@media (max-width:899px){
+  .en-grid{display:flex;flex-direction:column;gap:0}
+  .en-txt{display:contents}
+  .en-txt #mani3{order:1;font-size:clamp(25px,7.3vw,44px);line-height:1.08;max-width:none;margin-bottom:24px}
+  .en-film{order:2;padding:0;margin-bottom:28px}
+  .en-p{order:3;font-size:15.5px}
+  .en-pills{order:4;margin-top:10px}
+  .en-btn{order:5;justify-content:center;width:100%;white-space:normal;text-align:center}
+  .en-s em{font-size:8.5px;letter-spacing:.06em}
 }
-@media (max-width:899px){#mani3{font-size:clamp(25px,7.3vw,44px);line-height:1.08;max-width:none}#entreprises .ag-txt p,#entreprises .ag-txt .m-fold p:first-child{border-top:0;padding:0 0 14px}}
 .ag-txt p{margin:0;padding:20px 0;border-top:1px solid rgba(243,238,249,.14);font-size:clamp(15px,1.15vw,18px);line-height:1.6;color:rgba(243,238,249,.84);max-width:46ch}
 .ag-txt>p:first-child{padding-top:0;border-top:0}
 .ag-band{margin-top:clamp(48px,6vw,104px);padding-top:clamp(28px,3vw,44px);border-top:1px solid rgba(243,238,249,.16);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,4vw,64px);align-items:center}
@@ -1115,24 +1130,22 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
   </section>
 
 
-  <section class="sec ag-sec ag-flip" id="entreprises" aria-labelledby="en-t">
+  <section class="sec ag-sec en-sec" id="entreprises" aria-labelledby="en-t">
     <div class="wrap">
       <div class="ag-hd"><p class="mono kicker">Entreprises et indépendants</p><h2 class="display t-xl split" id="en-t" data-glow>Pour les <em>entreprises</em></h2></div>
-      <div class="ag-grid">
-        <p class="display mani" id="mani3">Ce que vous faites,<br class="m-br"> <em>compris en 90 secondes.</em></p>
-        <div class="ag-txt">
-          <p>Vous connaissez votre métier par cœur. Vos clients, beaucoup moins. J’en fais une vidéo d’animation qu’on comprend du premier coup, même sans rien y connaître.</p>
-          <div class="m-fold" id="foldEntreprises"><div class="m-fold-in">
-            <p>Vous savez, ce moment en rendez-vous où vous attrapez un bic pour dessiner un schéma sur un coin de feuille ? On va s’en passer.</p>
-            <p>Une heure pour trouver le bon angle, un script que vous validez, une demi-journée de photos chez vous. Trente jours plus tard, la vidéo tourne sur votre site, dans vos rendez-vous et sur vos réseaux. Avec vous et votre équipe dedans, si vous le voulez.</p>
-            <p>Le prix est affiché, pas négocié. Et si elle ne se comprend pas, je la refais.</p>
-          </div></div>
-          <button class="m-more-btn mono" type="button" aria-expanded="false" aria-controls="foldEntreprises"><b>Lire la suite</b><span aria-hidden="true">+</span></button>
+      <div class="en-grid">
+        <div class="en-txt">
+          <p class="display mani" id="mani3">Ce que vous faites,<br class="m-br"> <em>compris en 90 secondes.</em></p>
+          <p class="en-p">Vous connaissez votre métier par cœur. Vos clients, beaucoup moins. J’en fais une vidéo d’animation qu’on comprend du premier coup, même sans rien y connaître.</p>
+          <p class="en-p">Vous savez, ce moment en rendez-vous où vous attrapez un bic pour dessiner un schéma sur un coin de feuille ? On va s’en passer.</p>
+          <ul class="en-pills"><li>Livrée en 30 jours</li><li>Dès 3 400 € HTVA</li><li>Comprise, ou refaite</li></ul>
+          <a class="btn ag-btn en-btn" href="/film-explicatif/">Découvrir la vidéo explicative <span aria-hidden="true">→</span></a>
         </div>
-      </div>
-      <div class="ag-band">
-        <div class="ag-who"><p class="mono">En bref</p><ul><li>Livrée en 30 jours</li><li>Dès 3 400 € HTVA</li><li>Comprise, ou refaite</li></ul></div>
-        <a class="btn ag-btn" href="/film-explicatif/">Découvrir la vidéo explicative <span aria-hidden="true">→</span></a>
+        <figure class="en-film">
+          <div class="en-v"><video muted loop playsinline preload="none" poster="/assets/hero-nikita.jpg" data-src="/assets/hero-nikita.mp4" data-src-hd="/assets/hero-nikita-hd.mp4" aria-label="La vidéo explicative de Nikita Concept"></video></div>
+          <div class="en-tl" role="presentation"><span class="en-s" data-a="0" data-b="10" style="--w:10;--c:#9E37FF"><b></b><em class="mono">hook</em></span><span class="en-s" data-a="10" data-b="36" style="--w:26;--c:#C08BFF"><b></b><em class="mono">problème</em></span><span class="en-s" data-a="36" data-b="58" style="--w:22;--c:#8E6CC9"><b></b><em class="mono">solution</em></span><span class="en-s" data-a="58" data-b="77" style="--w:19;--c:#F3EEF9"><b></b><em class="mono">expertise</em></span><span class="en-s" data-a="77" data-b="90.6" style="--w:13.6;--c:#9E37FF"><b></b><em class="mono">cta</em></span></div>
+          <figcaption class="mono">Nikita Concept · toute l’équipe joue son propre rôle</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -1443,6 +1456,15 @@ const mani3=$('#mani3');
 (function(){ if(!mani3) return; const proc=(node,parent)=>{ if(node.nodeType===3){node.textContent.split(/([ \n\t]+)/).forEach(p=>{if(!p)return; if(/^[ \n\t]+$/.test(p)){parent.appendChild(document.createTextNode(' '));return;} const w=document.createElement('span'); w.className='mw'; w.textContent=p; parent.appendChild(w);});} else if(node.nodeType===1){const c=node.cloneNode(false); parent.appendChild(c); [...node.childNodes].forEach(n=>proc(n,c));} };
   const frag=document.createDocumentFragment(); [...mani3.childNodes].forEach(n=>proc(n,frag)); mani3.textContent=''; mani3.appendChild(frag); })();
 const words3=mani3?$$('.mw',mani3):[];
+
+/* entreprises : la vidéo Nikita et ses cinq temps */
+(function(){ const v=$('#entreprises video'); if(!v) return; const segs=$$('#entreprises .en-s'), tl=$('#entreprises .en-tl'), D=90.6; let ok=false, raf=0;
+  const load=()=>{ if(ok) return; ok=true; v.src=innerWidth>=900?v.dataset.srcHd:v.dataset.src; };
+  const upd=()=>{ raf=0; const t=v.currentTime||0; segs.forEach(s=>{ const a=+s.dataset.a, b=+s.dataset.b; s.style.setProperty('--p',Math.max(0,Math.min(1,(t-a)/(b-a))).toFixed(4)); s.classList.toggle('on',t>=a&&t<b); }); if(!v.paused) raf=requestAnimationFrame(upd); };
+  new IntersectionObserver(es=>{ const e=es[0]; if(e.isIntersecting) load(); if(e.intersectionRatio>=.3){ if(!RM) v.play().catch(()=>{}); } else v.pause(); },{threshold:[0,.3]}).observe(v);
+  v.addEventListener('play',()=>{ if(!raf) raf=requestAnimationFrame(upd); }); v.addEventListener('seeked',upd);
+  tl.addEventListener('click',e=>{ const r=tl.getBoundingClientRect(); load(); const go=()=>{ v.currentTime=Math.max(0,Math.min(.999,(e.clientX-r.left)/r.width))*D; v.play().catch(()=>{}); }; if(v.readyState>=1) go(); else v.addEventListener('loadedmetadata',go,{once:true}); });
+})();
 
 /* menu mobile */
 const menu=$('#menu'), menuBtn=$('#menuBtn');
