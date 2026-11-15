@@ -3,6 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script> (function(ss,ex){ window.ldfdr=window.ldfdr||function(){(ldfdr._q=ldfdr._q||[]).push([].slice.call(arguments));}; (function(d,s){ fs=d.getElementsByTagName(s)[0]; function ce(src){ var cs=d.createElement(s); cs.src=src; cs.async=1; fs.parentNode.insertBefore(cs,fs); }; ce('https://sc.lfeeder.com/lftracker_v1_'+ss+(ex?'_'+ex:'')+'.js'); })(document,'script'); })('lAxoEaKj6E04OYGd'); </script>
+<script>
+/* consentement Leadfeeder : saykiLF('yes') pose le cookie, saykiLF('no') le supprime */
+window.saykiLF=function(v){
+  try{
+    if(v==='yes'){ var n=0; (function go(){ if(window.ldfdr&&window.ldfdr.acceptCookie){ window.ldfdr.acceptCookie(); return; } if(++n<60) setTimeout(go,250); })(); return; }
+    var p=location.hostname.split('.'), ds=[''];
+    for(var i=0;i<p.length-1;i++) ds.push('.'+p.slice(i).join('.'));
+    ds.forEach(function(d){ document.cookie='_lfa=; Max-Age=0; path=/'+(d?'; domain='+d:''); });
+  }catch(e){}
+};
+(function(){ var v=null; try{v=localStorage.getItem('sayki-consent');}catch(e){} if(v==='yes') saykiLF('yes'); })();
+addEventListener('sayki:consent',function(e){ saykiLF(e.detail==='yes'?'yes':'no'); });
+</script>
 <title>Sayki Studio · Films d’animation et vidéos sans tournage, Namur</title>
 <meta name="description" content="Studio de films d’animation sans tournage à Namur, en Belgique : films explicatifs, publicités narratives, films d’entreprise, univers de marque et personnages, du script à la version finale.">
 <link rel="canonical" href="https://sayki.studio/">

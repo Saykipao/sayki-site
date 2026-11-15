@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <script>document.documentElement.classList.add("js-intro")</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script> (function(ss,ex){ window.ldfdr=window.ldfdr||function(){(ldfdr._q=ldfdr._q||[]).push([].slice.call(arguments));}; (function(d,s){ fs=d.getElementsByTagName(s)[0]; function ce(src){ var cs=d.createElement(s); cs.src=src; cs.async=1; fs.parentNode.insertBefore(cs,fs); }; ce('https://sc.lfeeder.com/lftracker_v1_'+ss+(ex?'_'+ex:'')+'.js'); })(document,'script'); })('lAxoEaKj6E04OYGd'); </script>
+<script>
+/* consentement Leadfeeder : saykiLF('yes') pose le cookie, saykiLF('no') le supprime */
+window.saykiLF=function(v){
+  try{
+    if(v==='yes'){ var n=0; (function go(){ if(window.ldfdr&&window.ldfdr.acceptCookie){ window.ldfdr.acceptCookie(); return; } if(++n<60) setTimeout(go,250); })(); return; }
+    var p=location.hostname.split('.'), ds=[''];
+    for(var i=0;i<p.length-1;i++) ds.push('.'+p.slice(i).join('.'));
+    ds.forEach(function(d){ document.cookie='_lfa=; Max-Age=0; path=/'+(d?'; domain='+d:''); });
+  }catch(e){}
+};
+(function(){ var v=null; try{v=localStorage.getItem('sayki-consent');}catch(e){} if(v==='yes') saykiLF('yes'); })();
+addEventListener('sayki:consent',function(e){ saykiLF(e.detail==='yes'?'yes':'no'); });
+</script>
 <title>Vidéo explicative en animation 3D, dès 3 400 € HTVA · Sayki Studio</title>
 <meta name="description" content="Votre métier, compris en 90 secondes par quelqu’un qui n’y connaît rien. Vidéo d’animation 3D, histoire comprise, livrée en 30 jours, prix fixe. Studio à Namur.">
 <link rel="canonical" href="https://sayki.studio/film-explicatif/">
@@ -1133,6 +1147,7 @@ html,body{overflow-x:clip}
 .xo.on{background:var(--paper);color:var(--ink);border-color:var(--paper);box-shadow:0 30px 60px -36px rgba(8,3,18,.6)}
 .xo.on::before{opacity:0}
 .xo.on .xo-h,.xo.on .xo-d{color:var(--mute)}
+@media (max-width:560px){ .stats{gap:22px} .stats dt{font-size:36px} .stats dd{font-size:10.5px} }
 </style>
 </head>
 <body>
@@ -1377,7 +1392,7 @@ html,body{overflow-x:clip}
 <section class="sec wrap" id="ludovic" aria-labelledby="t-who">
   <p class="lab mono">Qui fait votre vidéo</p>
   <div class="who-h"><h2 class="h h2 split" id="t-who">Derrière le studio, il y a moi, <em>Ludovic.</em></h2>
-    <dl class="stats"><div><dt>20<i>+</i></dt><dd class="mono">ans dans la communication</dd></div><div><dt>15<i>+</i></dt><dd class="mono">clients accompagnés</dd></div></dl></div>
+    <dl class="stats"><div><dt>20<i>+</i></dt><dd class="mono">ans dans la communication</dd></div><div><dt>15<i>+</i></dt><dd class="mono">clients accompagnés</dd></div><div><dt>3<i>+</i></dt><dd class="mono">ans à étudier les outils IA, chaque jour</dd></div></dl></div>
   <div class="who-g">
     <figure class="who-v rv"><video src="/assets/studio.mp4" poster="/assets/studio.jpg" muted loop playsinline preload="none" data-lazyplay aria-label="Ludovic au travail dans son studio"></video></figure>
     <div class="who-t rv">
@@ -1920,6 +1935,7 @@ function phStart(){
     addEventListener('scroll',()=>{if(scrollY>innerHeight*0.6) go_();},{passive:true}); setTimeout(go_,12000); }
   ck.addEventListener('click',e=>{const b=e.target.closest('[data-ck]'); if(!b) return;
     v=b.dataset.ck==='1'?'yes':'no'; try{localStorage.setItem('sayki-consent',v);}catch(err){}
+    dispatchEvent(new CustomEvent('sayki:consent',{detail:v})); /* Leadfeeder (lf.py) écoute cet événement */
     if(v==='yes') phStart(); else if(phOn){ try{ posthog.opt_out_capturing(); }catch(err){} phOn=false; } hide(); });
   $('#ckOpen').addEventListener('click',show);
 })();

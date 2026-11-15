@@ -3,6 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script> (function(ss,ex){ window.ldfdr=window.ldfdr||function(){(ldfdr._q=ldfdr._q||[]).push([].slice.call(arguments));}; (function(d,s){ fs=d.getElementsByTagName(s)[0]; function ce(src){ var cs=d.createElement(s); cs.src=src; cs.async=1; fs.parentNode.insertBefore(cs,fs); }; ce('https://sc.lfeeder.com/lftracker_v1_'+ss+(ex?'_'+ex:'')+'.js'); })(document,'script'); })('lAxoEaKj6E04OYGd'); </script>
+<script>
+/* consentement Leadfeeder : saykiLF('yes') pose le cookie, saykiLF('no') le supprime */
+window.saykiLF=function(v){
+  try{
+    if(v==='yes'){ var n=0; (function go(){ if(window.ldfdr&&window.ldfdr.acceptCookie){ window.ldfdr.acceptCookie(); return; } if(++n<60) setTimeout(go,250); })(); return; }
+    var p=location.hostname.split('.'), ds=[''];
+    for(var i=0;i<p.length-1;i++) ds.push('.'+p.slice(i).join('.'));
+    ds.forEach(function(d){ document.cookie='_lfa=; Max-Age=0; path=/'+(d?'; domain='+d:''); });
+  }catch(e){}
+};
+(function(){ var v=null; try{v=localStorage.getItem('sayki-consent');}catch(e){} if(v==='yes') saykiLF('yes'); })();
+addEventListener('sayki:consent',function(e){ saykiLF(e.detail==='yes'?'yes':'no'); });
+</script>
 <title>Mentions légales · Sayki Studio</title>
 <meta name="description" content="Mentions légales et politique de confidentialité de Sayki Studio SRL, studio de films d’animation à Namur.">
 <link rel="canonical" href="https://sayki.studio/mentions-legales/">
@@ -63,10 +77,11 @@ button{font:500 14px Geist,system-ui,sans-serif;color:#fff;background:var(--viol
 <p>Pour afficher le site, votre navigateur charge des polices (Google Fonts), des scripts (cdnjs, jsDelivr, Cloudflare) et des vidéos (bunny.net). Comme pour n’importe quelle page web, ces services reçoivent techniquement votre adresse IP.</p></section>
 <section><h2>Cookies</h2>
 <p>Aucun cookie publicitaire, aucune revente. Votre choix sur le bandeau « Un cookie ? » est simplement mémorisé dans votre navigateur. La mesure d’audience, anonyme, ne fonctionne que si vous l’acceptez.</p>
+<p>Leadfeeder (Dealfront, Helsinki, Finlande). Nous utilisons Leadfeeder pour savoir quelles entreprises visitent notre site, à partir de l’adresse IP de leur réseau. L’outil identifie des entreprises, pas des personnes. Si vous acceptez les cookies de mesure d’audience, Leadfeeder pose un cookie (_lfa, durée 1 an) qui permet de reconnaître une visite récurrente. Sans votre accord, aucun cookie Leadfeeder n’est déposé. Leadfeeder agit comme sous-traitant ; Sayki Studio est responsable du traitement.</p>
 <p><button type="button" id="ckReset">Revoir mon choix</button> <span id="ckState" class="m"></span></p></section>
 <section><h2>Vos droits</h2>
 <p>Vous pouvez demander l’accès, la correction ou la suppression de données vous concernant en écrivant à <a href="mailto:ludovic@sayki.studio">ludovic@sayki.studio</a>. Vous pouvez aussi introduire une plainte auprès de l’Autorité de protection des données (rue de la Presse 35, 1000 Bruxelles, <a href="https://www.autoriteprotectiondonnees.be" rel="noopener">autoriteprotectiondonnees.be</a>).</p></section>
 </div>
-<script>(function(){var s=document.getElementById('ckState'),b=document.getElementById('ckReset');function show(){var v=null;try{v=localStorage.getItem('sayki-consent')}catch(e){}s.textContent=v==='yes'?'Choix actuel : mesure acceptée':v==='no'?'Choix actuel : mesure refusée':'Aucun choix enregistré';}b.addEventListener('click',function(){try{localStorage.removeItem('sayki-consent')}catch(e){}s.textContent='Choix effacé : le bandeau réapparaîtra sur le site.';});show();})();</script>
+<script>(function(){var s=document.getElementById('ckState'),b=document.getElementById('ckReset');function show(){var v=null;try{v=localStorage.getItem('sayki-consent')}catch(e){}s.textContent=v==='yes'?'Choix actuel : mesure acceptée':v==='no'?'Choix actuel : mesure refusée':'Aucun choix enregistré';}b.addEventListener('click',function(){try{localStorage.removeItem('sayki-consent')}catch(e){}if(window.saykiLF)saykiLF('no');s.textContent='Choix effacé : le bandeau réapparaîtra sur le site.';});show();})();</script>
 </body>
 </html>
