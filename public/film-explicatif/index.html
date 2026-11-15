@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <script>document.documentElement.classList.add("js-intro")</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
 <title>Vidéo explicative en animation 3D, dès 3 400 € HTVA · Sayki Studio</title>
 <meta name="description" content="Votre métier, compris en 90 secondes par quelqu’un qui n’y connaît rien. Vidéo d’animation 3D, histoire comprise, livrée en 30 jours, prix fixe. Studio à Namur.">
 <link rel="canonical" href="https://sayki-site.ludovic-afd.workers.dev/film-explicatif/">
@@ -1921,6 +1922,7 @@ function phStart(){
     addEventListener('scroll',()=>{if(scrollY>innerHeight*0.6) go_();},{passive:true}); setTimeout(go_,12000); }
   ck.addEventListener('click',e=>{const b=e.target.closest('[data-ck]'); if(!b) return;
     v=b.dataset.ck==='1'?'yes':'no'; try{localStorage.setItem('sayki-consent',v);}catch(err){}
+    dispatchEvent(new CustomEvent('sayki:consent',{detail:v})); /* Leadfeeder (lf.py) écoute cet événement */
     if(v==='yes') phStart(); else if(phOn){ try{ posthog.opt_out_capturing(); }catch(err){} phOn=false; } hide(); });
   $('#ckOpen').addEventListener('click',show);
 })();
