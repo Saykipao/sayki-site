@@ -5,16 +5,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script> (function(ss,ex){ window.ldfdr=window.ldfdr||function(){(ldfdr._q=ldfdr._q||[]).push([].slice.call(arguments));}; (function(d,s){ fs=d.getElementsByTagName(s)[0]; function ce(src){ var cs=d.createElement(s); cs.src=src; cs.async=1; fs.parentNode.insertBefore(cs,fs); }; ce('https://sc.lfeeder.com/lftracker_v1_'+ss+(ex?'_'+ex:'')+'.js'); })(document,'script'); })('lAxoEaKj6E04OYGd'); </script>
 <script>
-/* consentement Leadfeeder : saykiLF('yes') pose le cookie, saykiLF('no') le supprime */
+/* consentement Leadfeeder : saykiLF('yes') pose le cookie, saykiLF('no') le refuse et efface tout */
 window.saykiLF=function(v){
-  try{
-    if(v==='yes'){ var n=0; (function go(){ if(window.ldfdr&&window.ldfdr.acceptCookie){ window.ldfdr.acceptCookie(); return; } if(++n<60) setTimeout(go,250); })(); return; }
+  var call=function(f,then){ var n=0; (function go(){ if(window.ldfdr&&window.ldfdr[f]){ try{window.ldfdr[f]();}catch(e){} if(then) then(); return; } if(++n<60) setTimeout(go,250); })(); };
+  var clean=function(){ try{
+    ['_lfa','_lfa_expiry','_lfa_consent'].forEach(function(k){ try{localStorage.removeItem(k);}catch(e){} });
     var p=location.hostname.split('.'), ds=[''];
     for(var i=0;i<p.length-1;i++) ds.push('.'+p.slice(i).join('.'));
-    ds.forEach(function(d){ document.cookie='_lfa=; Max-Age=0; path=/'+(d?'; domain='+d:''); });
-  }catch(e){}
+    ['_lfa','_lfa_consent'].forEach(function(c){ ds.forEach(function(d){ document.cookie=c+'=; Max-Age=0; path=/'+(d?'; domain='+d:''); }); });
+  }catch(e){} };
+  if(v==='yes'){ call('acceptCookie'); return; }
+  clean(); call('rejectCookie',clean);
 };
-(function(){ var v=null; try{v=localStorage.getItem('sayki-consent');}catch(e){} if(v==='yes') saykiLF('yes'); })();
+(function(){ var v=null; try{v=localStorage.getItem('sayki-consent');}catch(e){} if(v==='yes') saykiLF('yes'); else if(v==='no') saykiLF('no'); })();
 addEventListener('sayki:consent',function(e){ saykiLF(e.detail==='yes'?'yes':'no'); });
 </script>
 <title>RALL · La mascotte entre sur le terrain · Sayki Studio</title>
