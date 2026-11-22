@@ -1032,27 +1032,13 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
         <li class="frame"><span class="n" aria-hidden="true">2</span><p class="wk mono">Semaine 1</p><h3 class="display t-m">Concept &amp; DA</h3><p>Je travaille avec vos équipes créatives ou marketing. Je propose deux ou trois pistes d’univers, de format et de direction artistique, et je m’entoure de scénaristes et de créatifs selon le média à produire.</p><p class="val mono">Livrable : 2 à 3 pistes créatives et narratives, moodboard, image clé.</p></li>
         <li class="frame"><span class="n" aria-hidden="true">3</span><p class="wk mono">Semaine 2</p><h3 class="display t-m">Storyboard</h3><p>Sur base du concept validé, je réalise le storyboard statique, le script de la voix off et des dialogues.</p><p class="val mono">Livrable : storyboard, script et animatique.</p></li>
         <li class="frame"><span class="n" aria-hidden="true">4</span><p class="wk mono">Semaine 2</p><h3 class="display t-m">Casting</h3><p>Je propose les acteurs virtuels et leurs voix, je crée les lieux à partir de lieux réels ou fictifs, et les images des produits ou objets qui apparaissent dans le film.</p><p class="val mono">Livrable : une fiche référence pour chaque personnage, lieu et objet, et 2 à 3 voix au choix.</p></li>
-        <li class="frame"><span class="n" aria-hidden="true">5</span><p class="wk mono">Semaines 3 et 4</p><h3 class="display t-m">Production</h3><p>Je produis votre film avec des méthodes hybrides ou full IA, selon le budget et les plans à produire : animation, montage, musique, voix.</p><p class="val mono">Livrable : une première version complète de la vidéo.</p></li>
+        <li class="frame"><span class="n" aria-hidden="true">5</span><p class="wk mono">Semaines 3 et 4</p><h3 class="display t-m">Production</h3><p>Je produis votre film avec des méthodes hybrides, selon le budget et les plans à produire : animation, montage, musique, voix.</p><p class="val mono">Livrable : une première version complète de la vidéo.</p></li>
         <li class="frame"><span class="n" aria-hidden="true">6</span><p class="wk mono">Semaine 4</p><h3 class="display t-m">Déclinaison</h3><p>Je décline, monte et coupe votre film selon les formats à produire, pour qu’il s’insère parfaitement dans votre plan média digital.</p><p class="val mono">Livrable : masters 16:9, 9:16 et 1:1, sous-titres, version de langue, et un document de cession des droits avec la liste des outils utilisés.</p></li>
       </ol>
       <div class="wrap mt-barw" aria-hidden="true"><div class="pr-bar"><i id="mtBar"></i></div></div>
     </div>
   </section>
 
-  <section class="proofs" id="preuves" aria-label="Ce que nos clients en disent">
-    <div class="wrap">
-      <div class="pr-hd">
-        <div><p class="mono kicker">Preuves</p><h2 class="display t-l split" data-glow>Ils le disent <em>mieux</em> que moi.</h2></div>
-        <div class="pr-nav">
-          <p class="pr-count mono"><b id="prTot">04</b> témoignages</p>
-          <button class="pr-btn" id="prPrev" type="button" aria-label="Témoignage précédent"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-          <button class="pr-btn" id="prNext" type="button" aria-label="Témoignage suivant"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
-        </div>
-      </div>
-      <div class="pr-track" id="prTrack" tabindex="0" aria-label="Témoignages, faites défiler horizontalement"></div>
-      <div class="pr-bar" aria-hidden="true"><i id="prBar"></i></div>
-    </div>
-  </section>
   </div>
 
   <section class="studio-sec" id="studio">
@@ -1123,7 +1109,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       </div>
       <div class="cta-foot">
         <div>
-          <p class="visit">85 % des publicités digitales retiennent l’attention moins de 2,5 secondes. Vous êtes sur ce site depuis <b id="visit">00:00</b>. Imaginez vos clients devant votre film avec le même intérêt.</p>
+          <p class="visit">85 % des publicités digitales retiennent l’attention moins de 2,5 secondes (<a href="https://www.amplified.co/insight/why-does-the-attention-memory-threshold-matter" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px">Amplified</a>). Vous êtes sur ce site depuis <b id="visit">00:00</b>. Imaginez vos clients devant votre film avec le même intérêt.</p>
           <p class="lead">Trente minutes pour parler de votre histoire. Café offert si vous passez au studio.</p>
         </div>
         <div class="cta-row">
@@ -2361,7 +2347,7 @@ function focusNow(){
   return {x:(r.left+r.width/2)/innerWidth, y:1-(r.top+r.height/2)/innerHeight, a};
 }
 /* indicateur de section */
-const SECS=[['#top','Accueil'],['#films','Films'],['#manifeste','Conviction'],['#services','Services'],['#methode','Méthode'],['#preuves','Preuves'],['#studio','Studio'],['#agences','Agences'],['#contact','Contact']].map(([s,n])=>[$(s),n]);
+const SECS=[['#top','Accueil'],['#films','Films'],['#manifeste','Conviction'],['#services','Services'],['#methode','Méthode'],['#studio','Studio'],['#agences','Agences'],['#contact','Contact']].map(([s,n])=>[$(s),n]);
 const hdSec=$('#hdSec'), hdSecT=$('span',hdSec);
 let secName='Accueil', secTick=0;
 function secUpdate(){
