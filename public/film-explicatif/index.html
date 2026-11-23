@@ -1746,7 +1746,7 @@ async function idSubmit(e){ if(e) e.preventDefault(); if(!validate(idForm)) retu
 idForm.addEventListener('submit',idSubmit);
 
 /* ---------- clients : la ligne de l'accueil ---------- */
-const CLIENTS=['Guerlain','Proximus','Bioderma','Arkopharma','Aurobindo','Elba','BW+','Hilarious','Nikita Concept','Mona Studio','Flying Fish','TreeOsk','La Forge','Sorcery Systems','Rayon Belge','Tante Riche','Pat le Sommelier'];
+const CLIENTS=['Guerlain','Proximus','Bioderma','Arkopharma','Aurobindo','Elba','BW+','Hilarious','Nikita Concept','Mona Studio','Flying Fish','TreeOsk','La Forge','Sorcery Systems','Rayon Belge','Tante Riche'];
 const mq=$('#marquee');
 mq.innerHTML=(CLIENTS.map(c=>`<span>${c}<i aria-hidden="true">·</i></span>`).join('')).repeat(2);
 (function(){ const refs=$('.refs'); const W=document.createElement('div'); W.className='mwall'; W.setAttribute('aria-hidden','true');
