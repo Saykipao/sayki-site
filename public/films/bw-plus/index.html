@@ -2214,7 +2214,7 @@ plFs.addEventListener('click',()=>{ if(document.fullscreenElement) document.exit
 fpMedia.addEventListener('pointermove',()=>{pl.classList.remove('idle'); clearTimeout(plIdle); plIdle=setTimeout(()=>pl.classList.add('idle'),2200);});
 addEventListener('keydown',e=>{ if(e.code!=='Space'||fp.hidden||pl.hidden) return; if(e.target.closest&&e.target.closest('button,a,input,textarea')) return; e.preventDefault(); togglePlay(); });
 
-const HOME_TITLE='Sayki Studio · Films d’animation et vidéos sans tournage, Namur';
+const HOME_TITLE='Sayki · Studio d’animation narrative, IA et hybride, Namur';
 let routing=false, openSrc='lien direct', curFilm=null;
 function filmTitle(id){const f=FILMS[id]; return f.t+' · '+f.hook+' · Sayki Studio';}
 function openFilm(id){
