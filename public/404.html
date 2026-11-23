@@ -195,6 +195,7 @@ html.is-loading,html.is-loading body{overflow:hidden}
 .hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top, rgba(21,10,38,.94) 0%, rgba(21,10,38,.4) 45%, rgba(21,10,38,.2) 70%, rgba(21,10,38,.75) 100%)}
 .is-gl .hero-media video{opacity:0}
 .is-gl .hero-media::after{display:none}
+.hero-k{position:relative;z-index:1;margin:0 0 clamp(14px,2vh,24px);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--violet-clair)}.hero-k .ln{display:block;overflow:hidden;padding:.2em 0}@media (max-width:600px){.hero-k{font-size:10.5px;letter-spacing:.09em;white-space:nowrap}}
 .hero-tc{position:absolute;top:calc(100px + env(safe-area-inset-top,0px));right:max(var(--pad), env(safe-area-inset-right,0px), calc((100% - 1560px) / 2));text-align:right;display:grid;gap:4px}
 .hero-tc b{font-weight:500;color:var(--violet-clair)}
 .h1{position:relative;z-index:1;margin:0;font-family:var(--f-cond);font-weight:500;text-transform:uppercase;font-size:clamp(26px,min(3.6vw, calc((100svh - 260px) / 6.5)),68px);line-height:1.04;letter-spacing:.012em;display:flex;flex-direction:column;align-items:center;text-wrap:balance;text-shadow:0 1px 2px rgba(21,10,38,.25),0 4px 34px rgba(21,10,38,.45)}
@@ -808,6 +809,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <video id="heroVid" poster="assets/intro.jpg" autoplay muted loop playsinline preload="auto" crossorigin="anonymous"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_1080p.mp4" type="video/mp4" media="(min-width: 900px)"><source src="https://vz-4410841f-776.b-cdn.net/2305e705-3fba-45d7-90b7-1fc385a8e65a/play_720p.mp4" type="video/mp4"><source src="assets/intro.mp4" type="video/mp4"></video>
     </div>
     <div class="hero-tc mono" aria-hidden="true"><span>Showreel 2026 · 16:9 · 24 i/s</span><span>TC <b id="heroTc">00:00:00:00</b></span></div>
+    <p class="hero-k mono"><span class="ln"><span style="--d:0">Studio d’animation narrative · IA et hybride</span></span></p>
     <h1 class="h1">
       <span class="ln"><span style="--d:0">Vos clients n’aiment pas les vidéos.</span></span>
       <span class="ln ln-h"><span style="--d:1">Ils aiment les <em>histoires.</em></span></span>
@@ -1045,7 +1047,7 @@ html.is-locked .wa-btn{opacity:0;pointer-events:none}
       <div class="st-grid">
         <div class="st-main">
           <h2 class="display t-xl split" data-glow>Le <em>studio</em></h2>
-          <p class="studio-lead">Directeur artistique et designer multidisciplinaire, mon parcours me mène aujourd’hui à la réalisation IA et la formation d’équipe aux nouveaux workflows créatifs.</p>
+          <p class="studio-lead">Sayki est un studio d’animation narrative, IA et hybride. Directeur artistique et designer multidisciplinaire, mon parcours me mène aujourd’hui à la réalisation IA et la formation d’équipe aux nouveaux workflows créatifs.</p>
           <p class="studio-p">L’IA a rendu la création visuelle facile. Pas l’excellence. Je l’utilise pour apporter aux marques et aux entreprises mon œil d’expert en apportant ma sensibilité, de bonnes idées et surtout une combinaison entre technicité et direction artistique qui me permette de livrer des projets de qualité publicitaire dans des budgets et des délais adaptés à nos nouvelles réalités.</p>
           <div class="m-fold" id="foldStudio"><div class="m-fold-in">
             <p class="studio-p">Ma manière de travailler vient de mes 20 années pour et dans des agences de communication. J’ai commencé comme graphiste, ensuite web designer chez Havas, avant de cofonder l’agence Hilarious, où j’ai dirigé l’équipe design pendant près de dix ans : activations digitales, jeux, identités et campagnes pour Proximus, Tomorrowland, les Diables Rouges ou L’Oréal.</p>
