@@ -1,4 +1,6 @@
 # Publie le dossier public/ sur GitHub Pages (sayki.studio) à chaque mise à jour de main
+# Deux tâches séparées (préparation puis publication) : GitHub retrouve ainsi le paquet envoyé.
+# Si la publication échoue quand même, elle est retentée après 30 secondes.
 name: Publication sayki.studio
 on:
   push:
@@ -12,16 +14,26 @@ concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url || steps.retry.outputs.page_url }}
+    steps:
       - id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - if: steps.deployment.outcome == 'failure'
+        run: sleep 30
+      - id: retry
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v4
